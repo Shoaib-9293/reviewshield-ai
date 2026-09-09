@@ -4,258 +4,2301 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ReviewShield AI — Phase 2</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f7fb;color:#172033}
-button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}.side{width:245px;background:#fff;border-right:1px solid #e6e9ef;padding:22px 15px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column}.brand{font-weight:800;font-size:17px;padding:0 10px 28px;display:flex;align-items:center;gap:9px}.logo{width:34px;height:34px;border-radius:9px;background:#172033;color:white;display:grid;place-items:center}.nav button{width:100%;border:0;background:none;text-align:left;padding:12px;border-radius:9px;color:#687386;cursor:pointer;font-weight:650}.nav button.active{background:#eef1f8;color:#172033}.bottom{margin-top:auto}.plan{padding:14px;border:1px solid #e7eaf0;border-radius:12px;background:#fafbfc;margin-bottom:12px}.plan small{display:block;color:#8b94a3}.plan button,.primary{background:#172033;color:#fff;border:0;border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}.plan button{width:100%;margin-top:9px}.user{display:flex;gap:9px;align-items:center;padding:6px}.avatar{width:33px;height:33px;border-radius:50%;background:#dfe4ee;display:grid;place-items:center;font-weight:800}.main{margin-left:245px;width:calc(100% - 245px)}.top{height:68px;background:#fff;border-bottom:1px solid #e6e9ef;padding:0 32px;display:flex;justify-content:space-between;align-items:center}.business{font-size:13px}.business strong{margin-left:8px}.topright{display:flex;gap:9px;align-items:center}.ghost{border:1px solid #e3e7ee;background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}.page{padding:30px;max-width:1400px;margin:auto}.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}.head h1{margin:0 0 5px;font-size:26px}.muted{color:#7d8798}.eyebrow{font-size:10px;letter-spacing:.12em;font-weight:800;color:#9aa3b1}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:#fff;border:1px solid #e7eaf0;border-radius:12px}.stat{padding:18px}.stat small{color:#8a94a5}.stat strong{display:block;font-size:26px;margin:7px 0}.green{color:#267c55}.amber{color:#9d691a}.section{margin-top:18px;padding:20px}.section h2{font-size:16px;margin:0 0 4px}.review-list{display:grid;gap:10px;margin-top:15px}.review{border:1px solid #e8ebf0;border-radius:10px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:12px}.review p{margin:7px 0;color:#505c70;font-size:13px;line-height:1.5}.review small{color:#9aa3b1}.badge{display:inline-block;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:800}.flag{background:#fff0df;color:#9b651a}.safe{background:#e9f6ef;color:#287b55}.danger{background:#fbe8e8;color:#b33e3e}.actions{display:flex;gap:7px;align-items:center}.hidden{display:none!important} .auth-wrap.hidden{display:none!important}.form{display:grid;gap:12px;max-width:760px}.form textarea{min-height:150px;resize:vertical;border:1px solid #dfe4ec;border-radius:9px;padding:12px}.result{padding:15px;border-radius:10px;background:#f7f8fb;border:1px solid #e6e9ef}.result strong{display:block;margin-bottom:6px}.case{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid #edf0f4}.case:first-child{border-top:0}.status{padding:5px 8px;border-radius:6px;background:#eef1f8;font-size:10px;font-weight:800}.empty{padding:45px;text-align:center;color:#8b94a3}
-.auth-wrap{position:fixed;inset:0;background:rgba(23,32,51,.35);display:grid;place-items:center;z-index:9999}.auth-box{width:min(420px,92vw);background:#fff;border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.18)}.auth-box h1{margin:0 0 6px;font-size:24px}.auth-box p{margin:0 0 20px;color:#7d8798;font-size:13px}.auth-box input{width:100%;padding:12px;border:1px solid #dfe4ec;border-radius:9px;margin-bottom:10px}.auth-box .primary{width:100%;margin-top:4px}.auth-switch{text-align:center;margin-top:15px;font-size:13px}.auth-switch button{border:0;background:none;color:#172033;font-weight:800;cursor:pointer}.auth-msg{font-size:12px;margin-top:12px;line-height:1.5}.top-email{font-size:12px;color:#7d8798}
-@media(max-width:900px){.side{width:72px}.brand span:last-child,.nav button span,.plan,.user div:last-child{display:none}.nav button{text-align:center}.main{margin-left:72px;width:calc(100% - 72px)}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.page{padding:18px}.stats{grid-template-columns:1fr}.head{gap:12px;flex-direction:column}.review{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<div id="authWrap" class="auth-wrap">
-  <div class="auth-box">
-    <h1 id="authTitle">Welcome to ReviewShield AI</h1>
-    <p id="authSubtitle">Sign in to access your private review dashboard.</p>
-    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email">
-    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
-    <button id="authButton" class="primary" onclick="handleAuth()">Sign in</button>
-    <div id="authMsg" class="auth-msg"></div>
-    <div class="auth-switch"><span id="authSwitchText">Don't have an account?</span> <button onclick="toggleAuthMode()">Create account</button></div>
-  </div>
-</div>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap');
 
-<div id="appShell" class="app hidden">
-<aside class="side">
-<div class="brand"><span class="logo">R</span><span>ReviewShield AI</span></div>
-<div class="nav">
-<button class="active" onclick="show('dashboard',this)">⌂ &nbsp; Dashboard</button>
-<button onclick="show('reviews',this)">★ &nbsp; Reviews</button>
-<button onclick="show('analyzer',this)">⚑ &nbsp; AI Analyzer</button>
-<button onclick="show('cases',this)">▣ &nbsp; Cases</button>
-<button onclick="show('responses',this)">◈ &nbsp; AI Responses</button>
-<button onclick="show('settings',this)">⚙ &nbsp; Settings</button>
-</div>
-<div class="bottom"><div class="plan"><small>Current plan</small><b>Starter</b><button>Upgrade</button></div><div class="user"><div id="sideAvatar" class="avatar">U</div><div><b id="sideName">Business Owner</b><small id="sideEmail">Signed in</small></div></div></div>
-</aside>
-<main class="main">
-<header class="top"><div class="business"><span class="muted">Business</span><strong>Acme Auto Care ▾</strong></div><div class="topright"><span id="topEmail" class="top-email"></span><button class="ghost" onclick="signOut()">Sign out</button><button class="ghost">?</button><button class="ghost">🔔</button><div id="topAvatar" class="avatar">U</div></div></header>
-
-<section id="dashboard" class="page">
-<div class="head"><div><div class="eyebrow">REVIEW HEALTH</div><h1 id="welcomeTitle">Good evening 👋</h1><div class="muted">Monitor, analyze and organize your business reviews.</div></div><button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">＋ Analyze review</button></div>
-<div class="stats"><div class="card stat"><small>Average rating</small><strong>0.0 ★</strong><span class="green">Live data</span></div><div class="card stat"><small>Total reviews</small><strong>0</strong><span class="green">Your account</span></div><div class="card stat"><small>Potential issues</small><strong id="flagCount">0</strong><span class="amber">Needs attention</span></div><div class="card stat"><small>Open cases</small><strong id="caseCount">0</strong><span class="muted">Your account</span></div></div>
-<div class="card section"><h2>What ReviewShield does</h2><p class="muted">Analyze reviews for potential policy issues, organize evidence, prepare reporting information, and generate professional responses. Google makes the final decision on policy violations.</p></div>
-<div class="card section"><h2>Recent reviews</h2><div id="dashReviews" class="review-list"></div></div>
-</section>
-
-<section id="reviews" class="page hidden"><div class="head"><div><div class="eyebrow">REVIEWS</div><h1>Review inbox</h1><div class="muted">Reviews saved to your account.</div></div><button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">Analyze a review</button></div><div class="card section"><div id="allReviews" class="review-list"></div></div></section>
-
-<section id="analyzer" class="page hidden"><div class="head"><div><div class="eyebrow">AI REVIEW ANALYZER</div><h1>Analyze a review</h1><div class="muted">Transparent rule-based analysis with results saved privately to your account.</div></div></div><div class="card section"><div class="form"><label><b>Review text</b></label><textarea id="reviewText" placeholder="Paste a review here..."></textarea><button class="primary" onclick="analyze()">Analyze review</button><div id="analysisResult"></div></div></div></section>
-
-<section id="cases" class="page hidden"><div class="head"><div><div class="eyebrow">CASE MANAGEMENT</div><h1>Cases</h1><div class="muted">Track reviews that need evidence or reporting.</div></div></div><div class="card section" id="caseList"></div></section>
-
-<section id="responses" class="page hidden"><div class="head"><div><div class="eyebrow">AI RESPONSES</div><h1>Response assistant</h1><div class="muted">Generate a professional draft for a legitimate negative review.</div></div></div><div class="card section"><div class="form"><textarea id="responseText" placeholder="Paste the customer's review..."></textarea><button class="primary" onclick="generateResponse()">Generate draft</button><div id="responseResult"></div></div></div></section>
-
-<section id="settings" class="page hidden"><div class="head"><div><div class="eyebrow">SETTINGS</div><h1>Settings</h1><div class="muted">Account and Google integration settings.</div></div></div><div class="card section"><h2>Account</h2><p class="muted">Signed in as <b id="settingsEmail"></b></p><button class="ghost" onclick="signOut()">Sign out</button></div><div class="card section"><h2>Google Business Profile</h2><p class="muted">Status: <b>Not connected</b></p><button class="primary" onclick="alert('Google OAuth will be enabled after the Business Profile API access stage.')">Connect Google</button></div></section>
-</main></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://ppqavvwcmgojbddnqwpl.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Q6IJEnT3XvDI8KXMWpatkg_bNyxpKie";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-let reviews=[];
-let cases=[];
-let currentUser=null;
-let signupMode=false;
-
-function toggleAuthMode(){
-  signupMode=!signupMode;
-  document.getElementById('authTitle').textContent=signupMode?'Create your ReviewShield account':'Welcome to ReviewShield AI';
-  document.getElementById('authSubtitle').textContent=signupMode?'Create an account to keep your dashboard and data private.':'Sign in to access your private review dashboard.';
-  document.getElementById('authButton').textContent=signupMode?'Create account':'Sign in';
-  document.getElementById('authSwitchText').textContent=signupMode?'Already have an account?':"Don't have an account?";
-  document.querySelector('.auth-switch button').textContent=signupMode?'Sign in':'Create account';
-  document.getElementById('authMsg').textContent='';
+:root{
+  --bg:#f4f7fb;
+  --surface:#ffffff;
+  --navy:#0b1220;
+  --navy2:#111c31;
+  --blue:#4f7cff;
+  --blue2:#6d8dff;
+  --text:#111827;
+  --muted:#718096;
+  --border:#e5eaf2;
+  --green:#15966a;
+  --amber:#c27b16;
+  --red:#d64545;
+  --shadow:0 10px 35px rgba(15,23,42,.07);
+  --shadow2:0 25px 70px rgba(15,23,42,.18);
 }
 
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(79,124,255,.07),transparent 28%),
+    var(--bg);
+  color:var(--text);
+}
+
+button,input,textarea,select{font:inherit}
+button{transition:.2s ease}
+.hidden{display:none!important}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+.side{
+  width:250px;
+  background:linear-gradient(180deg,#0b1220 0%,#111c31 100%);
+  color:#fff;
+  padding:22px 15px;
+  position:fixed;
+  inset:0 auto 0 0;
+  display:flex;
+  flex-direction:column;
+  z-index:50;
+  box-shadow:8px 0 30px rgba(15,23,42,.08);
+}
+
+.brand{
+  font-family:Manrope,Inter,sans-serif;
+  font-weight:800;
+  font-size:17px;
+  padding:0 10px 30px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:11px;
+  background:linear-gradient(135deg,#4f7cff,#7b9aff);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  box-shadow:0 8px 25px rgba(79,124,255,.35);
+}
+
+.nav{
+  display:grid;
+  gap:5px;
+}
+
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  text-align:left;
+  padding:12px 13px;
+  border-radius:10px;
+  color:#9aa8bd;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.nav button:hover{
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  transform:translateX(2px);
+}
+
+.nav button.active{
+  background:linear-gradient(
+    90deg,
+    rgba(79,124,255,.22),
+    rgba(79,124,255,.08)
+  );
+  color:#fff;
+  box-shadow:inset 3px 0 0 #5d83ff;
+}
+
+.bottom{
+  margin-top:auto;
+}
+
+.plan{
+  padding:15px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:rgba(255,255,255,.055);
+  margin-bottom:14px;
+}
+
+.plan small{
+  display:block;
+  color:#8493aa;
+  margin-bottom:4px;
+}
+
+.plan b{
+  font-family:Manrope;
+}
+
+.plan button{
+  width:100%;
+  margin-top:11px;
+}
+
+.plan button,
+.primary{
+  background:linear-gradient(135deg,#4f7cff,#668cff);
+  color:#fff;
+  border:0;
+  border-radius:9px;
+  padding:11px 14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 7px 20px rgba(79,124,255,.22);
+}
+
+.plan button:hover,
+.primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 28px rgba(79,124,255,.32);
+}
+
+.user{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:7px;
+}
+
+.user b{
+  font-size:12px;
+}
+
+.user small{
+  display:block;
+  color:#8795aa;
+  font-size:11px;
+  margin-top:2px;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#dbe5ff,#a9bcff);
+  color:#1b3475;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+  min-width:0;
+}
+
+.top{
+  height:70px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:40;
+}
+
+.business{
+  font-size:13px;
+}
+
+.business strong{
+  margin-left:9px;
+  font-weight:700;
+}
+
+.topright{
+  display:flex;
+  gap:9px;
+  align-items:center;
+}
+
+.top-email{
+  font-size:12px;
+  color:#718096;
+  margin-right:5px;
+}
+
+.ghost{
+  border:1px solid var(--border);
+  background:#fff;
+  color:#4b5563;
+  border-radius:9px;
+  padding:8px 11px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.ghost:hover{
+  background:#f7f9fc;
+  border-color:#cfd7e6;
+  transform:translateY(-1px);
+}
+
+.page{
+  padding:34px;
+  max-width:1450px;
+  margin:auto;
+}
+
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:25px;
+}
+
+.head h1{
+  font-family:Manrope,Inter,sans-serif;
+  margin:3px 0 6px;
+  font-size:29px;
+  letter-spacing:-.6px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.eyebrow{
+  font-size:10px;
+  letter-spacing:.16em;
+  font-weight:800;
+  color:#6882c7;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:17px;
+}
+
+.card{
+  background:rgba(255,255,255,.94);
+  border:1px solid var(--border);
+  border-radius:15px;
+  box-shadow:var(--shadow);
+}
+
+.stat{
+  padding:21px;
+  position:relative;
+  overflow:hidden;
+}
+
+.stat:after{
+  content:"";
+  position:absolute;
+  width:80px;
+  height:80px;
+  right:-35px;
+  top:-35px;
+  border-radius:50%;
+  background:rgba(79,124,255,.07);
+}
+
+.stat small{
+  color:#8792a5;
+  font-weight:600;
+}
+
+.stat strong{
+  display:block;
+  font-family:Manrope,Inter,sans-serif;
+  font-size:29px;
+  margin:8px 0;
+  letter-spacing:-.5px;
+}
+
+.green{
+  color:var(--green);
+}
+
+.amber{
+  color:var(--amber);
+}
+
+.danger{
+  color:var(--red);
+}
+
+.section{
+  margin-top:19px;
+  padding:22px;
+}
+
+.section h2{
+  font-family:Manrope,Inter,sans-serif;
+  font-size:16px;
+  margin:0 0 5px;
+}
+
+.review-list{
+  display:grid;
+  gap:11px;
+  margin-top:16px;
+}
+
+.review{
+  background:#fff;
+  border:1px solid #e8edf4;
+  border-radius:12px;
+  padding:17px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:15px;
+  transition:.2s ease;
+}
+
+.review:hover{
+  border-color:#cbd6eb;
+  box-shadow:0 8px 25px rgba(15,23,42,.06);
+  transform:translateY(-1px);
+}
+
+.review p{
+  margin:8px 0;
+  color:#536174;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.review small{
+  color:#9aa5b5;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:800;
+}
+
+.flag{
+  background:#fff4df;
+  color:#a56b13;
+}
+
+.safe{
+  background:#e8f8f0;
+  color:#217b59;
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+  max-width:820px;
+}
+
+.form label{
+  font-size:13px;
+  color:#273247;
+}
+
+.form textarea{
+  min-height:170px;
+  resize:vertical;
+  border:1px solid #dce3ee;
+  border-radius:11px;
+  padding:14px;
+  outline:none;
+  background:#fbfcfe;
+  color:#172033;
+  transition:.2s;
+}
+
+.form textarea:focus{
+  border-color:#6d8dff;
+  box-shadow:0 0 0 4px rgba(79,124,255,.09);
+  background:#fff;
+}
+
+.form textarea::placeholder{
+  color:#a2adbc;
+}
+
+.result{
+  padding:17px;
+  border-radius:11px;
+  background:linear-gradient(135deg,#f8faff,#f4f7fc);
+  border:1px solid #e1e7f0;
+}
+
+.result strong{
+  display:block;
+  margin-bottom:7px;
+}
+
+.case{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 0;
+  border-top:1px solid #edf1f5;
+}
+
+.case:first-child{
+  border-top:0;
+}
+
+.status{
+  padding:6px 10px;
+  border-radius:20px;
+  background:#edf1f8;
+  color:#526078;
+  font-size:10px;
+  font-weight:800;
+}
+
+.empty{
+  padding:50px 20px;
+  text-align:center;
+  color:#929dad;
+}
+
+.auth-wrap{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(79,124,255,.24),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(99,102,241,.18),
+      transparent 30%
+    ),
+    linear-gradient(135deg,#08101f,#111c31);
+  display:grid;
+  place-items:center;
+  z-index:9999;
+  padding:20px;
+}
+
+.auth-box{
+  width:min(430px,94vw);
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:20px;
+  padding:32px;
+  box-shadow:var(--shadow2);
+  animation:authIn .35s ease;
+}
+
+@keyframes authIn{
+  from{
+    opacity:0;
+    transform:translateY(15px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.auth-box h1{
+  font-family:Manrope,Inter,sans-serif;
+  margin:0 0 7px;
+  font-size:25px;
+  letter-spacing:-.5px;
+}
+
+.auth-box p{
+  margin:0 0 22px;
+  color:#7b8799;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.auth-box input{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #dce3ee;
+  border-radius:10px;
+  margin-bottom:10px;
+  outline:none;
+  background:#f9fbfe;
+  transition:.2s;
+}
+
+.auth-box input:focus{
+  border-color:#6688ff;
+  box-shadow:0 0 0 4px rgba(79,124,255,.09);
+  background:#fff;
+}
+
+.auth-box .primary{
+  width:100%;
+  margin-top:5px;
+  padding:13px;
+}
+
+.auth-switch{
+  text-align:center;
+  margin-top:17px;
+  font-size:13px;
+  color:#7b8799;
+}
+
+.auth-switch button{
+  border:0;
+  background:none;
+  color:#4f73df;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.auth-switch button:hover{
+  text-decoration:underline;
+}
+
+.auth-msg{
+  font-size:12px;
+  margin-top:12px;
+  line-height:1.5;
+}
+
+@media(max-width:1000px){
+
+  .side{
+    width:75px;
+  }
+
+  .brand span:last-child,
+  .nav button span,
+  .plan,
+  .user div:last-child{
+    display:none;
+  }
+
+  .brand{
+    justify-content:center;
+    padding-left:0;
+    padding-right:0;
+  }
+
+  .nav button{
+    text-align:center;
+    padding:13px 5px;
+    font-size:0;
+  }
+
+  .nav button:first-letter{
+    font-size:18px;
+  }
+
+  .main{
+    margin-left:75px;
+    width:calc(100% - 75px);
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+
+  .top{
+    padding:0 16px;
+  }
+
+  .business{
+    display:none;
+  }
+
+  .top-email{
+    display:none;
+  }
+
+  .page{
+    padding:20px 15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .head{
+    gap:15px;
+    flex-direction:column;
+  }
+
+  .head h1{
+    font-size:25px;
+  }
+
+  .review{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    justify-content:flex-start;
+  }
+
+  .auth-box{
+    padding:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+<div id="authWrap" class="auth-wrap">
+
+  <div class="auth-box">
+
+    <h1 id="authTitle">
+      Welcome to ReviewShield AI
+    </h1>
+
+    <p id="authSubtitle">
+      Sign in to access your private review dashboard.
+    </p>
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="Email address"
+      autocomplete="email"
+    >
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button
+      id="authButton"
+      class="primary"
+      onclick="handleAuth()"
+    >
+      Sign in
+    </button>
+
+    <div id="authMsg" class="auth-msg"></div>
+
+    <div class="auth-switch">
+      <span id="authSwitchText">
+        Don't have an account?
+      </span>
+
+      <button onclick="toggleAuthMode()">
+        Create account
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- APP -->
+<div id="appShell" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+
+    <div class="brand">
+      <span class="logo">R</span>
+      <span>ReviewShield AI</span>
+    </div>
+
+    <div class="nav">
+
+      <button
+        class="active"
+        onclick="show('dashboard',this)"
+      >
+        ⌂ &nbsp; Dashboard
+      </button>
+
+      <button
+        onclick="show('reviews',this)"
+      >
+        ★ &nbsp; Reviews
+      </button>
+
+      <button
+        onclick="show('analyzer',this)"
+      >
+        ⚑ &nbsp; AI Analyzer
+      </button>
+
+      <button
+        onclick="show('cases',this)"
+      >
+        ▣ &nbsp; Cases
+      </button>
+
+      <button
+        onclick="show('responses',this)"
+      >
+        ◈ &nbsp; AI Responses
+      </button>
+
+      <button
+        onclick="show('settings',this)"
+      >
+        ⚙ &nbsp; Settings
+      </button>
+
+    </div>
+
+
+    <div class="bottom">
+
+      <div class="plan">
+
+        <small>Current plan</small>
+
+        <b>Starter</b>
+
+        <button>
+          Upgrade
+        </button>
+
+      </div>
+
+
+      <div class="user">
+
+        <div
+          id="sideAvatar"
+          class="avatar"
+        >
+          U
+        </div>
+
+        <div>
+
+          <b id="sideName">
+            Business Owner
+          </b>
+
+          <small id="sideEmail">
+            Signed in
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <header class="top">
+
+      <div class="business">
+
+        <span class="muted">
+          Business
+        </span>
+
+        <strong>
+          Acme Auto Care ▾
+        </strong>
+
+      </div>
+
+
+      <div class="topright">
+
+        <span
+          id="topEmail"
+          class="top-email"
+        ></span>
+
+        <button
+          class="ghost"
+          onclick="signOut()"
+        >
+          Sign out
+        </button>
+
+        <button class="ghost">
+          ?
+        </button>
+
+        <button class="ghost">
+          🔔
+        </button>
+
+        <div
+          id="topAvatar"
+          class="avatar"
+        >
+          U
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+    <section
+      id="dashboard"
+      class="page"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            REVIEW HEALTH
+          </div>
+
+          <h1 id="welcomeTitle">
+            Good evening 👋
+          </h1>
+
+          <div class="muted">
+            Monitor, analyze and organize your business reviews.
+          </div>
+
+        </div>
+
+
+        <button
+          class="primary"
+          onclick="show('analyzer',document.querySelectorAll('.nav button')[2])"
+        >
+          ＋ Analyze review
+        </button>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="card stat">
+
+          <small>
+            Average rating
+          </small>
+
+          <strong>
+            0.0 ★
+          </strong>
+
+          <span class="green">
+            Live data
+          </span>
+
+        </div>
+
+
+        <div class="card stat">
+
+          <small>
+            Total reviews
+          </small>
+
+          <strong>
+            0
+          </strong>
+
+          <span class="green">
+            Your account
+          </span>
+
+        </div>
+
+
+        <div class="card stat">
+
+          <small>
+            Potential issues
+          </small>
+
+          <strong id="flagCount">
+            0
+          </strong>
+
+          <span class="amber">
+            Needs attention
+          </span>
+
+        </div>
+
+
+        <div class="card stat">
+
+          <small>
+            Open cases
+          </small>
+
+          <strong id="caseCount">
+            0
+          </strong>
+
+          <span class="muted">
+            Your account
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="card section">
+
+        <h2>
+          What ReviewShield does
+        </h2>
+
+        <p class="muted">
+          Analyze reviews for potential policy issues,
+          organize evidence, prepare reporting information,
+          and generate professional responses.
+          Google makes the final decision on policy violations.
+        </p>
+
+      </div>
+
+
+      <div class="card section">
+
+        <h2>
+          Recent reviews
+        </h2>
+
+        <div
+          id="dashReviews"
+          class="review-list"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- REVIEWS -->
+    <section
+      id="reviews"
+      class="page hidden"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            REVIEWS
+          </div>
+
+          <h1>
+            Review inbox
+          </h1>
+
+          <div class="muted">
+            Reviews saved to your account.
+          </div>
+
+        </div>
+
+        <button
+          class="primary"
+          onclick="show('analyzer',document.querySelectorAll('.nav button')[2])"
+        >
+          Analyze a review
+        </button>
+
+      </div>
+
+
+      <div class="card section">
+
+        <div
+          id="allReviews"
+          class="review-list"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ANALYZER -->
+    <section
+      id="analyzer"
+      class="page hidden"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            AI REVIEW ANALYZER
+          </div>
+
+          <h1>
+            Analyze a review
+          </h1>
+
+          <div class="muted">
+            Transparent rule-based analysis with results saved privately to your account.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card section">
+
+        <div class="form">
+
+          <label>
+            <b>
+              Review text
+            </b>
+          </label>
+
+          <textarea
+            id="reviewText"
+            placeholder="Paste a review here..."
+          ></textarea>
+
+          <button
+            class="primary"
+            onclick="analyze()"
+          >
+            Analyze review
+          </button>
+
+          <div id="analysisResult"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CASES -->
+    <section
+      id="cases"
+      class="page hidden"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            CASE MANAGEMENT
+          </div>
+
+          <h1>
+            Cases
+          </h1>
+
+          <div class="muted">
+            Track reviews that need evidence or reporting.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="card section"
+        id="caseList"
+      ></div>
+
+    </section>
+
+
+    <!-- RESPONSES -->
+    <section
+      id="responses"
+      class="page hidden"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            AI RESPONSES
+          </div>
+
+          <h1>
+            Response assistant
+          </h1>
+
+          <div class="muted">
+            Generate a professional draft for a legitimate negative review.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card section">
+
+        <div class="form">
+
+          <textarea
+            id="responseText"
+            placeholder="Paste the customer's review..."
+          ></textarea>
+
+          <button
+            class="primary"
+            onclick="generateResponse()"
+          >
+            Generate draft
+          </button>
+
+          <div id="responseResult"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section
+      id="settings"
+      class="page hidden"
+    >
+
+      <div class="head">
+
+        <div>
+
+          <div class="eyebrow">
+            SETTINGS
+          </div>
+
+          <h1>
+            Settings
+          </h1>
+
+          <div class="muted">
+            Account and Google integration settings.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card section">
+
+        <h2>
+          Account
+        </h2>
+
+        <p class="muted">
+          Signed in as
+          <b id="settingsEmail"></b>
+        </p>
+
+        <button
+          class="ghost"
+          onclick="signOut()"
+        >
+          Sign out
+        </button>
+
+      </div>
+
+
+      <div class="card section">
+
+        <h2>
+          Google Business Profile
+        </h2>
+
+        <p class="muted">
+          Status:
+          <b>Not connected</b>
+        </p>
+
+        <button
+          class="primary"
+          onclick="alert('Google OAuth will be enabled after the Business Profile API access stage.')"
+        >
+          Connect Google
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+"https://ppqavvwcmgojbddnqwpl.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_Q6IJEnT3XvDI8KXMWpatkg_bNyxpKie";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+let reviews = [];
+let cases = [];
+let currentUser = null;
+let signupMode = false;
+
+
+function toggleAuthMode(){
+
+  signupMode = !signupMode;
+
+  document.getElementById('authTitle').textContent =
+    signupMode
+    ? 'Create your ReviewShield account'
+    : 'Welcome to ReviewShield AI';
+
+  document.getElementById('authSubtitle').textContent =
+    signupMode
+    ? 'Create an account to keep your dashboard and data private.'
+    : 'Sign in to access your private review dashboard.';
+
+  document.getElementById('authButton').textContent =
+    signupMode
+    ? 'Create account'
+    : 'Sign in';
+
+  document.getElementById('authSwitchText').textContent =
+    signupMode
+    ? 'Already have an account?'
+    : "Don't have an account?";
+
+  document.querySelector('.auth-switch button').textContent =
+    signupMode
+    ? 'Sign in'
+    : 'Create account';
+
+  document.getElementById('authMsg').textContent = '';
+}
+
+
 async function handleAuth(){
-  const email=document.getElementById('authEmail').value.trim();
-  const password=document.getElementById('authPassword').value;
-  const msg=document.getElementById('authMsg');
-  if(!email || !password){msg.innerHTML='<span class="amber">Enter your email and password.</span>';return}
-  if(password.length<6){msg.innerHTML='<span class="amber">Password must be at least 6 characters.</span>';return}
-  msg.textContent=signupMode?'Creating account…':'Signing in…';
+
+  const email =
+    document.getElementById('authEmail').value.trim();
+
+  const password =
+    document.getElementById('authPassword').value;
+
+  const msg =
+    document.getElementById('authMsg');
+
+
+  if(!email || !password){
+
+    msg.innerHTML =
+      '<span class="amber">Enter your email and password.</span>';
+
+    return;
+  }
+
+
+  if(password.length < 6){
+
+    msg.innerHTML =
+      '<span class="amber">Password must be at least 6 characters.</span>';
+
+    return;
+  }
+
+
+  msg.textContent =
+    signupMode
+    ? 'Creating account…'
+    : 'Signing in…';
+
 
   let result;
+
+
   if(signupMode){
-    result=await supabaseClient.auth.signUp({email,password});
-    if(result.error){msg.innerHTML='<span class="danger">'+escapeHTML(result.error.message)+'</span>';return}
-    if(!result.data.session){
-      msg.innerHTML='<span class="green"><b>Account created ✓</b><br>Check your email for the confirmation link, then sign in.</span>';
+
+    result =
+      await supabaseClient.auth.signUp({
+        email,
+        password
+      });
+
+
+    if(result.error){
+
+      msg.innerHTML =
+        '<span class="danger">' +
+        escapeHTML(result.error.message) +
+        '</span>';
+
       return;
     }
+
+
+    if(!result.data.session){
+
+      msg.innerHTML =
+        '<span class="green">' +
+        '<b>Account created ✓</b><br>' +
+        'Check your email for the confirmation link, then sign in.' +
+        '</span>';
+
+      return;
+    }
+
   }else{
-    result=await supabaseClient.auth.signInWithPassword({email,password});
-    if(result.error){msg.innerHTML='<span class="danger">'+escapeHTML(result.error.message)+'</span>';return}
+
+    result =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+    if(result.error){
+
+      msg.innerHTML =
+        '<span class="danger">' +
+        escapeHTML(result.error.message) +
+        '</span>';
+
+      return;
+    }
+
   }
+
+
   await startApp(result.data.user);
 }
 
+
 async function startApp(user){
-  currentUser=user;
-  document.getElementById('authWrap').classList.add('hidden');
-  document.getElementById('appShell').classList.remove('hidden');
-  const email=user.email || '';
-  const initial=(email.charAt(0)||'U').toUpperCase();
-  document.getElementById('topAvatar').textContent=initial;
-  document.getElementById('sideAvatar').textContent=initial;
-  document.getElementById('topEmail').textContent=email;
-  document.getElementById('sideName').textContent=email.split('@')[0] || 'Business Owner';
-  document.getElementById('sideEmail').textContent=email;
-  document.getElementById('settingsEmail').textContent=email;
-  document.getElementById('welcomeTitle').textContent='Good evening, '+(email.split('@')[0]||'there')+' 👋';
-  try{ await loadData(); }catch(err){
+
+  currentUser = user;
+
+  document
+    .getElementById('authWrap')
+    .classList.add('hidden');
+
+  document
+    .getElementById('appShell')
+    .classList.remove('hidden');
+
+
+  const email = user.email || '';
+
+  const initial =
+    (email.charAt(0) || 'U').toUpperCase();
+
+
+  document.getElementById('topAvatar').textContent =
+    initial;
+
+  document.getElementById('sideAvatar').textContent =
+    initial;
+
+  document.getElementById('topEmail').textContent =
+    email;
+
+  document.getElementById('sideName').textContent =
+    email.split('@')[0] || 'Business Owner';
+
+  document.getElementById('sideEmail').textContent =
+    email;
+
+  document.getElementById('settingsEmail').textContent =
+    email;
+
+  document.getElementById('welcomeTitle').textContent =
+    'Good evening, ' +
+    (email.split('@')[0] || 'there') +
+    ' 👋';
+
+
+  try{
+
+    await loadData();
+
+  }catch(err){
+
     console.error(err);
-    document.getElementById('dashReviews').innerHTML='<div class="result">Could not load your private data. The database policies may still need to be updated.<br><br>'+escapeHTML(err.message || err)+'</div>';
+
+    document.getElementById('dashReviews').innerHTML =
+      '<div class="result">' +
+      'Could not load your private data. ' +
+      'The database policies may still need to be updated.' +
+      '<br><br>' +
+      escapeHTML(err.message || err) +
+      '</div>';
+
     render();
   }
 }
 
+
 async function signOut(){
+
   await supabaseClient.auth.signOut();
-  currentUser=null;
-  reviews=[];cases=[];
-  document.getElementById('appShell').classList.add('hidden');
-  document.getElementById('authWrap').classList.remove('hidden');
-  document.getElementById('authMsg').innerHTML='<span class="green">Signed out successfully.</span>';
+
+  currentUser = null;
+
+  reviews = [];
+  cases = [];
+
+
+  document
+    .getElementById('appShell')
+    .classList.add('hidden');
+
+  document
+    .getElementById('authWrap')
+    .classList.remove('hidden');
+
+  document.getElementById('authMsg').innerHTML =
+    '<span class="green">Signed out successfully.</span>';
 }
+
 
 function normalizeReview(r){
-  const assessment = r.assessment || (r.issue_type ? 'Potential issue' : 'Likely legitimate');
-  return {...r, cls: /Potential|Needs|issue/i.test(assessment) ? 'flag' : 'safe'};
+
+  const assessment =
+    r.assessment ||
+    (r.issue_type
+      ? 'Potential issue'
+      : 'Likely legitimate');
+
+  return {
+    ...r,
+    cls:
+      /Potential|Needs|issue/i.test(assessment)
+      ? 'flag'
+      : 'safe'
+  };
 }
-function normalizeCase(c){ return {...c}; }
+
+
+function normalizeCase(c){
+
+  return {
+    ...c
+  };
+}
+
 
 async function loadData(showStatus=false){
-  if(!currentUser)return;
-  const statusEl=document.getElementById('dashReviews');
-  if(showStatus && statusEl) statusEl.innerHTML='<div class="result">Refreshing your live Supabase data…</div>';
-  const [reviewsRes, casesRes] = await Promise.all([
-    supabaseClient.from('reviews').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:true}),
-    supabaseClient.from('cases').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:true})
+
+  if(!currentUser) return;
+
+
+  const statusEl =
+    document.getElementById('dashReviews');
+
+
+  if(showStatus && statusEl){
+
+    statusEl.innerHTML =
+      '<div class="result">' +
+      'Refreshing your live Supabase data…' +
+      '</div>';
+  }
+
+
+  const [
+    reviewsRes,
+    casesRes
+  ] = await Promise.all([
+
+    supabaseClient
+      .from('reviews')
+      .select('*')
+      .eq('user_id',currentUser.id)
+      .order('created_at',{ascending:true}),
+
+    supabaseClient
+      .from('cases')
+      .select('*')
+      .eq('user_id',currentUser.id)
+      .order('created_at',{ascending:true})
+
   ]);
-  if(reviewsRes.error) throw reviewsRes.error;
-  if(casesRes.error) throw casesRes.error;
-  reviews = (reviewsRes.data || []).map(normalizeReview);
-  cases = (casesRes.data || []).map(normalizeCase);
+
+
+  if(reviewsRes.error)
+    throw reviewsRes.error;
+
+  if(casesRes.error)
+    throw casesRes.error;
+
+
+  reviews =
+    (reviewsRes.data || [])
+      .map(normalizeReview);
+
+  cases =
+    (casesRes.data || [])
+      .map(normalizeCase);
+
+
   updateStats();
+
   render();
 }
+
+
 function reviewHTML(r){
+
   const id = r.id;
-  return `<div class="review"><div><b>${escapeHTML(r.name)}</b> &nbsp; <span class="badge ${r.cls}">${escapeHTML(r.assessment || 'Likely legitimate')}</span><small> · ${r.rating}/5 ★</small><p>“${escapeHTML(r.text)}”</p><small>Your account · ${new Date(r.created_at || Date.now()).toLocaleString()}</small></div><div class="actions"><button class="ghost" onclick="loadReview(${id})">Analyze</button></div></div>`
+
+
+  return `
+  <div class="review">
+
+    <div>
+
+      <b>${escapeHTML(r.name)}</b>
+
+      &nbsp;
+
+      <span class="badge ${r.cls}">
+        ${escapeHTML(
+          r.assessment ||
+          'Likely legitimate'
+        )}
+      </span>
+
+      <small>
+        · ${r.rating}/5 ★
+      </small>
+
+      <p>
+        “${escapeHTML(r.text)}”
+      </p>
+
+      <small>
+        Your account ·
+        ${new Date(
+          r.created_at || Date.now()
+        ).toLocaleString()}
+      </small>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="ghost"
+        onclick="loadReview(${id})"
+      >
+        Analyze
+      </button>
+
+    </div>
+
+  </div>
+  `;
 }
+
+
 function escapeHTML(s){
-  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+  return String(s ?? '').replace(
+    /[&<>"']/g,
+    m => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m])
+  );
 }
+
+
 function updateStats(){
-  const flags = reviews.filter(r => r.issue_type || /Potential|Needs|issue/i.test(r.assessment || '')).length;
-  const openCases = cases.filter(c => !/resolved|closed/i.test(c.status || '')).length;
-  const flagEl=document.getElementById('flagCount'); if(flagEl) flagEl.textContent=flags;
-  const caseEl=document.getElementById('caseCount'); if(caseEl) caseEl.textContent=openCases;
-  const totalEl=[...document.querySelectorAll('.stat strong')][1]; if(totalEl) totalEl.textContent=reviews.length;
-  const avgEl=[...document.querySelectorAll('.stat strong')][0];
-  if(avgEl) avgEl.textContent=reviews.length ? (reviews.reduce((a,r)=>a+Number(r.rating||0),0)/reviews.length).toFixed(1)+' ★' : '0.0 ★';
+
+  const flags =
+    reviews.filter(
+      r =>
+        r.issue_type ||
+        /Potential|Needs|issue/i.test(
+          r.assessment || ''
+        )
+    ).length;
+
+
+  const openCases =
+    cases.filter(
+      c =>
+        !/resolved|closed/i.test(
+          c.status || ''
+        )
+    ).length;
+
+
+  const flagEl =
+    document.getElementById('flagCount');
+
+  if(flagEl)
+    flagEl.textContent = flags;
+
+
+  const caseEl =
+    document.getElementById('caseCount');
+
+  if(caseEl)
+    caseEl.textContent = openCases;
+
+
+  const statStrong =
+    [...document.querySelectorAll(
+      '.stat strong'
+    )];
+
+
+  const totalEl = statStrong[1];
+
+  if(totalEl)
+    totalEl.textContent = reviews.length;
+
+
+  const avgEl = statStrong[0];
+
+
+  if(avgEl){
+
+    avgEl.textContent =
+      reviews.length
+      ? (
+          reviews.reduce(
+            (a,r) =>
+              a + Number(r.rating || 0),
+            0
+          ) / reviews.length
+        ).toFixed(1) + ' ★'
+      : '0.0 ★';
+  }
 }
+
+
 function render(){
-  document.getElementById('dashReviews').innerHTML=reviews.length ? reviews.slice(-3).reverse().map(reviewHTML).join('') : '<div class="empty">No reviews yet. Analyze your first review.</div>';
-  document.getElementById('allReviews').innerHTML=reviews.length ? reviews.slice().reverse().map(reviewHTML).join('') : '<div class="empty">No reviews yet.</div>';
-  document.getElementById('caseList').innerHTML=cases.length ? cases.slice().reverse().map(c=>`<div class="case"><div><b>${escapeHTML(c.name)}</b><div class="muted">${escapeHTML(c.issue)}</div></div><span class="status">${escapeHTML(c.status)}</span></div>`).join('') : '<div class="empty">No cases yet.</div>';
+
+  document.getElementById(
+    'dashReviews'
+  ).innerHTML =
+
+    reviews.length
+
+    ? reviews
+        .slice(-3)
+        .reverse()
+        .map(reviewHTML)
+        .join('')
+
+    : '<div class="empty">' +
+      'No reviews yet. Analyze your first review.' +
+      '</div>';
+
+
+  document.getElementById(
+    'allReviews'
+  ).innerHTML =
+
+    reviews.length
+
+    ? reviews
+        .slice()
+        .reverse()
+        .map(reviewHTML)
+        .join('')
+
+    : '<div class="empty">' +
+      'No reviews yet.' +
+      '</div>';
+
+
+  document.getElementById(
+    'caseList'
+  ).innerHTML =
+
+    cases.length
+
+    ? cases
+        .slice()
+        .reverse()
+        .map(
+          c => `
+          <div class="case">
+
+            <div>
+
+              <b>
+                ${escapeHTML(c.name)}
+              </b>
+
+              <div class="muted">
+                ${escapeHTML(c.issue)}
+              </div>
+
+            </div>
+
+            <span class="status">
+              ${escapeHTML(c.status)}
+            </span>
+
+          </div>
+          `
+        )
+        .join('')
+
+    : '<div class="empty">' +
+      'No cases yet.' +
+      '</div>';
 }
-function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active')}
+
+
+function show(id,btn){
+
+  document
+    .querySelectorAll('.page')
+    .forEach(
+      x => x.classList.add('hidden')
+    );
+
+
+  document
+    .getElementById(id)
+    .classList.remove('hidden');
+
+
+  document
+    .querySelectorAll('.nav button')
+    .forEach(
+      x => x.classList.remove('active')
+    );
+
+
+  if(btn)
+    btn.classList.add('active');
+}
+
+
 function loadReview(id){
-  const r=reviews.find(x=>String(x.id)===String(id));
+
+  const r =
+    reviews.find(
+      x => String(x.id) === String(id)
+    );
+
+
   if(!r) return;
-  show('analyzer',document.querySelectorAll('.nav button')[2]);
-  document.getElementById('reviewText').value=r.text;
+
+
+  show(
+    'analyzer',
+    document.querySelectorAll(
+      '.nav button'
+    )[2]
+  );
+
+
+  document.getElementById(
+    'reviewText'
+  ).value = r.text;
+
+
   analyze(false);
 }
+
+
 async function analyze(saveToDatabase=true){
-  const t=document.getElementById('reviewText').value.trim();
-  if(!t){document.getElementById('analysisResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
-  let signals=[];
-  if(/never (went|visited)|never been|didn.?t visit/i.test(t))signals.push('Reviewer states or suggests they did not visit the business.');
-  if(/scam|fraud|worst|idiot|stupid|hate|trash/i.test(t))signals.push('Contains potentially abusive or accusatory language.');
-  if(/http|www\\.|promo|discount code|buy now/i.test(t))signals.push('Possible promotional/link content detected.');
-  const high=signals.length>0;
-  document.getElementById('analysisResult').innerHTML=`<div class="result"><strong>${high?'Potential policy issue — review required':'No obvious policy signal detected'}</strong><div class="muted">${signals.length?signals.map(s=>'• '+s).join('<br>'):'The demo rules found no obvious signal. This does not mean the review is legitimate or illegitimate.'}</div><br><span class="badge ${high?'flag':'safe'}">${high?'Needs human review':'Likely legitimate'}</span><p class="muted">Recommendation: verify the facts and relevant Google policy before reporting. Google makes the final decision.</p><small class="muted">${saveToDatabase?'Saving to Supabase…':'Loaded from Supabase'}</small></div>`;
 
-  if(saveToDatabase){
-    if(!currentUser){document.getElementById('analysisResult').innerHTML += '<div class="muted" style="margin-top:8px">Please sign in first.</div>';return}
-    const record={
-      user_id: currentUser.id,
-      name:'Manual review',
-      rating: high ? 1 : 5,
-      text:t,
-      assessment: high ? 'Potential policy issue' : 'Likely legitimate',
-      issue_type: high ? signals[0].replace(/\.$/,'') : null
-    };
-    const {data,error}=await supabaseClient.from('reviews').insert(record).select().single();
-    if(error){
-      document.getElementById('analysisResult').innerHTML += `<div class="muted" style="margin-top:8px">Database save failed: ${escapeHTML(error.message)}</div>`;
-      return;
-    }
-    reviews.push(normalizeReview(data));
-    if(high){
-      const c={user_id: currentUser.id,name:'Manual review',issue:signals[0].replace(/\.$/,''),status:'Needs evidence'};
-      const {data:caseData,error:caseError}=await supabaseClient.from('cases').insert(c).select().single();
-      if(!caseError && caseData) cases.push(normalizeCase(caseData));
-    }
-    updateStats(); render();
-    document.getElementById('analysisResult').innerHTML += '<div class="green" style="margin-top:8px"><b>Saved to your private account ✓</b></div>';
-  }
-}
+  const t =
+    document
+      .getElementById('reviewText')
+      .value
+      .trim();
 
-function generateResponse(){
-  const t=document.getElementById('responseText').value.trim();
+
   if(!t){
-    document.getElementById('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';
+
+    document.getElementById(
+      'analysisResult'
+    ).innerHTML =
+      '<div class="result">' +
+      'Please paste a review first.' +
+      '</div>';
+
     return;
   }
-  const draft='Thank you for sharing your feedback. We’re sorry to hear that your experience did not meet expectations. We take concerns like this seriously and would appreciate the opportunity to understand what happened and make things right. Please contact our team directly so we can look into this further.';
-  document.getElementById('responseResult').innerHTML='<div class="result"><strong>Draft response</strong><div id="draftText"></div><br><button class="ghost" onclick="copyDraft(this)">Copy draft</button></div>';
-  document.getElementById('draftText').textContent='“'+draft+'”';
+
+
+  let signals = [];
+
+
+  if(
+    /never (went|visited)|never been|didn.?t visit/i.test(t)
+  ){
+
+    signals.push(
+      'Reviewer states or suggests they did not visit the business.'
+    );
+  }
+
+
+  if(
+    /scam|fraud|worst|idiot|stupid|hate|trash/i.test(t)
+  ){
+
+    signals.push(
+      'Contains potentially abusive or accusatory language.'
+    );
+  }
+
+
+  if(
+    /http|www\.|promo|discount code|buy now/i.test(t)
+  ){
+
+    signals.push(
+      'Possible promotional/link content detected.'
+    );
+  }
+
+
+  const high =
+    signals.length > 0;
+
+
+  document.getElementById(
+    'analysisResult'
+  ).innerHTML = `
+
+    <div class="result">
+
+      <strong>
+        ${
+          high
+          ? 'Potential policy issue — review required'
+          : 'No obvious policy signal detected'
+        }
+      </strong>
+
+      <div class="muted">
+
+        ${
+          signals.length
+          ? signals
+              .map(
+                s => '• ' + s
+              )
+              .join('<br>')
+
+          : 'The demo rules found no obvious signal. ' +
+            'This does not mean the review is legitimate or illegitimate.'
+        }
+
+      </div>
+
+      <br>
+
+      <span class="badge ${high ? 'flag' : 'safe'}">
+
+        ${
+          high
+          ? 'Needs human review'
+          : 'Likely legitimate'
+        }
+
+      </span>
+
+      <p class="muted">
+
+        Recommendation:
+        verify the facts and relevant Google policy
+        before reporting.
+        Google makes the final decision.
+
+      </p>
+
+      <small class="muted">
+
+        ${
+          saveToDatabase
+          ? 'Saving to Supabase…'
+          : 'Loaded from Supabase'
+        }
+
+      </small>
+
+    </div>
+  `;
+
+
+  if(saveToDatabase){
+
+    if(!currentUser){
+
+      document.getElementById(
+        'analysisResult'
+      ).innerHTML +=
+
+        '<div class="muted" style="margin-top:8px">' +
+        'Please sign in first.' +
+        '</div>';
+
+      return;
+    }
+
+
+    const record = {
+
+      user_id:
+        currentUser.id,
+
+      name:
+        'Manual review',
+
+      rating:
+        high ? 1 : 5,
+
+      text:
+        t,
+
+      assessment:
+        high
+        ? 'Potential policy issue'
+        : 'Likely legitimate',
+
+      issue_type:
+        high
+        ? signals[0].replace(/\.$/,'')
+        : null
+    };
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('reviews')
+        .insert(record)
+        .select()
+        .single();
+
+
+    if(error){
+
+      document.getElementById(
+        'analysisResult'
+      ).innerHTML +=
+
+        `<div
+          class="muted"
+          style="margin-top:8px"
+        >
+          Database save failed:
+          ${escapeHTML(error.message)}
+        </div>`;
+
+      return;
+    }
+
+
+    reviews.push(
+      normalizeReview(data)
+    );
+
+
+    if(high){
+
+      const c = {
+
+        user_id:
+          currentUser.id,
+
+        name:
+          'Manual review',
+
+        issue:
+          signals[0].replace(/\.$/,''),
+
+        status:
+          'Needs evidence'
+      };
+
+
+      const {
+        data:caseData,
+        error:caseError
+      } =
+        await supabaseClient
+          .from('cases')
+          .insert(c)
+          .select()
+          .single();
+
+
+      if(!caseError && caseData){
+
+        cases.push(
+          normalizeCase(caseData)
+        );
+      }
+    }
+
+
+    updateStats();
+
+    render();
+
+
+    document.getElementById(
+      'analysisResult'
+    ).innerHTML +=
+
+      '<div class="green" style="margin-top:8px">' +
+      '<b>Saved to your private account ✓</b>' +
+      '</div>';
+  }
 }
+
+
+function generateResponse(){
+
+  const t =
+    document
+      .getElementById('responseText')
+      .value
+      .trim();
+
+
+  if(!t){
+
+    document.getElementById(
+      'responseResult'
+    ).innerHTML =
+      '<div class="result">' +
+      'Please paste a review first.' +
+      '</div>';
+
+    return;
+  }
+
+
+  const draft =
+    'Thank you for sharing your feedback. ' +
+    'We’re sorry to hear that your experience did not meet expectations. ' +
+    'We take concerns like this seriously and would appreciate the opportunity ' +
+    'to understand what happened and make things right. ' +
+    'Please contact our team directly so we can look into this further.';
+
+
+  document.getElementById(
+    'responseResult'
+  ).innerHTML =
+
+    '<div class="result">' +
+
+      '<strong>Draft response</strong>' +
+
+      '<div id="draftText"></div>' +
+
+      '<br>' +
+
+      '<button ' +
+        'class="ghost" ' +
+        'onclick="copyDraft(this)"' +
+      '>' +
+        'Copy draft' +
+      '</button>' +
+
+    '</div>';
+
+
+  document.getElementById(
+    'draftText'
+  ).textContent =
+    '“' + draft + '”';
+}
+
+
 function copyDraft(btn){
-  const draft=document.getElementById('draftText').innerText;
-  if(navigator.clipboard){navigator.clipboard.writeText(draft);}
-  btn.innerText='Copied';
-  setTimeout(function(){btn.innerText='Copy draft';},1200);
+
+  const draft =
+    document.getElementById(
+      'draftText'
+    ).innerText;
+
+
+  if(navigator.clipboard){
+
+    navigator.clipboard.writeText(
+      draft
+    );
+  }
+
+
+  btn.innerText =
+    'Copied';
+
+
+  setTimeout(
+    function(){
+
+      btn.innerText =
+        'Copy draft';
+
+    },
+    1200
+  );
 }
 
-supabaseClient.auth.getSession().then(async function({data}){
-  if(data && data.session){ await startApp(data.session.user); }
-});
 
-supabaseClient.auth.onAuthStateChange(function(event,session){
-  if(event==='SIGNED_IN' && session && session.user){
-    startApp(session.user);
-  }
+/* INITIAL SESSION */
 
-  if(event==='SIGNED_OUT'){
-    currentUser=null;
-    reviews=[];
-    cases=[];
+supabaseClient.auth
+  .getSession()
+  .then(
+    async function({data}){
 
-    document.getElementById('appShell').classList.add('hidden');
-    document.getElementById('authWrap').classList.remove('hidden');
+      if(
+        data &&
+        data.session
+      ){
 
-    document.getElementById('authEmail').value='';
-    document.getElementById('authPassword').value='';
-  }
-});
+        await startApp(
+          data.session.user
+        );
+      }
 
-setInterval(function(){ if(currentUser) loadData(false).catch(function(err){ console.error(err); }); }, 15000);
+    }
+  );
+
+
+/* AUTH STATE */
+
+supabaseClient.auth
+  .onAuthStateChange(
+    function(event,session){
+
+      if(
+        event === 'SIGNED_IN' &&
+        session &&
+        session.user
+      ){
+
+        startApp(
+          session.user
+        );
+      }
+
+
+      if(
+        event === 'SIGNED_OUT'
+      ){
+
+        currentUser = null;
+
+        reviews = [];
+        cases = [];
+
+
+        document
+          .getElementById('appShell')
+          .classList.add('hidden');
+
+
+        document
+          .getElementById('authWrap')
+          .classList.remove('hidden');
+
+
+        document.getElementById(
+          'authEmail'
+        ).value = '';
+
+
+        document.getElementById(
+          'authPassword'
+        ).value = '';
+      }
+
+    }
+  );
+
+
+/* LIVE DATA REFRESH */
+
+setInterval(
+  function(){
+
+    if(currentUser){
+
+      loadData(false)
+        .catch(
+          function(err){
+            console.error(err);
+          }
+        );
+    }
+
+  },
+  15000
+);
+
 </script>
-</body></html>
+
+</body>
+</html>
