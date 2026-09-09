@@ -6,7 +6,7 @@
 <title>ReviewShield AI — Phase 3</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,sans-serif;background:#06101d;color:#172033;min-height:100vh;overflow-x:hidden}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f7fb;color:#172033}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 .app{display:flex;min-height:100vh}
@@ -72,122 +72,16 @@ button{cursor:pointer}
 .notification{padding:12px 0;border-top:1px solid #edf0f4;font-size:13px}
 .notification:first-child{border-top:0}
 .chart-wrap{position:relative;height:300px}
-
-/* Advanced Glassmorphism Login Background & Auth Box Styles */
-.auth-wrap{
-    position:fixed;
-    inset:0;
-    background:#070d19;
-    display:grid;
-    place-items:center;
-    z-index:9999;
-    overflow:hidden;
-}
-.glow-sphere-1 {
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, rgba(235, 67, 53, 0.22) 0%, rgba(0, 0, 0, 0) 70%);
-    top: -60px;
-    left: -60px;
-    border-radius: 50%;
-    filter: blur(60px);
-    animation: float 8s ease-in-out infinite alternate;
-    pointer-events: none;
-}
-.glow-sphere-2 {
-    position: absolute;
-    width: 480px;
-    height: 480px;
-    background: radial-gradient(circle, rgba(66, 133, 244, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-    bottom: -90px;
-    right: -90px;
-    border-radius: 50%;
-    filter: blur(70px);
-    animation: float 10s ease-in-out infinite alternate-reverse;
-    pointer-events: none;
-}
-.bg-pattern {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
-    background-size: 28px 28px;
-    z-index: 1;
-    opacity: 0.5;
-    pointer-events: none;
-}
-.auth-box{
-    position: relative;
-    z-index: 10;
-    width: min(440px, 92vw);
-    background: rgba(13, 26, 43, 0.75);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 22px;
-    padding: 34px 28px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(235, 67, 53, 0.08);
-}
-.shield-header-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 54px;
-    height: 54px;
-    background: linear-gradient(135deg, rgba(235, 67, 53, 0.2), rgba(66, 133, 244, 0.2));
-    border: 1px solid rgba(235, 67, 53, 0.35);
-    border-radius: 14px;
-    margin: 0 auto 12px auto;
-    box-shadow: 0 0 15px rgba(235, 67, 53, 0.25);
-}
-.shield-header-badge svg {
-    width: 28px;
-    height: 28px;
-    fill: #ea4335;
-}
-.status-pill {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    color: #f87171;
-    margin: 0 auto 18px auto;
-    width: fit-content;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.status-dot {
-    width: 6px;
-    height: 6px;
-    background-color: #ef4444;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #ef4444;
-    animation: pulse 1.5s infinite;
-}
-.auth-box h1{margin:0 0 6px;font-size:22px;text-align:center;color:#fff;}
-.auth-box p{margin:0 0 20px;color:#8fa2ba;font-size:13px;text-align:center;}
-.auth-box input{width:100%;padding:12px;border:1px solid #29415e;border-radius:9px;margin-bottom:10px;background:#0a1727;color:#edf4ff;}
+.auth-wrap{position:fixed;inset:0;background:rgba(23,32,51,.35);display:grid;place-items:center;z-index:9999}
+.auth-box{width:min(420px,92vw);background:#fff;border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.auth-box h1{margin:0 0 6px;font-size:24px}
+.auth-box p{margin:0 0 20px;color:#7d8798;font-size:13px}
+.auth-box input{width:100%;padding:12px;border:1px solid #dfe4ec;border-radius:9px;margin-bottom:10px}
 .auth-box .primary{width:100%;margin-top:4px}
-.auth-switch{text-align:center;margin-top:15px;font-size:13px;color:#8fa2ba}
-.auth-switch button{border:0;background:none;color:#76a7ff;font-weight:800;cursor:pointer}
-.auth-msg{font-size:12px;margin-top:12px;line-height:1.5;min-height:18px;text-align:center}
+.auth-switch{text-align:center;margin-top:15px;font-size:13px}
+.auth-switch button{border:0;background:none;color:#172033;font-weight:800;cursor:pointer}
+.auth-msg{font-size:12px;margin-top:12px;line-height:1.5;min-height:18px}
 .top-email{font-size:12px;color:#7d8798}
-
-@keyframes float {
-    0% { transform: translateY(0px) scale(1); }
-    100% { transform: translateY(-25px) scale(1.04); }
-}
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
-}
-
 @media(max-width:900px){
 .side{width:72px}
 .brand span:last-child,.nav button span,.plan,.user div:last-child{display:none}
@@ -224,7 +118,7 @@ button{cursor:pointer}
   --rs-danger:#ff6b78;
 }
 body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);color:var(--rs-text)}
-.side,.top,.card{
+.side,.top,.card,.auth-box{
   background:rgba(13,26,43,.96);
   border-color:var(--rs-border);
   color:var(--rs-text);
@@ -259,7 +153,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .review:hover{border-color:#365b86;transform:translateY(-1px);box-shadow:0 9px 24px rgba(0,0,0,.14)}
 .review p{color:#b8c6d8}
 .result{background:#0b1829;border-color:#223852;color:#dce8f8}
-.form textarea,.form input,.form select,.field input,.field select,.field textarea{
+.form textarea,.form input,.form select,.field input,.field select,.field textarea,.auth-box input{
   background:#0a1727;color:#edf4ff;border-color:#29415e;
 }
 .form textarea:focus,.form input:focus,.form select:focus,.field input:focus,.field select:focus,.field textarea:focus,.auth-box input:focus{
@@ -271,6 +165,11 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .safe{background:rgba(54,211,153,.13);color:#55e0aa}
 .flag{background:rgba(246,189,96,.13);color:#f6c979}
 .danger-badge{background:rgba(255,107,120,.13);color:#ff8a95}
+.auth-wrap{background:radial-gradient(circle at 50% 20%,rgba(79,140,255,.16),rgba(2,8,16,.82))}
+.auth-box{box-shadow:0 30px 90px rgba(0,0,0,.48);border:1px solid #29415e}
+.auth-box h1{color:#fff}
+.auth-box p{color:#8fa2ba}
+.auth-switch button{color:#76a7ff}
 .eyebrow{color:#6ea2ff}
 .green{color:var(--rs-success)}
 .amber{color:var(--rs-warning)}
@@ -282,6 +181,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .user{border-radius:10px}
 .avatar,.profile-avatar{background:linear-gradient(135deg,#213a5b,#172a43);color:#fff;border:1px solid #315171}
 </style>
+
 
 <style id="notification-theme">
 .bell-wrap{position:relative}
@@ -314,35 +214,16 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 <body>
 
 <div id="authWrap" class="auth-wrap">
-  <!-- Glowing Ambient Spheres & Pattern -->
-  <div class="glow-sphere-1"></div>
-  <div class="glow-sphere-2"></div>
-  <div class="bg-pattern"></div>
-
   <div class="auth-box">
-    <div class="shield-header-badge">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-      </svg>
-    </div>
-    
-    <div class="status-pill">
-      <span class="status-dot"></span>
-      Fake Review Shield Active
-    </div>
-
     <h1 id="authTitle">Welcome to ReviewShield AI</h1>
     <p id="authSubtitle">Sign in to access your private review dashboard.</p>
-    
     <div id="signupNameWrap" class="hidden">
       <input id="authName" type="text" placeholder="Your name" autocomplete="name">
     </div>
     <input id="authEmail" type="email" placeholder="Email address" autocomplete="email">
     <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
     <button id="authButton" class="primary" type="button" onclick="handleAuth()">Sign in</button>
-    
     <div id="authMsg" class="auth-msg"></div>
-    
     <div class="auth-switch">
       <span id="authSwitchText">Don't have an account?</span>
       <button type="button" onclick="toggleAuthMode()">Create account</button>
@@ -703,8 +584,185 @@ async function analyze(saveToDatabase=true){
   if(/scam|fraud|worst|idiot|stupid|hate|trash/i.test(t))signals.push('Contains potentially abusive or accusatory language.');
   if(/https?:\/\/|www\.|promo|discount code|buy now/i.test(t))signals.push('Possible promotional or link content detected.');
   const high=signals.length>0;
-  $('analysisResult').innerHTML=`<div class="result"><strong>${high?'Potential policy issue — review required':'No obvious policy signal detected'}</strong><div class="muted">${signals.join('<br>')||'Review appears clear of structural automated policy flags.'}</div></div>`;
+  $('analysisResult').innerHTML=`<div class="result"><strong>${high?'Potential policy issue — review required':'No obvious policy signal detected'}</strong><div class="muted">${signals.length?signals.map(s=>'• '+escapeHTML(s)).join('<br>'):'The demo rules found no obvious signal. This does not mean the review is legitimate or illegitimate.'}</div><br><span class="badge ${high?'flag':'safe'}">${high?'Needs human review':'Likely legitimate'}</span><p class="muted">Recommendation: verify the facts and relevant Google policy before reporting. Google makes the final decision.</p><small class="muted">${saveToDatabase?'Saving to Supabase…':'Loaded from Supabase'}</small></div>`;
+  if(!saveToDatabase)return;
+  if(!currentUser){$('analysisResult').innerHTML+='<div class="muted" style="margin-top:8px">Please sign in first.</div>';return}
+  const record={user_id:currentUser.id,name:'Manual review',reviewer_name:'Manual review',rating:high?1:5,text:t,review_text:t,assessment:high?'Potential policy issue':'Likely legitimate',issue_type:high?signals[0].replace(/\.$/,''):null};
+  const {data,error}=await supabaseClient.from('reviews').insert(record).select().single();
+  if(error){$('analysisResult').innerHTML+=`<div class="muted" style="margin-top:8px">Database save failed: ${escapeHTML(error.message)}</div>`;return}
+  reviews.push(normalizeReview(data));
+  if(high){
+    const c={user_id:currentUser.id,name:'Manual review',issue:signals[0].replace(/\.$/,''),status:'Needs evidence',priority:'medium',evidence_notes:''};
+    const {data:caseData,error:caseError}=await supabaseClient.from('cases').insert(c).select().single();
+    if(!caseError&&caseData)cases.push(normalizeCase(caseData));
+  }
+  updateStats();render();renderCharts();addActivity('Review analyzed and saved');
+  $('analysisResult').innerHTML+='<div class="green" style="margin-top:8px"><b>Saved to your private account ✓</b></div>';
 }
+
+function generateResponse(){
+  const t=$('responseText').value.trim();if(!t){$('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
+  const tone=$('responseTone').value;
+  let draft='';
+  if(tone==='warm')draft='Thank you for sharing your feedback. We’re truly sorry to hear that your experience did not meet expectations. We appreciate you bringing this to our attention and would value the opportunity to understand what happened and make things right. Please contact our team directly so we can help.';
+  else if(tone==='short')draft='Thank you for your feedback. We’re sorry your experience did not meet expectations. Please contact our team directly so we can review this with you and make things right.';
+  else if(tone==='factual')draft='Thank you for your feedback. We take customer concerns seriously. We would like to review the details of your experience and verify what happened. Please contact our team directly so we can investigate and assist you appropriately.';
+  else draft='Thank you for sharing your feedback. We’re sorry to hear that your experience did not meet expectations. We take concerns like this seriously and would appreciate the opportunity to understand what happened and make things right. Please contact our team directly so we can look into this further.';
+  $('responseResult').innerHTML='<div class="result"><strong>Draft response</strong><div id="draftText"></div><br><button class="ghost" type="button" onclick="copyDraft(this)">Copy draft</button></div>';
+  $('draftText').textContent='“'+draft+'”';addActivity('Response draft generated');
+}
+function copyDraft(btn){
+  const draft=$('draftText').innerText;
+  if(navigator.clipboard)navigator.clipboard.writeText(draft);
+  btn.innerText='Copied';setTimeout(()=>btn.innerText='Copy draft',1200);
+}
+
+function loadLocalProfile(){
+  try{profileData=JSON.parse(localStorage.getItem('reviewshield_profile_'+currentUser.id)||'{}')}catch(e){profileData={}}
+  $('businessName').value=profileData.businessName||'';
+  $('businessCategory').value=profileData.businessCategory||'';
+  $('businessWebsite').value=profileData.businessWebsite||'';
+  $('businessLocation').value=profileData.businessLocation||'';
+  if(profileData.businessName)$('businessTop').textContent=profileData.businessName+' ▾';
+}
+function saveProfile(){
+  const name=$('profileName').value.trim()||'Business Owner';
+  const currentMeta=currentUser.user_metadata||{};
+  supabaseClient.auth.updateUser({data:{...currentMeta,full_name:name}}).then(({error})=>{
+    if(error){showToast('Profile save failed: '+error.message);return}
+    $('sideName').textContent=name;$('welcomeTitle').textContent='Good evening, '+name+' 👋';
+    const initial=name.charAt(0).toUpperCase();$('sideAvatar').textContent=initial;$('topAvatar').textContent=initial;$('profileAvatar').textContent=initial;
+    addActivity('Profile updated');showToast('Profile saved successfully.');
+  });
+}
+function saveBusiness(){
+  profileData={businessName:$('businessName').value.trim(),businessCategory:$('businessCategory').value.trim(),businessWebsite:$('businessWebsite').value.trim(),businessLocation:$('businessLocation').value.trim()};
+  localStorage.setItem('reviewshield_profile_'+currentUser.id,JSON.stringify(profileData));
+  $('businessTop').textContent=(profileData.businessName||'Acme Auto Care')+' ▾';
+  addActivity('Business profile updated');showToast('Business profile saved.');
+}
+
+function addActivity(text){activity.unshift({text,date:new Date().toISOString()});activity=activity.slice(0,30);localStorage.setItem('reviewshield_activity_'+(currentUser?.id||'guest'),JSON.stringify(activity));renderActivity()}
+function renderActivity(){
+  $('activityList').innerHTML=activity.length?activity.map(a=>`<div class="notification"><b>${escapeHTML(a.text)}</b><div class="muted">${new Date(a.date).toLocaleString()}</div></div>`).join(''):'<div class="empty">No activity yet.</div>';
+}
+function loadActivity(){
+  try{activity=JSON.parse(localStorage.getItem('reviewshield_activity_'+currentUser.id)||'[]')}catch(e){activity=[]}
+  renderActivity();
+}
+
+function exportReport(){
+  const rows=[['Type','Reviewer/Case','Rating','Assessment/Issue','Status','Priority','Created']];
+  reviews.forEach(r=>rows.push(['Review',r.name,r.rating,r.assessment,'','',r.created_at||'']));
+  cases.forEach(c=>rows.push(['Case',c.name,'',c.issue,c.status,c.priority,c.created_at||'']));
+  const csv=rows.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ReviewShield-report.csv';a.click();URL.revokeObjectURL(url);
+  addActivity('Report exported');showToast('Report exported successfully.');
+}
+
+function connectGoogle(){
+  alert('Google Business Profile OAuth is not connected yet. This button intentionally does not fake a connection.');
+}
+
+function renderCharts(){
+  if(typeof Chart==='undefined')return;
+  const counts=[1,2,3,4,5].map(n=>reviews.filter(r=>Number(r.rating)===n).length);
+  const issues=reviews.filter(r=>r.issue_type||/Potential|Needs|issue/i.test(r.assessment||'')).length;
+  const legitimate=Math.max(0,reviews.length-issues);
+  if(ratingChart)ratingChart.destroy();
+  if(healthChart)healthChart.destroy();
+  ratingChart=new Chart($('ratingChart'),{type:'bar',data:{labels:['1★','2★','3★','4★','5★'],datasets:[{label:'Reviews',data:counts}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+  healthChart=new Chart($('healthChart'),{type:'doughnut',data:{labels:['Potential issues','Other reviews'],datasets:[{data:[issues,legitimate]}]},options:{responsive:true,maintainAspectRatio:false}});
+}
+function destroyCharts(){if(ratingChart){ratingChart.destroy();ratingChart=null}if(healthChart){healthChart.destroy();healthChart=null}}
+
+function show(id,btn){
+  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+  const page=$(id);if(page)page.classList.remove('hidden');
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(id==='activity')loadActivity();
+  if(id==='profile'&&currentUser){$('profileEmail').value=currentUser.email||'';loadLocalProfile()}
+  if(id==='dashboard')renderCharts();
+}
+
+window.addEventListener('error',e=>{
+  console.error('ReviewShield JS error:',e.error||e.message);
+  if($('authMsg')&&!currentUser)$('authMsg').innerHTML='<span class="danger">App error: '+escapeHTML(e.message)+'</span>';
+});
+window.addEventListener('unhandledrejection',e=>{
+  console.error('ReviewShield promise error:',e.reason);
+  if($('authMsg')&&!currentUser)$('authMsg').innerHTML='<span class="danger">'+escapeHTML(e.reason?.message||String(e.reason))+'</span>';
+});
+
+supabaseClient.auth.getSession().then(async({data,error})=>{
+  if(error){console.error(error);return}
+  if(data?.session)await startApp(data.session.user);
+});
+supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+  if(session&&!currentUser)await startApp(session.user);
+  if(event==='SIGNED_OUT'){
+    currentUser=null;reviews=[];cases=[];destroyCharts();
+    $('appShell').classList.add('hidden');$('authWrap').classList.remove('hidden');
+  }
+});
+
+setInterval(()=>{if(currentUser)loadData(false).catch(err=>console.error('Refresh error:',err))},15000);
+
+// Professional notification center
+let notificationReadAt = localStorage.getItem('reviewshield_notification_read_'+(currentUser?.id||'guest')) || '';
+
+function notificationData(){
+  return (activity||[]).slice(0,12);
+}
+function updateNotificationCenter(){
+  const items=notificationData();
+  const unread=notificationReadAt ? items.filter(a=>new Date(a.date)>new Date(notificationReadAt)).length : Math.min(items.length,5);
+  const badge=$('notificationBadge');
+  if(badge){
+    badge.textContent=unread>9?'9+':String(unread);
+    badge.classList.toggle('hidden',unread===0);
+  }
+  const box=$('notificationItems');
+  if(!box)return;
+  box.innerHTML=items.length
+    ?items.map(a=>`<div class="notification-item" onclick="openActivityFromBell()"><b><span class="notification-dot"></span>${escapeHTML(a.text)}</b><small>${new Date(a.date).toLocaleString()}</small></div>`).join('')
+    :'<div class="empty" style="padding:28px">No notifications yet.</div>';
+}
+function toggleNotifications(){
+  const p=$('notificationPanel');
+  if(!p)return;
+  p.classList.toggle('hidden');
+  if(!p.classList.contains('hidden'))updateNotificationCenter();
+}
+function markNotificationsRead(){
+  notificationReadAt=new Date().toISOString();
+  if(currentUser)localStorage.setItem('reviewshield_notification_read_'+currentUser.id,notificationReadAt);
+  updateNotificationCenter();
+  $('notificationPanel')?.classList.add('hidden');
+}
+function openActivityFromBell(){
+  markNotificationsRead();
+  const nav=document.querySelectorAll('.nav button')[6];
+  show('activity',nav);
+}
+document.addEventListener('click',e=>{
+  const wrap=document.querySelector('.bell-wrap');
+  const panel=$('notificationPanel');
+  if(wrap && panel && !wrap.contains(e.target))panel.classList.add('hidden');
+});
+const _oldAddActivity=addActivity;
+addActivity=function(text){
+  _oldAddActivity(text);
+  updateNotificationCenter();
+};
+const _oldLoadActivity=loadActivity;
+loadActivity=function(){
+  _oldLoadActivity();
+  updateNotificationCenter();
+};
+
 </script>
 </body>
 </html>
