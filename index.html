@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,1567 +6,627 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ReviewShield AI — Phase 3</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 *{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f7fb;color:#172033}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
 
-:root{
- --bg:#07111f;
- --panel:#0c1929;
- --panel2:#101f32;
- --line:#203247;
- --text:#edf4ff;
- --muted:#8ea2b9;
- --blue:#3b82f6;
- --blue2:#2563eb;
- --green:#22c55e;
- --red:#ef4444;
- --amber:#f59e0b;
- --white:#fff;
- --shadow:0 18px 50px rgba(0,0,0,.22);
+.app{display:flex;min-height:100vh}
+.side{
+ width:245px;background:#fff;border-right:1px solid #e6e9ef;
+ padding:22px 15px;position:fixed;inset:0 auto 0 0;
+ display:flex;flex-direction:column;z-index:10
 }
-
-body{
- margin:0;
- font-family:Inter,Arial,sans-serif;
- background:#f4f7fb;
- color:#172033;
+.brand{font-weight:800;font-size:17px;padding:0 10px 28px;display:flex;align-items:center;gap:9px}
+.logo{width:34px;height:34px;border-radius:9px;background:#172033;color:#fff;display:grid;place-items:center}
+.nav button{
+ width:100%;border:0;background:none;text-align:left;padding:12px;
+ border-radius:9px;color:#687386;cursor:pointer;font-weight:650;margin-bottom:2px
 }
-
-button,input,textarea,select{
- font:inherit;
+.nav button.active{background:#eef1f8;color:#172033}
+.bottom{margin-top:auto}
+.plan{padding:14px;border:1px solid #e7eaf0;border-radius:12px;background:#fafbfc;margin-bottom:12px}
+.plan small{display:block;color:#8b94a3}
+.plan button,.primary{
+ background:#172033;color:#fff;border:0;border-radius:8px;
+ padding:10px 13px;font-weight:700;cursor:pointer
 }
-
-button{
- cursor:pointer;
-}
-
-.hidden{
- display:none!important;
-}
-
-/* AUTH */
-#authScreen{
- min-height:100vh;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:25px;
- background:
- radial-gradient(circle at 15% 15%,rgba(59,130,246,.22),transparent 30%),
- radial-gradient(circle at 85% 85%,rgba(37,99,235,.2),transparent 30%),
- #06101d;
-}
-
-.authBox{
- width:430px;
- max-width:100%;
- background:#0d1b2d;
- border:1px solid #233a54;
- border-radius:24px;
- padding:35px;
- box-shadow:0 30px 80px rgba(0,0,0,.4);
- color:white;
-}
-
-.logo{
- display:flex;
- align-items:center;
- gap:12px;
- margin-bottom:28px;
-}
-
-.logoIcon{
- width:44px;
- height:44px;
- border-radius:13px;
- display:grid;
- place-items:center;
- background:linear-gradient(135deg,#3b82f6,#2563eb);
- font-size:22px;
-}
-
-.logo h1{
- margin:0;
- font-family:Manrope;
- font-size:20px;
-}
-
-.logo span{
- color:#7fa1c4;
- font-size:11px;
- display:block;
- margin-top:3px;
-}
-
-.authBox h2{
- margin:0 0 8px;
- font-family:Manrope;
- font-size:28px;
-}
-
-.authSub{
- color:#8ea2b9;
- font-size:14px;
- margin-bottom:24px;
-}
-
-.field{
- margin-bottom:14px;
-}
-
-.field label{
- display:block;
- font-size:12px;
- font-weight:700;
- color:#8ea2b9;
- margin-bottom:7px;
-}
-
-.field input,
-.field textarea,
-.field select{
- width:100%;
- border:1px solid #294058;
- background:#091626;
- color:#fff;
- padding:12px 13px;
- border-radius:11px;
- outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
- border-color:#3b82f6;
- box-shadow:0 0 0 3px rgba(59,130,246,.12);
-}
-
-.primaryBtn{
- width:100%;
- border:0;
- border-radius:11px;
- padding:13px 15px;
- color:white;
- font-weight:800;
- background:linear-gradient(135deg,#3b82f6,#2563eb);
-}
-
-.secondaryBtn{
- border:1px solid #d8e0ea;
- background:#fff;
- color:#26364b;
- border-radius:10px;
- padding:10px 13px;
- font-weight:700;
-}
-
-.authSwitch{
- text-align:center;
- margin-top:18px;
- font-size:13px;
- color:#8ea2b9;
-}
-
-.authSwitch button{
- border:0;
- background:none;
- color:#60a5fa;
- font-weight:700;
-}
-
-#authMsg{
- margin-top:15px;
- font-size:13px;
- line-height:1.5;
-}
-
-.danger{color:#ef4444}
-.green{color:#22c55e}
-.amber{color:#f59e0b}
-
-/* APP */
-#appScreen{
- display:none;
- min-height:100vh;
-}
-
-.sidebar{
- position:fixed;
- left:0;
- top:0;
- bottom:0;
- width:250px;
- background:#07111f;
- border-right:1px solid #172b40;
- color:white;
- padding:22px 15px;
- z-index:20;
-}
-
-.sideLogo{
- display:flex;
- align-items:center;
- gap:11px;
- padding:4px 10px 25px;
-}
-
-.sideLogoIcon{
- width:39px;
- height:39px;
- border-radius:11px;
- display:grid;
- place-items:center;
- background:#2563eb;
-}
-
-.sideLogo b{
- font-family:Manrope;
-}
-
-.sideLogo small{
- display:block;
- color:#7890a9;
- font-size:10px;
- margin-top:2px;
-}
-
-.navLabel{
- color:#526a83;
- font-size:10px;
- text-transform:uppercase;
- font-weight:800;
- padding:12px 12px 7px;
- letter-spacing:.08em;
-}
-
-.navBtn{
- width:100%;
- display:flex;
- align-items:center;
- gap:11px;
- border:0;
- background:transparent;
- color:#8ea2b9;
- padding:11px 12px;
- border-radius:10px;
- margin:2px 0;
- text-align:left;
- font-weight:600;
-}
-
-.navBtn:hover,
-.navBtn.active{
- background:#12243a;
- color:white;
-}
-
-.navIcon{
- width:22px;
- text-align:center;
-}
-
-.sideBottom{
- position:absolute;
- bottom:20px;
- left:15px;
- right:15px;
-}
-
-.userMini{
- padding:12px;
- border:1px solid #1b3046;
- background:#0b1929;
- border-radius:13px;
- display:flex;
- align-items:center;
- gap:10px;
-}
-
+.plan button{width:100%;margin-top:9px}
+.user{display:flex;gap:9px;align-items:center;padding:6px}
+.user small{display:block;color:#8b94a3;margin-top:2px}
 .avatar{
- width:35px;
- height:35px;
- border-radius:50%;
- display:grid;
- place-items:center;
- background:#2563eb;
- color:white;
- font-weight:800;
- flex:none;
+ width:33px;height:33px;border-radius:50%;background:#dfe4ee;
+ display:grid;place-items:center;font-weight:800
 }
-
-.userMiniText{
- min-width:0;
+.main{margin-left:245px;width:calc(100% - 245px)}
+.top{
+ height:68px;background:#fff;border-bottom:1px solid #e6e9ef;
+ padding:0 32px;display:flex;justify-content:space-between;align-items:center
 }
-
-.userMiniText b{
- display:block;
- overflow:hidden;
- text-overflow:ellipsis;
- white-space:nowrap;
- font-size:12px;
+.business{font-size:13px}
+.business strong{margin-left:8px}
+.topright{display:flex;gap:9px;align-items:center}
+.ghost{
+ border:1px solid #e3e7ee;background:#fff;border-radius:8px;
+ padding:8px 11px;cursor:pointer
 }
+.page{padding:30px;max-width:1450px;margin:auto}
+.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.head h1{margin:0 0 5px;font-size:26px}
+.muted{color:#7d8798}
+.eyebrow{font-size:10px;letter-spacing:.12em;font-weight:800;color:#9aa3b1}
 
-.userMiniText span{
- color:#7890a9;
- font-size:10px;
-}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:12px}
+.stat{padding:18px}
+.stat small{color:#8a94a5}
+.stat strong{display:block;font-size:26px;margin:7px 0}
+.green{color:#267c55}
+.amber{color:#9d691a}
+.red{color:#b33e3e}
 
-.main{
- margin-left:250px;
- min-height:100vh;
-}
+.section{margin-top:18px;padding:20px}
+.section h2{font-size:16px;margin:0 0 4px}
 
-.topbar{
- height:70px;
- background:white;
- border-bottom:1px solid #e5ebf2;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 28px;
- position:sticky;
- top:0;
- z-index:10;
-}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.chartbox{height:280px;margin-top:15px}
 
-.topTitle h2{
- margin:0;
- font-family:Manrope;
- font-size:20px;
-}
-
-.topTitle p{
- margin:3px 0 0;
- font-size:11px;
- color:#8190a4;
-}
-
-.topActions{
- display:flex;
- gap:9px;
- align-items:center;
-}
-
-.businessTop{
- border:1px solid #dce4ee;
- padding:9px 12px;
- border-radius:10px;
- background:#fff;
- font-size:12px;
- font-weight:700;
-}
-
-.notificationBtn{
- position:relative;
- border:1px solid #dce4ee;
- background:#fff;
- border-radius:10px;
- width:38px;
- height:38px;
-}
-
-.notifyDot{
- position:absolute;
- width:7px;
- height:7px;
- background:#ef4444;
- border-radius:50%;
- right:7px;
- top:6px;
-}
-
-.content{
- padding:26px;
- max-width:1600px;
- margin:auto;
-}
-
-.page{
- display:none;
-}
-
-.page.active{
- display:block;
-}
-
-/* DASHBOARD */
-.welcome{
- margin-bottom:22px;
-}
-
-.welcome h1{
- margin:0;
- font-family:Manrope;
- font-size:26px;
-}
-
-.welcome p{
- margin:5px 0 0;
- color:#8090a5;
- font-size:13px;
-}
-
-.stats{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:15px;
- margin-bottom:18px;
-}
-
-.stat{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:15px;
- padding:18px;
- box-shadow:0 5px 20px rgba(23,32,51,.04);
-}
-
-.statTop{
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-
-.statLabel{
- font-size:12px;
- color:#7b8a9e;
- font-weight:700;
-}
-
-.statIcon{
- width:34px;
- height:34px;
- border-radius:9px;
- display:grid;
- place-items:center;
- background:#edf4ff;
-}
-
-.statValue{
- font-family:Manrope;
- font-size:26px;
- font-weight:800;
- margin-top:10px;
-}
-
-.statFoot{
- color:#8090a5;
- font-size:10px;
- margin-top:4px;
-}
-
-.grid2{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:16px;
- margin-bottom:16px;
-}
-
-.card{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:15px;
- padding:18px;
- box-shadow:0 5px 20px rgba(23,32,51,.035);
-}
-
-.cardHead{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:12px;
- margin-bottom:16px;
-}
-
-.cardHead h3{
- margin:0;
- font-family:Manrope;
- font-size:15px;
-}
-
-.cardHead span{
- color:#8190a4;
- font-size:11px;
-}
-
-.chartWrap{
- height:260px;
- position:relative;
-}
-
-.emptyChart{
- height:100%;
- display:grid;
- place-items:center;
- color:#94a3b8;
- font-size:12px;
- text-align:center;
-}
-
-/* REVIEWS */
 .toolbar{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:15px;
- padding:14px;
- display:flex;
- gap:9px;
- flex-wrap:wrap;
- margin-bottom:15px;
+ display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px
 }
-
-.toolbar input,
-.toolbar select{
- border:1px solid #dce4ee;
- background:#fff;
- border-radius:9px;
- padding:10px 11px;
- outline:none;
- color:#27384c;
+.toolbar input,.toolbar select,
+.form input,.form select{
+ border:1px solid #dfe4ec;border-radius:9px;
+ padding:10px 12px;background:#fff;outline:none
 }
+.toolbar input{min-width:220px}
 
-.searchBox{
- flex:1;
- min-width:200px;
+.review-list{display:grid;gap:10px}
+.review{
+ border:1px solid #e8ebf0;border-radius:10px;padding:15px;
+ display:grid;grid-template-columns:1fr auto;gap:12px
 }
-
-.reviewCard{
- background:white;
- border:1px solid #e3e9f0;
- border-radius:14px;
- padding:17px;
- margin-bottom:11px;
-}
-
-.reviewHead{
- display:flex;
- justify-content:space-between;
- gap:15px;
-}
-
-.reviewer{
- display:flex;
- gap:11px;
- align-items:center;
-}
-
-.reviewerAvatar{
- width:38px;
- height:38px;
- border-radius:50%;
- background:#edf4ff;
- color:#2563eb;
- display:grid;
- place-items:center;
- font-weight:800;
-}
-
-.reviewerName{
- font-weight:800;
- font-size:13px;
-}
-
-.reviewDate{
- color:#8997a8;
- font-size:10px;
- margin-top:3px;
-}
-
-.stars{
- color:#f59e0b;
- letter-spacing:1px;
- font-size:14px;
-}
-
-.reviewText{
- margin:14px 0;
- color:#405067;
- line-height:1.65;
- font-size:13px;
-}
-
-.reviewFooter{
- border-top:1px solid #edf1f5;
- padding-top:12px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
-}
-
+.review p{margin:7px 0;color:#505c70;font-size:13px;line-height:1.5}
+.review small{color:#9aa3b1}
+.stars{letter-spacing:1px;font-size:15px}
 .badge{
- display:inline-flex;
- align-items:center;
- padding:5px 8px;
- border-radius:7px;
- font-size:10px;
- font-weight:800;
+ display:inline-block;padding:5px 8px;border-radius:6px;
+ font-size:10px;font-weight:800
 }
+.flag{background:#fff0df;color:#9b651a}
+.safe{background:#e9f6ef;color:#287b55}
+.danger{background:#fbe8e8;color:#b33e3e}
+.neutral{background:#eef1f8;color:#596579}
+.actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
 
-.badge.safe{
- color:#16803c;
- background:#eaf9ef;
+.form{display:grid;gap:12px;max-width:800px}
+.form textarea{
+ min-height:150px;resize:vertical;border:1px solid #dfe4ec;
+ border-radius:9px;padding:12px;outline:none
 }
-
-.badge.flag{
- color:#b42318;
- background:#fff0ee;
-}
-
-.badge.pending{
- color:#9a6700;
- background:#fff7df;
-}
-
-.badge.closed{
- color:#526273;
- background:#edf1f5;
-}
-
-.actions{
- display:flex;
- gap:7px;
- flex-wrap:wrap;
-}
-
-.smallBtn{
- border:1px solid #dce4ee;
- background:white;
- color:#34465b;
- border-radius:8px;
- padding:7px 9px;
- font-size:10px;
- font-weight:700;
-}
-
-.smallBtn.blue{
- color:#2563eb;
- border-color:#cfe0ff;
- background:#f4f8ff;
-}
-
-.smallBtn.green{
- color:#16803c;
- border-color:#ccefd7;
- background:#f3fff6;
-}
-
-/* CASES */
-.caseCard{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:14px;
- padding:16px;
- margin-bottom:11px;
-}
-
-.caseTop{
- display:flex;
- justify-content:space-between;
- gap:10px;
-}
-
-.caseTitle{
- font-weight:800;
- font-size:13px;
-}
-
-.caseMeta{
- color:#8190a4;
- font-size:10px;
- margin-top:5px;
-}
-
-.caseBody{
- margin-top:13px;
- color:#526273;
- font-size:12px;
- line-height:1.6;
-}
-
-.caseControls{
- display:flex;
- gap:8px;
- margin-top:14px;
- flex-wrap:wrap;
-}
-
-.priority{
- border:0;
- border-radius:7px;
- padding:5px 8px;
- font-size:10px;
- font-weight:800;
-}
-
-.priority.high{
- background:#ffebe8;
- color:#b42318;
-}
-
-.priority.medium{
- background:#fff5dc;
- color:#946200;
-}
-
-.priority.low{
- background:#eaf9ef;
- color:#16803c;
-}
-
-/* ANALYZER */
-.analyzer{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:16px;
-}
-
-.analyzerBox{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:15px;
- padding:20px;
-}
-
-.analyzerBox h3{
- margin:0 0 15px;
- font-family:Manrope;
-}
-
-.analyzer textarea{
- min-height:190px;
- resize:vertical;
-}
-
-.analyzeBtn{
- margin-top:10px;
- width:100%;
- padding:12px;
- border:0;
- border-radius:10px;
- color:white;
- background:#2563eb;
- font-weight:800;
-}
-
 .result{
- border:1px solid #dce4ee;
- border-radius:12px;
- padding:14px;
- margin-top:15px;
- background:#f8fafc;
- font-size:12px;
- line-height:1.6;
+ padding:15px;border-radius:10px;background:#f7f8fb;
+ border:1px solid #e6e9ef
+}
+.result strong{display:block;margin-bottom:6px}
+
+.case{
+ border-top:1px solid #edf0f4;padding:15px 0;
+ display:grid;grid-template-columns:1fr auto;gap:12px
+}
+.case:first-child{border-top:0}
+.case-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.status{
+ padding:5px 8px;border-radius:6px;background:#eef1f8;
+ font-size:10px;font-weight:800
+}
+.priority{
+ padding:5px 8px;border-radius:6px;
+ font-size:10px;font-weight:800
+}
+.priority.high{background:#fbe8e8;color:#b33e3e}
+.priority.medium{background:#fff0df;color:#9b651a}
+.priority.low{background:#e9f6ef;color:#287b55}
+
+.profile{
+ display:grid;grid-template-columns:120px 1fr;gap:25px;align-items:start
+}
+.profile-avatar{
+ width:100px;height:100px;border-radius:50%;background:#172033;
+ color:#fff;display:grid;place-items:center;font-size:35px;font-weight:800
+}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:grid;gap:6px}
+.field label{font-size:12px;font-weight:700}
+.field input,.field select{
+ border:1px solid #dfe4ec;border-radius:8px;padding:11px;background:#fff
 }
 
-.result h4{
- margin:0 0 8px;
+.activity{display:grid;gap:10px}
+.activity-item{
+ padding:12px;border:1px solid #e8ebf0;border-radius:9px;
+ display:flex;justify-content:space-between;gap:12px
 }
+.empty{padding:45px;text-align:center;color:#8b94a3}
 
-/* RESPONSE */
-.responseBox{
- max-width:850px;
- margin:auto;
+.auth-screen{
+ position:fixed;inset:0;background:#f6f7fb;
+ display:grid;place-items:center;z-index:50
 }
-
-.toneRow{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
- margin-bottom:14px;
+.auth-box{
+ width:min(430px,92vw);background:#fff;border:1px solid #e5e8ef;
+ border-radius:16px;padding:30px;
+ box-shadow:0 18px 50px rgba(23,32,51,.08)
 }
-
-.toneBtn{
- padding:9px 12px;
- border:1px solid #dce4ee;
- border-radius:9px;
- background:white;
- font-size:11px;
- font-weight:700;
+.auth-box .logo{margin-bottom:18px}
+.auth-box h1{margin:0 0 7px;font-size:25px}
+.auth-box p{font-size:13px;line-height:1.5}
+.auth-form{display:grid;gap:10px;margin-top:20px}
+.auth-form label{font-size:12px;font-weight:700}
+.auth-form input{
+ border:1px solid #dfe4ec;border-radius:8px;
+ padding:11px 12px;outline:none;width:100%
 }
-
-.toneBtn.active{
- background:#edf4ff;
- border-color:#a9c9ff;
- color:#2563eb;
+.auth-error{color:#b33e3e;font-size:11px;min-height:16px}
+.auth-switch{text-align:center;margin-top:15px;font-size:12px}
+.auth-switch button{
+ border:0;background:none;color:#4b63a3;font-weight:800;cursor:pointer
 }
-
-.responseTextarea{
- width:100%;
- min-height:250px;
- border:1px solid #dce4ee;
- border-radius:12px;
- padding:15px;
- resize:vertical;
- outline:none;
-}
-
-.responseActions{
- display:flex;
- gap:8px;
- margin-top:10px;
-}
-
-/* SETTINGS */
-.settingsGrid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:16px;
-}
-
-.settingCard{
- background:white;
- border:1px solid #e4eaf1;
- border-radius:15px;
- padding:20px;
-}
-
-.settingCard h3{
- margin:0 0 5px;
- font-family:Manrope;
-}
-
-.settingCard>p{
- color:#8190a4;
- font-size:11px;
- margin:0 0 18px;
-}
-
-.saveBtn{
- border:0;
- background:#2563eb;
- color:white;
- padding:10px 14px;
- border-radius:9px;
- font-weight:800;
- font-size:11px;
-}
-
-.connection{
- padding:14px;
- border:1px dashed #ccd7e4;
- border-radius:11px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:15px;
-}
-
-.connectionStatus{
- display:flex;
- align-items:center;
- gap:8px;
- font-size:12px;
- font-weight:700;
-}
-
-.statusDot{
- width:8px;
- height:8px;
- background:#ef4444;
- border-radius:50%;
-}
-
-/* NOTIFICATIONS */
-.activityItem{
- display:flex;
- gap:11px;
- padding:13px 0;
- border-bottom:1px solid #edf1f5;
-}
-
-.activityIcon{
- width:32px;
- height:32px;
- border-radius:9px;
- display:grid;
- place-items:center;
- background:#edf4ff;
- flex:none;
-}
-
-.activityText{
- font-size:12px;
- line-height:1.5;
-}
-
-.activityText small{
- color:#8997a8;
- display:block;
- margin-top:3px;
-}
-
-/* MOBILE */
-.mobileMenu{
- display:none;
- border:1px solid #dce4ee;
- background:white;
- width:38px;
- height:38px;
- border-radius:9px;
+.toast{
+ position:fixed;right:20px;bottom:20px;background:#172033;color:#fff;
+ padding:12px 16px;border-radius:9px;z-index:100;display:none;font-size:13px
 }
 
 @media(max-width:1000px){
- .stats{
-  grid-template-columns:repeat(2,1fr);
- }
- .grid2,
- .analyzer,
- .settingsGrid{
-  grid-template-columns:1fr;
- }
+ .side{width:72px}
+ .brand span:last-child,.nav button span,.plan,.user div:last-child{display:none}
+ .nav button{text-align:center}
+ .main{margin-left:72px;width:calc(100% - 72px)}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .grid2{grid-template-columns:1fr}
 }
-
-@media(max-width:760px){
- .sidebar{
-  transform:translateX(-100%);
-  transition:.25s;
- }
-
- .sidebar.open{
-  transform:translateX(0);
- }
-
- .main{
-  margin-left:0;
- }
-
- .mobileMenu{
-  display:block;
- }
-
- .topbar{
-  padding:0 14px;
- }
-
- .topTitle p{
-  display:none;
- }
-
- .businessTop{
-  display:none;
- }
-
- .content{
-  padding:16px;
- }
-
- .stats{
-  grid-template-columns:1fr 1fr;
-  gap:9px;
- }
-
- .stat{
-  padding:13px;
- }
-
- .statValue{
-  font-size:21px;
- }
-
- .reviewHead,
- .reviewFooter,
- .caseTop{
-  flex-direction:column;
-  align-items:flex-start;
- }
-
- .chartWrap{
-  height:220px;
- }
+@media(max-width:650px){
+ .top{padding:0 15px}
+ .business{display:none}
+ .page{padding:18px}
+ .stats{grid-template-columns:1fr}
+ .head{gap:12px;flex-direction:column}
+ .review{grid-template-columns:1fr}
+ .case{grid-template-columns:1fr}
+ .settings-grid{grid-template-columns:1fr}
+ .profile{grid-template-columns:1fr}
 }
-
-@media(max-width:480px){
- .stats{
-  grid-template-columns:1fr;
- }
-
- .authBox{
-  padding:25px;
- }
-
- .topTitle h2{
-  font-size:16px;
- }
-}
+.hidden{display:none!important}
 </style>
 </head>
 
 <body>
 
+<div id="toast" class="toast"></div>
+
 <!-- AUTH -->
-<section id="authScreen">
+<div id="authScreen" class="auth-screen">
+<div class="auth-box">
+<div class="logo">R</div>
+<div class="eyebrow">REVIEW MANAGEMENT PLATFORM</div>
+<h1 id="authTitle">Create your account</h1>
+<p class="muted" id="authSubtitle">Start building your ReviewShield workspace.</p>
 
- <div class="authBox">
+<form class="auth-form" onsubmit="handleAuth(event)">
+<div id="nameField">
+<label>Full name</label>
+<input id="authName" autocomplete="name" placeholder="Your name">
+</div>
 
-  <div class="logo">
-   <div class="logoIcon">🛡️</div>
-   <div>
-    <h1>ReviewShield AI</h1>
-    <span>Business Reputation Intelligence</span>
-   </div>
-  </div>
+<div>
+<label>Email</label>
+<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com">
+</div>
 
-  <h2 id="authTitle">Welcome back</h2>
-  <div class="authSub" id="authSub">
-   Sign in to manage your business reviews.
-  </div>
+<div>
+<label>Password</label>
+<input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="At least 6 characters">
+</div>
 
-  <div class="field">
-   <label>Email</label>
-   <input id="authEmail" type="email" placeholder="you@example.com">
-  </div>
+<div id="authError" class="auth-error"></div>
+<button class="primary" type="submit" id="authButton">Create account</button>
+</form>
 
-  <div class="field">
-   <label>Password</label>
-   <input id="authPassword" type="password" placeholder="Minimum 6 characters">
-  </div>
+<div class="auth-switch">
+<span id="switchText">Already have an account?</span>
+<button type="button" onclick="toggleAuth()">Log in</button>
+</div>
+</div>
+</div>
 
-  <button class="primaryBtn" onclick="handleAuth()" id="authButton">
-   Sign In
-  </button>
+<div class="app">
 
-  <div id="authMsg"></div>
+<aside class="side">
+<div class="brand">
+<span class="logo">R</span>
+<span>ReviewShield AI</span>
+</div>
 
-  <div class="authSwitch">
-   <span id="authSwitchText">Don't have an account?</span>
-   <button onclick="toggleSignup()" id="authSwitchBtn">Create account</button>
-  </div>
+<div class="nav">
+<button class="active" onclick="show('dashboard',this)">⌂ &nbsp; Dashboard</button>
+<button onclick="show('reviews',this)">★ &nbsp; Reviews</button>
+<button onclick="show('analyzer',this)">⚑ &nbsp; AI Analyzer</button>
+<button onclick="show('cases',this)">▣ &nbsp; Cases</button>
+<button onclick="show('responses',this)">◈ &nbsp; AI Responses</button>
+<button onclick="show('activity',this)">◉ &nbsp; Activity</button>
+<button onclick="show('profile',this)">● &nbsp; Profile</button>
+<button onclick="show('settings',this)">⚙ &nbsp; Settings</button>
+</div>
 
- </div>
+<div class="bottom">
+<div class="plan">
+<small>Current plan</small>
+<b>Starter</b>
+<button onclick="showToast('Upgrade options will be added later.')">Upgrade</button>
+</div>
+
+<div class="user">
+<div class="avatar" id="sideAvatar">L</div>
+<div>
+<b id="sideName">Lumos</b>
+<small>Business Owner</small>
+</div>
+</div>
+</div>
+</aside>
+
+<main class="main">
+
+<header class="top">
+<div class="business">
+<span class="muted">Business</span>
+<strong id="businessTop">Your Business ▾</strong>
+</div>
+
+<div class="topright">
+<button class="ghost" onclick="show('activity',document.querySelectorAll('.nav button')[5])">🔔</button>
+<div class="avatar" id="topAvatar">L</div>
+<button class="ghost" onclick="logout()">Sign out</button>
+</div>
+</header>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+
+<div class="head">
+<div>
+<div class="eyebrow">REVIEW HEALTH</div>
+<h1 id="welcomeTitle">Good evening 👋</h1>
+<div class="muted">Monitor, analyze and organize your business reviews.</div>
+</div>
+
+<button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">
+＋ Analyze review
+</button>
+</div>
+
+<div class="stats">
+<div class="card stat">
+<small>Average rating</small>
+<strong id="avgRating">0.0 ★</strong>
+<span class="green">Live database</span>
+</div>
+
+<div class="card stat">
+<small>Total reviews</small>
+<strong id="totalReviews">0</strong>
+<span class="green">Supabase data</span>
+</div>
+
+<div class="card stat">
+<small>Potential issues</small>
+<strong id="flagCount">0</strong>
+<span class="amber">Needs attention</span>
+</div>
+
+<div class="card stat">
+<small>Open cases</small>
+<strong id="caseCount">0</strong>
+<span class="muted">Case management</span>
+</div>
+</div>
+
+<div class="grid2">
+
+<div class="card section">
+<h2>Reviews over time</h2>
+<div class="chartbox">
+<canvas id="reviewsChart"></canvas>
+</div>
+</div>
+
+<div class="card section">
+<h2>Rating distribution</h2>
+<div class="chartbox">
+<canvas id="ratingChart"></canvas>
+</div>
+</div>
+
+</div>
+
+<div class="card section">
+<h2>Recent reviews</h2>
+<div id="dashReviews" class="review-list"></div>
+</div>
 
 </section>
 
-
-<!-- APP -->
-<section id="appScreen">
-
- <aside class="sidebar" id="sidebar">
-
-  <div class="sideLogo">
-   <div class="sideLogoIcon">🛡️</div>
-   <div>
-    <b>ReviewShield</b>
-    <small>AI Reputation Suite</small>
-   </div>
-  </div>
-
-  <div class="navLabel">Workspace</div>
-
-  <button class="navBtn active" onclick="showPage('dashboard',this)">
-   <span class="navIcon">▦</span> Dashboard
-  </button>
-
-  <button class="navBtn" onclick="showPage('reviews',this)">
-   <span class="navIcon">★</span> Reviews
-  </button>
-
-  <button class="navBtn" onclick="showPage('analyzer',this)">
-   <span class="navIcon">✦</span> AI Analyzer
-  </button>
-
-  <button class="navBtn" onclick="showPage('cases',this)">
-   <span class="navIcon">◫</span> Cases
-  </button>
-
-  <button class="navBtn" onclick="showPage('responses',this)">
-   <span class="navIcon">↗</span> AI Responses
-  </button>
-
-  <div class="navLabel">Account</div>
-
-  <button class="navBtn" onclick="showPage('activity',this)">
-   <span class="navIcon">●</span> Activity
-  </button>
-
-  <button class="navBtn" onclick="showPage('settings',this)">
-   <span class="navIcon">⚙</span> Settings
-  </button>
-
-  <div class="sideBottom">
-
-   <div class="userMini">
-    <div class="avatar" id="sideAvatar">U</div>
-    <div class="userMiniText">
-     <b id="sideEmail">User</b>
-     <span>Starter Plan</span>
-    </div>
-   </div>
-
-   <button class="navBtn" style="margin-top:8px" onclick="signOut()">
-    <span class="navIcon">↪</span> Sign out
-   </button>
-
-  </div>
-
- </aside>
-
-
- <main class="main">
-
-  <header class="topbar">
-
-   <div style="display:flex;align-items:center;gap:10px">
-
-    <button class="mobileMenu" onclick="toggleSidebar()">☰</button>
-
-    <div class="topTitle">
-     <h2 id="pageTitle">Dashboard</h2>
-     <p id="pageSub">Your reputation overview</p>
-    </div>
-
-   </div>
-
-   <div class="topActions">
-
-    <div class="businessTop" id="businessTop">
-     Acme Auto Care ▾
-    </div>
-
-    <button class="notificationBtn" onclick="showPageByName('activity')">
-     🔔
-     <span class="notifyDot" id="notifyDot"></span>
-    </button>
-
-   </div>
-
-  </header>
-
-
-  <div class="content">
-
-
-   <!-- DASHBOARD -->
-   <section id="page-dashboard" class="page active">
-
-    <div class="welcome">
-     <h1 id="welcomeName">Good morning 👋</h1>
-     <p>Monitor reviews, identify potential issues and manage reputation from one place.</p>
-    </div>
-
-    <div class="stats">
-
-     <div class="stat">
-      <div class="statTop">
-       <span class="statLabel">Total Reviews</span>
-       <div class="statIcon">★</div>
-      </div>
-      <div class="statValue" id="totalReviews">0</div>
-      <div class="statFoot">Live Supabase data</div>
-     </div>
-
-     <div class="stat">
-      <div class="statTop">
-       <span class="statLabel">Average Rating</span>
-       <div class="statIcon">⭐</div>
-      </div>
-      <div class="statValue" id="avgRating">0.0</div>
-      <div class="statFoot">Based on stored reviews</div>
-     </div>
-
-     <div class="stat">
-      <div class="statTop">
-       <span class="statLabel">Potential Issues</span>
-       <div class="statIcon">⚠</div>
-      </div>
-      <div class="statValue" id="flagCount">0</div>
-      <div class="statFoot">Requires attention</div>
-     </div>
-
-     <div class="stat">
-      <div class="statTop">
-       <span class="statLabel">Open Cases</span>
-       <div class="statIcon">◫</div>
-      </div>
-      <div class="statValue" id="caseCount">0</div>
-      <div class="statFoot">Cases requiring action</div>
-     </div>
-
-    </div>
-
-
-    <div class="grid2">
-
-     <div class="card">
-      <div class="cardHead">
-       <h3>Reviews Over Time</h3>
-       <span>Real review dates</span>
-      </div>
-      <div class="chartWrap">
-       <canvas id="reviewsChart"></canvas>
-       <div id="reviewsEmpty" class="emptyChart hidden">
-        No review data yet.<br>Analyze your first review to see the chart.
-       </div>
-      </div>
-     </div>
-
-
-     <div class="card">
-      <div class="cardHead">
-       <h3>Rating Distribution</h3>
-       <span>Actual ratings</span>
-      </div>
-      <div class="chartWrap">
-       <canvas id="ratingChart"></canvas>
-       <div id="ratingEmpty" class="emptyChart hidden">
-        No rating data available yet.
-       </div>
-      </div>
-     </div>
-
-    </div>
-
-
-    <div class="card">
-
-     <div class="cardHead">
-      <h3>Review Status</h3>
-      <span>Risk assessment</span>
-     </div>
-
-     <div style="height:240px;position:relative">
-      <canvas id="statusChart"></canvas>
-      <div id="statusEmpty" class="emptyChart hidden">
-       No analyzed reviews yet.
-      </div>
-     </div>
-
-    </div>
-
-   </section>
-
-
-   <!-- REVIEWS -->
-   <section id="page-reviews" class="page">
-
-    <div class="cardHead">
-     <div>
-      <h3 style="font-family:Manrope;margin:0">Reviews Inbox</h3>
-      <span>Search and filter your real Supabase reviews.</span>
-     </div>
-    </div>
-
-    <div class="toolbar">
-
-     <input
-      id="reviewSearch"
-      class="searchBox"
-      placeholder="Search reviewer or review text..."
-      oninput="renderReviews()"
-     >
-
-     <select id="ratingFilter" onchange="renderReviews()">
-      <option value="all">All Ratings</option>
-      <option value="5">★★★★★ 5</option>
-      <option value="4">★★★★ 4</option>
-      <option value="3">★★★ 3</option>
-      <option value="2">★★ 2</option>
-      <option value="1">★ 1</option>
-     </select>
-
-     <select id="statusFilter" onchange="renderReviews()">
-      <option value="all">All Status</option>
-      <option value="issue">Potential Issues</option>
-      <option value="safe">Likely Legitimate</option>
-     </select>
-
-     <button class="secondaryBtn" onclick="clearReviewFilters()">Clear</button>
-
-    </div>
-
-    <div id="allReviews"></div>
-
-   </section>
-
-
-   <!-- ANALYZER -->
-   <section id="page-analyzer" class="page">
-
-    <div class="analyzer">
-
-     <div class="analyzerBox">
-
-      <h3>AI Review Analyzer</h3>
-
-      <div class="field">
-       <label>Reviewer Name</label>
-       <input id="reviewerName" placeholder="e.g. John Smith">
-      </div>
-
-      <div class="field">
-       <label>Rating</label>
-       <select id="reviewRating">
-        <option value="5">★★★★★ 5 Stars</option>
-        <option value="4">★★★★ 4 Stars</option>
-        <option value="3">★★★ 3 Stars</option>
-        <option value="2">★★ 2 Stars</option>
-        <option value="1">★ 1 Star</option>
-       </select>
-      </div>
-
-      <div class="field">
-       <label>Review Text</label>
-       <textarea id="reviewText" placeholder="Paste the customer's review here..."></textarea>
-      </div>
-
-      <button class="analyzeBtn" onclick="analyzeReview()">
-       ✦ Analyze & Save Review
-      </button>
-
-      <div id="analyzerResult"></div>
-
-     </div>
-
-
-     <div class="analyzerBox">
-
-      <h3>What ReviewShield Checks</h3>
-
-      <div class="result">
-       <h4>🔎 Review authenticity signals</h4>
-       We look for patterns such as claims that the reviewer never visited the business.
-      </div>
-
-      <div class="result">
-       <h4>⚠️ Abusive / suspicious language</h4>
-       Strong accusations, abusive wording and potentially harmful claims are highlighted.
-      </div>
-
-      <div class="result">
-       <h4>🔗 Promotional content</h4>
-       Links, promo codes, discount language and promotional content can be flagged.
-      </div>
-
-      <div class="result">
-       <h4>🛡️ Important</h4>
-       ReviewShield provides analysis and evidence organization. It does not guarantee removal of a review or make Google's final policy decision.
-      </div>
-
-     </div>
-
-    </div>
-
-   </section>
-
-
-   <!-- CASES -->
-   <section id="page-cases" class="page">
-
-    <div class="cardHead">
-     <div>
-      <h3 style="font-family:Manrope;margin:0">Case Management</h3>
-      <span>Track evidence and case status.</span>
-     </div>
-
-     <select id="caseFilter" onchange="renderCases()" style="padding:9px;border:1px solid #dce4ee;border-radius:9px">
-      <option value="all">All Cases</option>
-      <option value="open">Open</option>
-      <option value="closed">Closed</option>
-     </select>
-
-    </div>
-
-    <div id="caseList"></div>
-
-   </section>
-
-
-   <!-- RESPONSES -->
-   <section id="page-responses" class="page">
-
-    <div class="responseBox">
-
-     <div class="card">
-
-      <div class="cardHead">
-       <div>
-        <h3>AI Response Generator</h3>
-        <span>Generate a professional customer response.</span>
-       </div>
-      </div>
-
-      <div class="toneRow">
-
-       <button class="toneBtn active" onclick="setTone('professional',this)">
-        Professional
-       </button>
-
-       <button class="toneBtn" onclick="setTone('warm',this)">
-        Warm & Empathetic
-       </button>
-
-       <button class="toneBtn" onclick="setTone('short',this)">
-        Short & Concise
-       </button>
-
-       <button class="toneBtn" onclick="setTone('factual',this)">
-        Professional & Factual
-       </button>
-
-      </div>
-
-      <div class="field">
-       <label>Review / Context</label>
-       <textarea id="responseInput" style="min-height:140px" placeholder="Paste the review or describe the situation..."></textarea>
-      </div>
-
-      <button class="analyzeBtn" onclick="generateResponse()">
-       ✦ Generate Response
-      </button>
-
-      <div style="margin-top:15px">
-       <textarea id="responseOutput" class="responseTextarea" placeholder="Generated response will appear here..."></textarea>
-      </div>
-
-      <div class="responseActions">
-       <button class="secondaryBtn" onclick="copyResponse()">Copy Response</button>
-       <button class="secondaryBtn" onclick="clearResponse()">Clear</button>
-      </div>
-
-     </div>
-
-    </div>
-
-   </section>
-
-
-   <!-- ACTIVITY -->
-   <section id="page-activity" class="page">
-
-    <div class="card">
-
-     <div class="cardHead">
-      <div>
-       <h3>Notifications & Activity</h3>
-       <span>Recent activity generated from your workspace.</span>
-      </div>
-      <button class="secondaryBtn" onclick="refreshActivity()">Refresh</button>
-     </div>
-
-     <div id="activityList"></div>
-
-    </div>
-
-   </section>
-
-
-   <!-- SETTINGS -->
-   <section id="page-settings" class="page">
-
-    <div class="settingsGrid">
-
-     <div class="settingCard">
-
-      <h3>Profile</h3>
-      <p>Your ReviewShield account information.</p>
-
-      <div class="field">
-       <label>Full Name</label>
-       <input id="profileName" placeholder="Your name">
-      </div>
-
-      <div class="field">
-       <label>Email</label>
-       <input id="profileEmail" disabled>
-      </div>
-
-      <button class="saveBtn" onclick="saveProfile()">
-       Save Profile
-      </button>
-
-     </div>
-
-
-     <div class="settingCard">
-
-      <h3>Business Profile</h3>
-      <p>These details are stored locally for this dashboard.</p>
-
-      <div class="field">
-       <label>Business Name</label>
-       <input id="businessName" placeholder="Your business name">
-      </div>
-
-      <div class="field">
-       <label>Business Category</label>
-       <input id="businessCategory" placeholder="e.g. Auto Repair">
-      </div>
-
-      <div class="field">
-       <label>Website</label>
-       <input id="businessWebsite" placeholder="https://example.com">
-      </div>
-
-      <div class="field">
-       <label>Location</label>
-       <input id="businessLocation" placeholder="City, State, Country">
-      </div>
-
-      <button class="saveBtn" onclick="saveBusiness()">
-       Save Business
-      </button>
-
-     </div>
-
-
-     <div class="settingCard">
-
-      <h3>Google Business Profile</h3>
-      <p>Connect your official Business Profile when API/OAuth access is configured.</p>
-
-      <div class="connection">
-
-       <div class="connectionStatus">
-        <span class="statusDot"></span>
-        Not connected
-       </div>
-
-       <button class="secondaryBtn" onclick="googleConnectionInfo()">
-        Connect
-       </button>
-
-      </div>
-
-      <div class="result">
-       Google OAuth is intentionally not faked here. A real connection requires Google Business Profile API access, OAuth credentials and proper redirect configuration.
-      </div>
-
-     </div>
-
-
-     <div class="settingCard">
-
-      <h3>Reports</h3>
-      <p>Export your current Supabase review and case data.</p>
-
-      <button class="saveBtn" onclick="exportReport()">
-       ⬇ Export CSV Report
-      </button>
-
-      <div class="result">
-       The export uses the reviews and cases currently loaded from your Supabase account.
-      </div>
-
-     </div>
-
-    </div>
-
-   </section>
-
-
-  </div>
-
- </main>
+<!-- REVIEWS -->
+<section id="reviews" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">REVIEWS</div>
+<h1>Review inbox</h1>
+<div class="muted">Filter and analyze your real review data.</div>
+</div>
+
+<button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">
+Analyze a review
+</button>
+</div>
+
+<div class="card section">
+
+<div class="toolbar">
+<input id="reviewSearch" placeholder="Search reviews..." oninput="renderReviews()">
+
+<select id="ratingFilter" onchange="renderReviews()">
+<option value="all">All ratings</option>
+<option value="5">5 ★</option>
+<option value="4">4 ★</option>
+<option value="3">3 ★</option>
+<option value="2">2 ★</option>
+<option value="1">1 ★</option>
+</select>
+
+<select id="statusFilter" onchange="renderReviews()">
+<option value="all">All status</option>
+<option value="issue">Potential Issues</option>
+<option value="safe">Likely Legitimate</option>
+</select>
+</div>
+
+<div id="allReviews" class="review-list"></div>
+
+</div>
+</section>
+
+<!-- ANALYZER -->
+<section id="analyzer" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">AI REVIEW ANALYZER</div>
+<h1>Analyze a review</h1>
+<div class="muted">Use transparent signals to identify reviews that may need human review.</div>
+</div>
+</div>
+
+<div class="card section">
+
+<div class="form">
+
+<div class="field">
+<label>Reviewer name</label>
+<input id="reviewerName" placeholder="e.g. Sarah M.">
+</div>
+
+<div class="field">
+<label>Rating</label>
+<select id="reviewRating">
+<option value="5">5 ★</option>
+<option value="4">4 ★</option>
+<option value="3">3 ★</option>
+<option value="2">2 ★</option>
+<option value="1">1 ★</option>
+</select>
+</div>
+
+<div class="field">
+<label>Review text</label>
+<textarea id="reviewText" placeholder="Paste a review here..."></textarea>
+</div>
+
+<button class="primary" onclick="analyze()">Analyze & Save Review</button>
+
+<div id="analysisResult"></div>
+
+</div>
+</div>
+</section>
+
+<!-- CASES -->
+<section id="cases" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">CASE MANAGEMENT</div>
+<h1>Cases</h1>
+<div class="muted">Track reviews that need evidence or reporting.</div>
+</div>
+</div>
+
+<div class="card section">
+<div id="caseList"></div>
+</div>
 
 </section>
 
+<!-- RESPONSES -->
+<section id="responses" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">AI RESPONSES</div>
+<h1>Response assistant</h1>
+<div class="muted">Generate a professional draft for a customer review.</div>
+</div>
+</div>
+
+<div class="card section">
+
+<div class="form">
+
+<div class="field">
+<label>Response tone</label>
+<select id="responseTone">
+<option value="professional">Professional</option>
+<option value="warm">Warm & Empathetic</option>
+<option value="short">Short & Concise</option>
+<option value="factual">Professional & Factual</option>
+</select>
+</div>
+
+<textarea id="responseText" placeholder="Paste the customer's review..."></textarea>
+
+<button class="primary" onclick="generateResponse()">Generate draft</button>
+
+<div id="responseResult"></div>
+
+</div>
+</div>
+</section>
+
+<!-- ACTIVITY -->
+<section id="activity" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">ACTIVITY</div>
+<h1>Notifications & activity</h1>
+<div class="muted">Recent activity from your ReviewShield workspace.</div>
+</div>
+</div>
+
+<div class="card section">
+<div id="activityList" class="activity"></div>
+</div>
+
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">ACCOUNT</div>
+<h1>Profile</h1>
+<div class="muted">Manage your account and business information.</div>
+</div>
+</div>
+
+<div class="card section">
+
+<div class="profile">
+
+<div>
+<div class="profile-avatar" id="profileAvatar">L</div>
+</div>
+
+<div class="settings-grid">
+
+<div class="field">
+<label>Full name</label>
+<input id="profileName" placeholder="Your name">
+</div>
+
+<div class="field">
+<label>Email</label>
+<input id="profileEmail" disabled>
+</div>
+
+<div class="field">
+<label>Business name</label>
+<input id="profileBusiness" placeholder="Your business name">
+</div>
+
+<div class="field">
+<label>Business category</label>
+<input id="profileCategory" placeholder="e.g. Auto Repair">
+</div>
+
+<div class="field">
+<label>Website</label>
+<input id="profileWebsite" placeholder="https://example.com">
+</div>
+
+<div class="field">
+<label>Location</label>
+<input id="profileLocation" placeholder="City, State, Country">
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<button class="primary" onclick="saveProfile()">Save profile</button>
+
+</div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page hidden">
+
+<div class="head">
+<div>
+<div class="eyebrow">SETTINGS</div>
+<h1>Settings</h1>
+<div class="muted">Manage integrations and workspace data.</div>
+</div>
+</div>
+
+<div class="card section">
+<h2>Google Business Profile</h2>
+
+<p class="muted">
+Status:
+<b id="googleStatus">Not connected</b>
+</p>
+
+<p class="muted">
+ReviewShield cannot honestly mark your Google Business Profile as connected until
+Google OAuth and the required Business Profile API access are configured.
+</p>
+
+<button class="primary" onclick="googleConnect()">
+Connect Google Business Profile
+</button>
+
+</div>
+
+<div class="card section">
+<h2>Export report</h2>
+<p class="muted">
+Export your currently loaded reviews and cases as a CSV report.
+</p>
+
+<button class="primary" onclick="exportReport()">
+Export CSV Report
+</button>
+</div>
+
+<div class="card section">
+<h2>Account</h2>
+<p class="muted">Sign out from this ReviewShield workspace.</p>
+<button class="ghost" onclick="logout()">Sign out</button>
+</div>
+
+</section>
+
+</main>
+</div>
 
 <script>
 
@@ -1576,85 +637,94 @@ button{
 const SUPABASE_URL =
 "https://ppqavvwcmgojbddnqwpl.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_KEY =
 "sb_publishable_Q6IJEnT3XvDI8KXMWpatkg_bNyxpKie";
 
 const supabaseClient =
 window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_PUBLISHABLE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-
-/* =========================
-   GLOBAL STATE
-========================= */
-
+let currentUser=null;
 let reviews=[];
 let cases=[];
-let currentUser=null;
-
-let signupMode=false;
-
 let reviewsChart=null;
 let ratingChart=null;
-let statusChart=null;
-
-let selectedTone="professional";
-
-let activityItems=[];
 
 
 /* =========================
    HELPERS
 ========================= */
 
-function escapeHTML(value){
- return String(value ?? "")
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
+function showToast(message){
+ const t=document.getElementById("toast");
+ t.textContent=message;
+ t.style.display="block";
+
+ setTimeout(()=>{
+   t.style.display="none";
+ },2200);
 }
 
-function initials(name){
- const s=String(name||"User").trim();
- if(!s)return "U";
+function escapeHTML(value){
+ return String(value??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+}
 
- return s
-  .split(/\s+/)
-  .slice(0,2)
-  .map(x=>x[0])
-  .join("")
-  .toUpperCase();
+function stars(rating){
+ const n=Number(rating)||0;
+ return "★".repeat(n)+"☆".repeat(5-n);
 }
 
 function formatDate(date){
  if(!date)return "Unknown date";
 
- const d=new Date(date);
-
- if(Number.isNaN(d.getTime()))return "Unknown date";
-
- return d.toLocaleDateString(undefined,{
-  year:"numeric",
-  month:"short",
-  day:"numeric"
- });
-}
-
-function isIssue(review){
- return !!(
-  review.issue_type ||
-  /Potential|Needs|issue/i.test(review.assessment||"")
+ return new Date(date).toLocaleDateString(
+ undefined,
+ {year:"numeric",month:"short",day:"numeric"}
  );
 }
 
-function stars(rating){
- const n=Math.max(0,Math.min(5,Number(rating)||0));
+function isIssue(r){
+ return /potential|needs|issue|spam|harassment|promotional/i
+ .test(
+  `${r.assessment||""} ${r.issue_type||""}`
+ );
+}
 
- return "★".repeat(n)+"☆".repeat(5-n);
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function show(id,btn){
+
+ document.querySelectorAll(".page")
+ .forEach(x=>x.classList.add("hidden"));
+
+ const page=document.getElementById(id);
+
+ if(page){
+  page.classList.remove("hidden");
+ }
+
+ document.querySelectorAll(".nav button")
+ .forEach(x=>x.classList.remove("active"));
+
+ if(btn){
+  btn.classList.add("active");
+ }
+
+ if(id==="dashboard")renderDashboard();
+ if(id==="reviews")renderReviews();
+ if(id==="cases")renderCases();
+ if(id==="activity")renderActivity();
+ if(id==="profile")loadProfile();
 }
 
 
@@ -1662,182 +732,160 @@ function stars(rating){
    AUTH
 ========================= */
 
-async function handleAuth(){
+let authMode="signup";
 
- const email=document.getElementById("authEmail").value.trim();
- const password=document.getElementById("authPassword").value;
- const msg=document.getElementById("authMsg");
+function toggleAuth(){
 
- if(!email || !password){
-  msg.innerHTML='<span class="amber">Enter your email and password.</span>';
-  return;
- }
+ authMode=authMode==="signup"
+ ?"login"
+ :"signup";
 
- if(password.length<6){
-  msg.innerHTML='<span class="amber">Password must be at least 6 characters.</span>';
-  return;
- }
+ document.getElementById("authTitle").innerText=
+ authMode==="signup"
+ ?"Create your account"
+ :"Welcome back";
 
- msg.textContent=
-  signupMode
-  ?"Creating account…"
-  :"Signing in…";
+ document.getElementById("authSubtitle").innerText=
+ authMode==="signup"
+ ?"Start building your ReviewShield workspace."
+ :"Log in to your ReviewShield workspace.";
 
- let result;
+ document.getElementById("nameField").style.display=
+ authMode==="signup"?"block":"none";
 
- if(signupMode){
+ document.getElementById("authButton").innerText=
+ authMode==="signup"
+ ?"Create account"
+ :"Log in";
 
-  result=
-   await supabaseClient.auth.signUp({
-    email,
-    password
-   });
+ document.getElementById("switchText").innerText=
+ authMode==="signup"
+ ?"Already have an account?"
+ :"New to ReviewShield?";
 
-  if(result.error){
+ document.querySelector(".auth-switch button").innerText=
+ authMode==="signup"
+ ?"Log in"
+ :"Create account";
 
-   msg.innerHTML=
-    '<span class="danger">'+
-    escapeHTML(result.error.message)+
-    '</span>';
+ document.getElementById("authError").innerText="";
+}
 
+async function handleAuth(e){
+
+ e.preventDefault();
+
+ const email=
+ document.getElementById("authEmail").value
+ .trim()
+ .toLowerCase();
+
+ const password=
+ document.getElementById("authPassword").value;
+
+ const name=
+ document.getElementById("authName").value
+ .trim()||"Lumos";
+
+ const error=
+ document.getElementById("authError");
+
+ error.innerText="";
+
+ if(authMode==="signup"){
+
+  const {data,error:err}=
+  await supabaseClient.auth.signUp({
+   email,
+   password,
+   options:{
+    data:{full_name:name}
+   }
+  });
+
+  if(err){
+   error.innerText=err.message;
    return;
   }
 
-  if(!result.data.session){
+  if(data.user){
 
-   msg.innerHTML=
-    '<span class="green"><b>Account created ✓</b><br>'+
-    'Check your email for the confirmation link, then sign in.</span>';
+   currentUser=data.user;
 
-   return;
+   showToast(
+    "Account created successfully."
+   );
+
+   applyUser();
+
+   document.getElementById("authScreen")
+   .style.display="none";
+
+   await loadData();
   }
 
  }else{
 
-  result=
-   await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-   });
+  const {data,error:err}=
+  await supabaseClient.auth.signInWithPassword({
+   email,
+   password
+  });
 
-  if(result.error){
-
-   msg.innerHTML=
-    '<span class="danger">'+
-    escapeHTML(result.error.message)+
-    '</span>';
-
+  if(err){
+   error.innerText=err.message;
    return;
   }
+
+  currentUser=data.user;
+
+  document.getElementById("authScreen")
+  .style.display="none";
+
+  applyUser();
+
+  await loadData();
  }
-
- await startApp(result.data.user);
 }
 
+async function logout(){
 
-function toggleSignup(){
+ await supabaseClient.auth.signOut();
 
- signupMode=!signupMode;
+ currentUser=null;
+ reviews=[];
+ cases=[];
 
- document.getElementById("authTitle").textContent=
-  signupMode
-  ?"Create your account"
-  :"Welcome back";
+ destroyCharts();
 
- document.getElementById("authSub").textContent=
-  signupMode
-  ?"Create your ReviewShield workspace."
-  :"Sign in to manage your business reviews.";
+ document.getElementById("authScreen")
+ .style.display="grid";
 
- document.getElementById("authButton").textContent=
-  signupMode
-  ?"Create Account"
-  :"Sign In";
-
- document.getElementById("authSwitchText").textContent=
-  signupMode
-  ?"Already have an account?"
-  :"Don't have an account?";
-
- document.getElementById("authSwitchBtn").textContent=
-  signupMode
-  ?"Sign in"
-  :"Create account";
-
- document.getElementById("authMsg").textContent="";
+ showToast("Signed out.");
 }
 
+function applyUser(){
 
-/* =========================
-   SESSION
-========================= */
+ if(!currentUser)return;
 
-async function init(){
+ const name=
+ currentUser.user_metadata?.full_name ||
+ currentUser.email?.split("@")[0] ||
+ "Lumos";
 
- const {
-  data:{
-   session
-  }
- }=
- await supabaseClient.auth.getSession();
+ const initial=
+ name.charAt(0).toUpperCase();
 
- if(session){
+ document.getElementById("sideName").innerText=name;
+ document.getElementById("welcomeTitle").innerText=
+ "Good evening, "+name+" 👋";
 
-  await startApp(session.user);
-
- }else{
-
-  document.getElementById("authScreen").style.display="flex";
-  document.getElementById("appScreen").style.display="none";
-
- }
-
- supabaseClient.auth.onAuthStateChange(
-  async(event,session)=>{
-
-   if(event==="SIGNED_IN" && session){
-
-    await startApp(session.user);
-
-   }
-
-   if(event==="SIGNED_OUT"){
-
-    currentUser=null;
-
-    reviews=[];
-    cases=[];
-
-    destroyCharts();
-
-    document.getElementById("authScreen").style.display="flex";
-    document.getElementById("appScreen").style.display="none";
-
-   }
-
-  }
- );
-}
-
-
-async function startApp(user){
-
- currentUser=user;
-
- document.getElementById("authScreen").style.display="none";
- document.getElementById("appScreen").style.display="block";
-
- const email=user.email||"User";
-
- document.getElementById("sideEmail").textContent=email;
- document.getElementById("sideAvatar").textContent=initials(email);
- document.getElementById("profileEmail").value=email;
-
- loadLocalProfile();
-
- await loadData();
-
- refreshActivity();
+ document.getElementById("sideAvatar").innerText=initial;
+ document.getElementById("topAvatar").innerText=initial;
+ document.getElementById("profileAvatar").innerText=initial;
+ document.getElementById("profileName").value=name;
+ document.getElementById("profileEmail").value=
+ currentUser.email||"";
 }
 
 
@@ -1845,531 +893,834 @@ async function startApp(user){
    LOAD DATA
 ========================= */
 
-async function loadData(showStatus=false){
+async function loadData(){
 
  if(!currentUser)return;
 
- const statusEl=document.getElementById("dashReviews");
+ const reviewResult=
+ await supabaseClient
+ .from("reviews")
+ .select("*")
+ .eq("user_id",currentUser.id)
+ .order("created_at",{ascending:false});
 
- if(showStatus && statusEl){
+ if(reviewResult.error){
 
-  statusEl.innerHTML=
-   '<div class="result">Refreshing your live Supabase data…</div>';
+  console.error(reviewResult.error);
 
+  showToast(
+   "Could not load reviews."
+  );
+
+ }else{
+
+  reviews=reviewResult.data||[];
  }
 
- try{
+ const caseResult=
+ await supabaseClient
+ .from("cases")
+ .select("*")
+ .eq("user_id",currentUser.id)
+ .order("created_at",{ascending:false});
 
-  const [
-   reviewsRes,
-   casesRes
-  ]=
-  await Promise.all([
+ if(caseResult.error){
 
-   supabaseClient
-    .from("reviews")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .order("created_at",{ascending:true}),
+  console.error(caseResult.error);
 
-   supabaseClient
-    .from("cases")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .order("created_at",{ascending:true})
+  cases=[];
 
-  ]);
+ }else{
 
-  if(reviewsRes.error)throw reviewsRes.error;
-  if(casesRes.error)throw casesRes.error;
-
-  reviews=
-   (reviewsRes.data||[])
-   .map(normalizeReview);
-
-  cases=
-   (casesRes.data||[])
-   .map(normalizeCase);
-
-  updateStats();
-  render();
-  refreshActivity();
-
- }catch(error){
-
-  console.error(error);
-
-  if(statusEl){
-
-   statusEl.innerHTML=
-    '<div class="result"><span class="danger">'+
-    escapeHTML(error.message)+
-    '</span></div>';
-
-  }
-
+  cases=caseResult.data||[];
  }
 
+ renderDashboard();
+ renderReviews();
+ renderCases();
+ renderActivity();
+ updateCharts();
 }
 
-
-function normalizeReview(r){
-
- const assessment=
-  r.assessment ||
-  (r.issue_type
-   ?"Potential issue"
-   :"Likely legitimate");
-
- return {
-  ...r,
-  cls:
-   /Potential|Needs|issue/i.test(assessment)
-   ?"flag"
-   :"safe"
- };
-
-}
-
-
-function normalizeCase(c){
-
- return {
-  ...c,
-  status:c.status||"Needs evidence",
-  priority:c.priority||"medium",
-  evidence_notes:c.evidence_notes||""
- };
-
-}
-
-
-/* =========================
-   STATS
-========================= */
-
-function updateStats(){
+function renderDashboard(){
 
  const total=reviews.length;
 
- const ratings=
-  reviews
-  .map(r=>Number(r.rating))
-  .filter(n=>n>=1 && n<=5);
-
- const avg=
-  ratings.length
-  ?ratings.reduce((a,b)=>a+b,0)/ratings.length
-  :0;
+ const average=
+ total?
+ (
+ reviews.reduce(
+  (sum,r)=>sum+(Number(r.rating)||0),
+  0
+ )/total
+ ).toFixed(1)
+ :"0.0";
 
  const flags=
-  reviews.filter(isIssue).length;
+ reviews.filter(isIssue).length;
 
  const openCases=
-  cases.filter(c=>
-   !/closed|resolved/i.test(c.status||"")
-  ).length;
+ cases.filter(c=>
+ !/closed|resolved/i.test(c.status||"")
+ ).length;
 
- document.getElementById("totalReviews").textContent=total;
+ document.getElementById("avgRating").innerText=
+ average+" ★";
 
- document.getElementById("avgRating").textContent=
-  avg?avg.toFixed(1):"0.0";
+ document.getElementById("totalReviews").innerText=
+ total;
 
- document.getElementById("flagCount").textContent=flags;
+ document.getElementById("flagCount").innerText=
+ flags;
 
- document.getElementById("caseCount").textContent=openCases;
+ document.getElementById("caseCount").innerText=
+ openCases;
 
+ const recent=reviews.slice(0,5);
+
+ document.getElementById("dashReviews").innerHTML=
+ recent.length
+ ?recent.map(reviewHTML).join("")
+ :`<div class="empty">
+ No reviews yet. Analyze your first review.
+ </div>`;
 }
 
 
 /* =========================
-   RENDER
+   REVIEW CARDS
 ========================= */
 
-function render(){
+function reviewHTML(r){
 
- renderReviews();
- renderCases();
- updateCharts();
+ const issue=isIssue(r);
 
+ const name=
+ r.reviewer_name||
+ r.name||
+ "Anonymous Reviewer";
+
+ const text=
+ r.review_text||
+ r.text||
+ "";
+
+ const assessment=
+ r.assessment||
+ (issue?"Potential issue":"Likely legitimate");
+
+ return `
+ <div class="review">
+
+ <div>
+
+ <div>
+ <b>${escapeHTML(name)}</b>
+ &nbsp;
+
+ <span class="badge ${issue?"flag":"safe"}">
+ ${escapeHTML(assessment)}
+ </span>
+ </div>
+
+ <div class="stars">
+ ${stars(Number(r.rating))}
+ </div>
+
+ <small>
+ ${Number(r.rating)||0}/5
+ · ${formatDate(r.created_at)}
+ </small>
+
+ <p>“${escapeHTML(text)}”</p>
+
+ <small>
+ ${r.issue_type?escapeHTML(r.issue_type):"No issue type assigned"}
+ </small>
+
+ </div>
+
+ <div class="actions">
+
+ <button
+ class="ghost"
+ onclick="loadReview('${escapeHTML(r.id)}')">
+ Analyze
+ </button>
+
+ </div>
+
+ </div>
+ `;
 }
-
 
 function renderReviews(){
 
- const container=document.getElementById("allReviews");
-
- if(!container)return;
-
  const search=
-  (document.getElementById("reviewSearch")?.value||"")
-  .toLowerCase()
-  .trim();
+ (document.getElementById("reviewSearch")?.value||"")
+ .toLowerCase();
 
  const rating=
-  document.getElementById("ratingFilter")?.value||"all";
+ document.getElementById("ratingFilter")?.value||"all";
 
  const status=
-  document.getElementById("statusFilter")?.value||"all";
+ document.getElementById("statusFilter")?.value||"all";
 
  let filtered=reviews.filter(r=>{
 
+  const name=
+  (r.reviewer_name||r.name||"")
+  .toLowerCase();
+
   const text=
-   (
-    (r.reviewer_name||r.reviewer||"")+
-    " "+
-    (r.review_text||r.text||r.content||"")
-   ).toLowerCase();
+  (r.review_text||r.text||"")
+  .toLowerCase();
 
-  if(search && !text.includes(search))return false;
+  const matchesSearch=
+  !search||
+  name.includes(search)||
+  text.includes(search);
 
-  if(
-   rating!=="all" &&
-   Number(r.rating)!==Number(rating)
-  )return false;
+  const matchesRating=
+  rating==="all"||
+  String(r.rating)===rating;
 
-  if(status==="issue" && !isIssue(r))return false;
+  const issue=isIssue(r);
 
-  if(status==="safe" && isIssue(r))return false;
+  const matchesStatus=
+  status==="all"||
+  (status==="issue"&&issue)||
+  (status==="safe"&&!issue);
 
-  return true;
-
+  return matchesSearch&&matchesRating&&matchesStatus;
  });
 
+ document.getElementById("allReviews").innerHTML=
+ filtered.length
+ ?filtered.map(reviewHTML).join("")
+ :`<div class="empty">
+ No reviews match your filters.
+ </div>`;
+}
 
- if(!filtered.length){
+function loadReview(id){
 
-  container.innerHTML=
-   '<div class="card" style="text-align:center;color:#8190a4;padding:45px">'+
-   'No reviews match your filters.'+
-   '</div>';
+ const r=reviews.find(
+ x=>String(x.id)===String(id)
+ );
+
+ if(!r)return;
+
+ show(
+  "analyzer",
+  document.querySelectorAll(".nav button")[2]
+ );
+
+ document.getElementById("reviewerName").value=
+ r.reviewer_name||r.name||"";
+
+ document.getElementById("reviewRating").value=
+ String(r.rating||5);
+
+ document.getElementById("reviewText").value=
+ r.review_text||r.text||"";
+
+ analyze(false);
+}
+
+
+/* =========================
+   ANALYZER
+========================= */
+
+async function analyze(save=true){
+
+ const reviewer=
+ document.getElementById("reviewerName")
+ .value.trim();
+
+ const rating=
+ Number(document.getElementById("reviewRating").value);
+
+ const text=
+ document.getElementById("reviewText")
+ .value.trim();
+
+ const result=
+ document.getElementById("analysisResult");
+
+ if(!text){
+
+  result.innerHTML=
+  `<div class="result">
+  Please paste a review first.
+  </div>`;
 
   return;
  }
 
+ let signals=[];
 
- container.innerHTML=
-  filtered
-  .slice()
-  .reverse()
-  .map(r=>{
+ if(
+ /never (went|visited)|never been|didn.?t visit|not a customer/i
+ .test(text)
+ ){
+  signals.push(
+   "Reviewer states or suggests they did not visit the business."
+  );
+ }
 
-   const name=
-    r.reviewer_name||
-    r.reviewer||
-    "Anonymous Reviewer";
+ if(
+ /scam|fraud|idiot|stupid|hate|trash|worthless|liar/i
+ .test(text)
+ ){
+  signals.push(
+   "Contains potentially abusive or accusatory language."
+  );
+ }
 
-   const text=
-    r.review_text||
-    r.text||
-    r.content||
-    "";
+ if(
+ /http|www\.|promo|discount code|buy now|visit my|contact me/i
+ .test(text)
+ ){
+  signals.push(
+   "Possible promotional or link content detected."
+  );
+ }
 
-   const issue=isIssue(r);
+ if(
+ /advertisement|advertising|coupon|free money/i
+ .test(text)
+ ){
+  signals.push(
+   "Possible promotional content detected."
+  );
+ }
 
-   const assessment=
-    r.assessment||
-    (issue?"Potential issue":"Likely legitimate");
+ const issue=signals.length>0;
 
-   return `
+ const assessment=
+ issue
+ ?"Potential policy issue"
+ :"Likely legitimate";
 
-    <div class="reviewCard">
+ result.innerHTML=`
 
-     <div class="reviewHead">
+ <div class="result">
 
-      <div class="reviewer">
+ <strong>
+ ${issue
+ ?"Potential policy issue — human review required"
+ :"No obvious policy signal detected"}
+ </strong>
 
-       <div class="reviewerAvatar">
-        ${escapeHTML(initials(name))}
-       </div>
+ <div class="muted">
 
-       <div>
-        <div class="reviewerName">
-         ${escapeHTML(name)}
-        </div>
+ ${
+ signals.length
+ ?signals.map(
+ s=>"• "+escapeHTML(s)
+ ).join("<br>")
+ :"The transparent rules found no obvious policy signal."
+ }
 
-        <div class="reviewDate">
-         ${escapeHTML(formatDate(r.created_at))}
-        </div>
-       </div>
+ </div>
 
-      </div>
+ <br>
 
-      <div class="stars">
-       ${stars(r.rating)}
-      </div>
+ <span class="badge ${issue?"flag":"safe"}">
+ ${assessment}
+ </span>
 
-     </div>
+ <p class="muted">
+ Recommendation: verify the facts and relevant Google policy
+ before reporting. Google makes the final decision.
+ </p>
 
-     <div class="reviewText">
-      ${escapeHTML(text)}
-     </div>
+ </div>
+ `;
 
-     <div class="reviewFooter">
+ if(!save||!currentUser)return;
 
-      <div>
-       <span class="badge ${issue?"flag":"safe"}">
-        ${escapeHTML(assessment)}
-       </span>
-      </div>
+ const reviewPayload={
+  user_id:currentUser.id,
+  reviewer_name:
+  reviewer||"Anonymous Reviewer",
+  rating:rating,
+  review_text:text,
+  assessment:
+  issue?"Potential policy issue":"Likely legitimate",
+  issue_type:
+  issue?"Potential issue":null
+ };
 
-      <div class="actions">
+ const {data,error}=await supabaseClient
+ .from("reviews")
+ .insert(reviewPayload)
+ .select()
+ .single();
 
-       <button
-        class="smallBtn blue"
-        onclick="useReviewForResponse('${escapeHTML(String(r.id))}')">
-        Generate Response
-       </button>
+ if(error){
 
-       <button
-        class="smallBtn"
-        onclick="openCaseFromReview('${escapeHTML(String(r.id))}')">
-        ${issue?"View Case":"Create Case"}
-       </button>
+  console.error(error);
 
-      </div>
+  showToast(
+   "Analysis worked, but saving failed."
+  );
 
-     </div>
+  return;
+ }
 
-    </div>
+ if(issue){
 
-   `;
+  const casePayload={
+   user_id:currentUser.id,
+   review_id:data?.id,
+   title:"Potential review issue",
+   status:"Needs evidence",
+   priority:"medium",
+   evidence_notes:""
+  };
 
-  }).join("");
+  const caseResult=
+  await supabaseClient
+  .from("cases")
+  .insert(casePayload);
 
-}
+  if(caseResult.error){
+   console.error(caseResult.error);
+  }
+ }
 
+ showToast("Review analyzed and saved.");
 
-function clearReviewFilters(){
-
- document.getElementById("reviewSearch").value="";
- document.getElementById("ratingFilter").value="all";
- document.getElementById("statusFilter").value="all";
-
- renderReviews();
-
+ await loadData();
 }
 
 
 /* =========================
-   CASES
+   CASE MANAGEMENT
 ========================= */
 
 function renderCases(){
 
- const container=document.getElementById("caseList");
+ const box=
+ document.getElementById("caseList");
 
- if(!container)return;
+ if(!cases.length){
 
- const filter=
-  document.getElementById("caseFilter")?.value||"all";
-
- let list=cases;
-
- if(filter==="open"){
-
-  list=list.filter(c=>
-   !/closed|resolved/i.test(c.status||"")
-  );
-
- }
-
- if(filter==="closed"){
-
-  list=list.filter(c=>
-   /closed|resolved/i.test(c.status||"")
-  );
-
- }
-
-
- if(!list.length){
-
-  container.innerHTML=
-   '<div class="card" style="text-align:center;color:#8190a4;padding:45px">'+
-   'No cases found.'+
-   '</div>';
+  box.innerHTML=
+  `<div class="empty">
+  No cases yet.
+  </div>`;
 
   return;
  }
 
+ box.innerHTML=
+ cases.map(c=>{
 
- container.innerHTML=
-  list
-  .slice()
-  .reverse()
-  .map(c=>{
+  const priority=
+  c.priority||"medium";
 
-   const review=
-    reviews.find(r=>String(r.id)===String(c.review_id));
-
-   const reviewText=
-    review
-    ?(
-      review.review_text||
-      review.text||
-      review.content||
-      ""
-     )
-    :"Review information unavailable";
-
-   const closed=
-    /closed|resolved/i.test(c.status||"");
-
-   const priority=
-    String(c.priority||"medium").toLowerCase();
-
-   return `
-
-    <div class="caseCard">
-
-     <div class="caseTop">
-
-      <div>
-       <div class="caseTitle">
-        ${escapeHTML(c.title||"Review Case")}
-       </div>
-
-       <div class="caseMeta">
-        Created ${escapeHTML(formatDate(c.created_at))}
-        · ${escapeHTML(c.status||"Needs evidence")}
-       </div>
-      </div>
-
-      <span class="priority ${priority}">
-       ${escapeHTML(priority.toUpperCase())}
-      </span>
-
-     </div>
-
-     <div class="caseBody">
-      <b>Review:</b>
-      ${escapeHTML(reviewText)}
-     </div>
-
-     <div class="caseControls">
-
-      <select
-       class="smallBtn"
-       onchange="changePriority('${escapeHTML(String(c.id))}',this.value)">
-       <option value="high" ${priority==="high"?"selected":""}>High Priority</option>
-       <option value="medium" ${priority==="medium"?"selected":""}>Medium Priority</option>
-       <option value="low" ${priority==="low"?"selected":""}>Low Priority</option>
-      </select>
-
-      <button
-       class="smallBtn"
-       onclick="editEvidence('${escapeHTML(String(c.id))}')">
-       Evidence Notes
-      </button>
-
-      <button
-       class="smallBtn ${closed?"green":"blue"}"
-       onclick="toggleCase('${escapeHTML(String(c.id))}')">
-       ${closed?"Reopen Case":"Close Case"}
-      </button>
-
-     </div>
-
-    </div>
-
-   `;
-
-  }).join("");
-
-}
-
-
-async function changePriority(caseId,priority){
-
- const result=
-  await supabaseClient
-  .from("cases")
-  .update({priority})
-  .eq("id",caseId)
-  .eq("user_id",currentUser.id);
-
- if(result.error){
-
-  alert(result.error.message);
-  return;
-
- }
-
- await loadData();
-
-}
-
-
-async function editEvidence(caseId){
-
- const c=
-  cases.find(x=>String(x.id)===String(caseId));
-
- if(!c)return;
-
- const notes=
-  prompt(
-   "Enter evidence notes:",
-   c.evidence_notes||""
-  );
-
- if(notes===null)return;
-
- const result=
-  await supabaseClient
-  .from("cases")
-  .update({
-   evidence_notes:notes
-  })
-  .eq("id",caseId)
-  .eq("user_id",currentUser.id);
-
- if(result.error){
-
-  alert(result.error.message);
-  return;
-
- }
-
- await loadData();
-
-}
-
-
-async function toggleCase(caseId){
-
- const c=
-  cases.find(x=>String(x.id)===String(caseId));
-
- if(!c)return;
-
- const closed=
+  const closed=
   /closed|resolved/i.test(c.status||"");
 
- const newStatus=
-  closed
-  ?"Needs evidence"
-  :"Closed";
+  return `
+  <div class="case">
 
- const result=
-  await supabaseClient
-  .from("cases")
-  .update({
-   status:newStatus
-  })
-  .eq("id",caseId)
-  .eq("user_id",currentUser.id);
+  <div>
 
- if(result.error){
+   <b>
+   ${escapeHTML(c.title||"Review case")}
+   </b>
 
-  alert(result.error.message);
+   <div class="muted">
+   ${escapeHTML(c.status||"Open")}
+   </div>
+
+   <div class="case-meta">
+
+    <span class="priority ${priority}">
+    ${escapeHTML(priority)} priority
+    </span>
+
+    <span class="status">
+    ${closed?"Closed":"Open"}
+    </span>
+
+   </div>
+
+   <br>
+
+   <div class="field">
+   <label>Evidence notes</label>
+
+   <textarea
+   id="notes-${escapeHTML(c.id)}"
+   style="min-height:80px"
+   placeholder="Add evidence notes..."
+   >${escapeHTML(c.evidence_notes||"")}</textarea>
+
+   </div>
+
+  </div>
+
+  <div class="actions">
+
+   <select
+   onchange="updateCasePriority('${escapeHTML(c.id)}',this.value)"
+   >
+   <option value="low" ${priority==="low"?"selected":""}>Low</option>
+   <option value="medium" ${priority==="medium"?"selected":""}>Medium</option>
+   <option value="high" ${priority==="high"?"selected":""}>High</option>
+   </select>
+
+   <button
+   class="ghost"
+   onclick="saveCaseNotes('${escapeHTML(c.id)}')">
+   Save notes
+   </button>
+
+   <button
+   class="ghost"
+   onclick="toggleCase('${escapeHTML(c.id)}',${closed})">
+   ${closed?"Reopen":"Close"}
+   </button>
+
+  </div>
+
+  </div>
+  `;
+ }).join("");
+}
+
+async function updateCasePriority(id,value){
+
+ const {error}=
+ await supabaseClient
+ .from("cases")
+ .update({priority:value})
+ .eq("id",id)
+ .eq("user_id",currentUser.id);
+
+ if(error){
+
+  console.error(error);
+  showToast("Could not update priority.");
   return;
-
  }
 
- await loadData();
+ showToast("Priority updated.");
 
+ await loadData();
+}
+
+async function saveCaseNotes(id){
+
+ const notes=
+ document.getElementById("notes-"+id)?.value||"";
+
+ const {error}=
+ await supabaseClient
+ .from("cases")
+ .update({evidence_notes:notes})
+ .eq("id",id)
+ .eq("user_id",currentUser.id);
+
+ if(error){
+
+  console.error(error);
+  showToast("Could not save notes.");
+  return;
+ }
+
+ showToast("Evidence notes saved.");
+
+ await loadData();
+}
+
+async function toggleCase(id,isClosed){
+
+ const newStatus=
+ isClosed
+ ?"Needs evidence"
+ :"Closed";
+
+ const {error}=
+ await supabaseClient
+ .from("cases")
+ .update({status:newStatus})
+ .eq("id",id)
+ .eq("user_id",currentUser.id);
+
+ if(error){
+
+  console.error(error);
+  showToast("Could not update case.");
+  return;
+ }
+
+ showToast(
+  isClosed?"Case reopened.":"Case closed."
+ );
+
+ await loadData();
+}
+
+
+/* =========================
+   RESPONSE GENERATOR
+========================= */
+
+function generateResponse(){
+
+ const text=
+ document.getElementById("responseText")
+ .value.trim();
+
+ const tone=
+ document.getElementById("responseTone")
+ .value;
+
+ const result=
+ document.getElementById("responseResult");
+
+ if(!text){
+
+  result.innerHTML=
+  `<div class="result">
+  Please paste a review first.
+  </div>`;
+
+  return;
+ }
+
+ let draft="";
+
+ if(tone==="warm"){
+
+  draft=
+  "Thank you for taking the time to share your feedback. "+
+  "We’re genuinely sorry that your experience did not meet your expectations. "+
+  "We value your feedback and would appreciate the opportunity to understand what happened. "+
+  "Please contact our team directly so we can look into your concerns and work toward a resolution.";
+
+ }else if(tone==="short"){
+
+  draft=
+  "Thank you for your feedback. We’re sorry your experience did not meet expectations. "+
+  "Please contact our team directly so we can better understand and address your concerns.";
+
+ }else if(tone==="factual"){
+
+  draft=
+  "Thank you for your feedback. We take customer concerns seriously and would like to review the details of your experience. "+
+  "Please contact our team directly with any relevant information so we can investigate the matter appropriately.";
+
+ }else{
+
+  draft=
+  "Thank you for sharing your feedback. We’re sorry to hear that your experience did not meet expectations. "+
+  "We take concerns like this seriously and would appreciate the opportunity to understand what happened and make things right. "+
+  "Please contact our team directly so we can look into this further.";
+ }
+
+ result.innerHTML=
+ `<div class="result">
+
+ <strong>Draft response</strong>
+
+ <div id="draftText">
+ “${escapeHTML(draft)}”
+ </div>
+
+ <br>
+
+ <button class="ghost" onclick="copyDraft()">
+ Copy draft
+ </button>
+
+ </div>`;
+}
+
+async function copyDraft(){
+
+ const text=
+ document.getElementById("draftText")
+ .innerText;
+
+ try{
+
+  await navigator.clipboard.writeText(text);
+
+  showToast("Draft copied.");
+
+ }catch(e){
+
+  showToast("Copy failed.");
+ }
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function profileKey(){
+
+ return currentUser
+ ?"reviewshield_profile_"+currentUser.id
+ :null;
+}
+
+function loadProfile(){
+
+ if(!currentUser)return;
+
+ const saved=
+ JSON.parse(
+  localStorage.getItem(profileKey())||"{}"
+ );
+
+ const name=
+ saved.name||
+ currentUser.user_metadata?.full_name||
+ "Lumos";
+
+ document.getElementById("profileName").value=
+ name;
+
+ document.getElementById("profileEmail").value=
+ currentUser.email||"";
+
+ document.getElementById("profileBusiness").value=
+ saved.business||"";
+
+ document.getElementById("profileCategory").value=
+ saved.category||"";
+
+ document.getElementById("profileWebsite").value=
+ saved.website||"";
+
+ document.getElementById("profileLocation").value=
+ saved.location||"";
+
+ const initial=
+ name.charAt(0).toUpperCase();
+
+ document.getElementById("profileAvatar").innerText=
+ initial;
+}
+
+async function saveProfile(){
+
+ if(!currentUser)return;
+
+ const name=
+ document.getElementById("profileName")
+ .value.trim()||"Lumos";
+
+ const business=
+ document.getElementById("profileBusiness")
+ .value.trim();
+
+ const category=
+ document.getElementById("profileCategory")
+ .value.trim();
+
+ const website=
+ document.getElementById("profileWebsite")
+ .value.trim();
+
+ const location=
+ document.getElementById("profileLocation")
+ .value.trim();
+
+ localStorage.setItem(
+  profileKey(),
+  JSON.stringify({
+   name,
+   business,
+   category,
+   website,
+   location
+  })
+ );
+
+ await supabaseClient.auth.updateUser({
+  data:{
+   full_name:name
+  }
+ });
+
+ document.getElementById("sideName").innerText=name;
+ document.getElementById("welcomeTitle").innerText=
+ "Good evening, "+name+" 👋";
+
+ const initial=
+ name.charAt(0).toUpperCase();
+
+ document.getElementById("sideAvatar").innerText=initial;
+ document.getElementById("topAvatar").innerText=initial;
+ document.getElementById("profileAvatar").innerText=initial;
+
+ document.getElementById("businessTop").innerText=
+ business||"Your Business ▾";
+
+ showToast("Profile saved.");
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+function renderActivity(){
+
+ const items=[];
+
+ reviews.slice(0,5).forEach(r=>{
+
+  items.push({
+   text:
+   "Review analyzed: "+
+   (r.reviewer_name||"Anonymous Reviewer"),
+   date:r.created_at
+  });
+ });
+
+ cases.slice(0,5).forEach(c=>{
+
+  items.push({
+   text:
+   "Case: "+
+   (c.title||"Review case")+
+   " — "+
+   (c.status||"Open"),
+   date:c.created_at
+  });
+ });
+
+ items.sort(
+  (a,b)=>
+  new Date(b.date||0)-
+  new Date(a.date||0)
+ );
+
+ document.getElementById("activityList").innerHTML=
+ items.length
+ ?items.slice(0,10).map(x=>`
+   <div class="activity-item">
+   <span>${escapeHTML(x.text)}</span>
+   <small class="muted">
+   ${formatDate(x.date)}
+   </small>
+   </div>
+ `).join("")
+ :`<div class="empty">
+ No activity yet.
+ </div>`;
 }
 
 
@@ -2388,776 +1739,97 @@ function destroyCharts(){
   ratingChart.destroy();
   ratingChart=null;
  }
-
- if(statusChart){
-  statusChart.destroy();
-  statusChart=null;
- }
-
 }
-
 
 function updateCharts(){
 
  destroyCharts();
 
- updateReviewsChart();
- updateRatingChart();
- updateStatusChart();
+ const lineCtx=
+ document.getElementById("reviewsChart");
 
-}
+ const ratingCtx=
+ document.getElementById("ratingChart");
 
+ if(!lineCtx||!ratingCtx)return;
 
-function updateReviewsChart(){
-
- const canvas=document.getElementById("reviewsChart");
- const empty=document.getElementById("reviewsEmpty");
-
- if(!canvas)return;
-
- if(!reviews.length){
-
-  canvas.classList.add("hidden");
-  empty.classList.remove("hidden");
-  return;
-
- }
-
- canvas.classList.remove("hidden");
- empty.classList.add("hidden");
-
- const counts={};
+ const days={};
 
  reviews.forEach(r=>{
 
-  const d=
-   new Date(r.created_at||Date.now());
+  const date=
+  r.created_at
+  ?new Date(r.created_at).toLocaleDateString()
+  :"Unknown";
 
-  const key=
-   d.toLocaleDateString(undefined,{
-    month:"short",
-    day:"numeric"
-   });
-
-  counts[key]=(counts[key]||0)+1;
-
+  days[date]=(days[date]||0)+1;
  });
 
+ const labels=
+ Object.keys(days).slice(-14);
+
+ const values=
+ labels.map(x=>days[x]);
+
  reviewsChart=
-  new Chart(canvas,{
-   type:"line",
-   data:{
-    labels:Object.keys(counts),
-    datasets:[{
-     label:"Reviews",
-     data:Object.values(counts),
-     borderWidth:3,
-     tension:.35,
-     fill:false
-    }]
-   },
-   options:{
-    responsive:true,
-    maintainAspectRatio:false,
-    plugins:{
-     legend:{
-      display:false
-     }
-    }
-   }
-  });
+ new Chart(lineCtx,{
+  type:"line",
+  data:{
+   labels,
+   datasets:[{
+    label:"Reviews",
+    data:values,
+    tension:.35,
+    fill:false
+   }]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false
+  }
+ });
 
-}
-
-
-function updateRatingChart(){
-
- const canvas=document.getElementById("ratingChart");
- const empty=document.getElementById("ratingEmpty");
-
- if(!canvas)return;
-
- const counts=[1,2,3,4,5].map(
-  rating=>
-   reviews.filter(
-    r=>Number(r.rating)===rating
-   ).length
- );
-
- if(!counts.some(Boolean)){
-
-  canvas.classList.add("hidden");
-  empty.classList.remove("hidden");
-
-  return;
- }
-
- canvas.classList.remove("hidden");
- empty.classList.add("hidden");
+ const distribution=[
+  reviews.filter(r=>Number(r.rating)===1).length,
+  reviews.filter(r=>Number(r.rating)===2).length,
+  reviews.filter(r=>Number(r.rating)===3).length,
+  reviews.filter(r=>Number(r.rating)===4).length,
+  reviews.filter(r=>Number(r.rating)===5).length
+ ];
 
  ratingChart=
-  new Chart(canvas,{
-   type:"bar",
-   data:{
-    labels:["1★","2★","3★","4★","5★"],
-    datasets:[{
-     label:"Reviews",
-     data:counts,
-     borderWidth:1
-    }]
-   },
-   options:{
-    responsive:true,
-    maintainAspectRatio:false,
-    plugins:{
-     legend:{
-      display:false
-     }
+ new Chart(ratingCtx,{
+  type:"bar",
+  data:{
+   labels:["1 ★","2 ★","3 ★","4 ★","5 ★"],
+   datasets:[{
+    label:"Reviews",
+    data:distribution
+   }]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   scales:{
+    y:{
+     beginAtZero:true,
+     ticks:{precision:0}
     }
    }
-  });
-
-}
-
-
-function updateStatusChart(){
-
- const canvas=document.getElementById("statusChart");
- const empty=document.getElementById("statusEmpty");
-
- if(!canvas)return;
-
- const issues=
-  reviews.filter(isIssue).length;
-
- const safe=
-  reviews.length-issues;
-
- if(!reviews.length){
-
-  canvas.classList.add("hidden");
-  empty.classList.remove("hidden");
-
-  return;
- }
-
- canvas.classList.remove("hidden");
- empty.classList.add("hidden");
-
- statusChart=
-  new Chart(canvas,{
-   type:"doughnut",
-   data:{
-    labels:[
-     "Likely Legitimate",
-     "Potential Issues"
-    ],
-    datasets:[{
-     data:[safe,issues],
-     borderWidth:1
-    }]
-   },
-   options:{
-    responsive:true,
-    maintainAspectRatio:false,
-    cutout:"65%"
-   }
-  });
-
-}
-
-
-/* =========================
-   ANALYZER
-========================= */
-
-async function analyzeReview(){
-
- const reviewer=
-  document.getElementById("reviewerName").value.trim();
-
- const rating=
-  Number(document.getElementById("reviewRating").value);
-
- const text=
-  document.getElementById("reviewText").value.trim();
-
- const resultEl=
-  document.getElementById("analyzerResult");
-
- if(!text){
-
-  resultEl.innerHTML=
-   '<div class="result"><span class="danger">Paste a review first.</span></div>';
-
-  return;
- }
-
-
- const lower=text.toLowerCase();
-
- const signals=[];
-
- if(
-  /never went|never visited|never been|didn't visit|did not visit|never used/i.test(lower)
- ){
-
-  signals.push(
-   "Reviewer claims they did not visit or use the business."
-  );
-
- }
-
- if(
-  /scam|fraud|fake|worst|idiot|stupid|hate|trash|criminal/i.test(lower)
- ){
-
-  signals.push(
-   "Potentially abusive or accusatory language detected."
-  );
-
- }
-
- if(
-  /https?:\/\/|www\.|promo|discount code|buy now|coupon/i.test(lower)
- ){
-
-  signals.push(
-   "Promotional or link-based content detected."
-  );
-
- }
-
- const issue=signals.length>0;
-
- const assessment=
-  issue
-  ?"Potential issue"
-  :"Likely legitimate";
-
-
- resultEl.innerHTML=
-  '<div class="result">'+
-  '<h4>'+(
-   issue
-   ?"⚠️ Potential Issue Detected"
-   :"✓ Likely Legitimate"
-  )+'</h4>'+
-  '<b>Assessment:</b> '+
-  escapeHTML(assessment)+
-  '<br><br>'+
-  (
-   signals.length
-   ?signals.map(s=>"• "+escapeHTML(s)).join("<br>")
-   :"No obvious suspicious signals were detected by the current rules."
-  )+
-  '</div>';
-
-
- try{
-
-  const reviewPayload={
-   user_id:currentUser.id,
-   reviewer_name:reviewer||"Anonymous Reviewer",
-   rating:rating,
-   review_text:text,
-   assessment:assessment,
-   issue_type:issue?"Potential issue":null
-  };
-
-  const {
-   data,
-   error
-  }=
-  await supabaseClient
-  .from("reviews")
-  .insert(reviewPayload)
-  .select()
-  .single();
-
-  if(error)throw error;
-
-
-  if(issue){
-
-   const casePayload={
-    user_id:currentUser.id,
-    review_id:data?.id,
-    title:"Potential review issue",
-    status:"Needs evidence",
-    priority:"medium",
-    evidence_notes:""
-   };
-
-   const caseResult=
-    await supabaseClient
-    .from("cases")
-    .insert(casePayload);
-
-   if(caseResult.error){
-
-    console.warn(
-     "Case creation failed:",
-     caseResult.error
-    );
-
-   }
-
   }
-
-
-  resultEl.innerHTML+=
-   '<div class="result"><span class="green"><b>Saved ✓</b></span><br>'+
-   'The review has been saved to your Supabase workspace.</div>';
-
-
-  document.getElementById("reviewText").value="";
-  document.getElementById("reviewerName").value="";
-
-  await loadData();
-
- }catch(error){
-
-  console.error(error);
-
-  resultEl.innerHTML+=
-   '<div class="result"><span class="danger">'+
-   "Could not save: "+
-   escapeHTML(error.message)+
-   '</span></div>';
-
- }
-
+ });
 }
 
 
 /* =========================
-   CASE FROM REVIEW
+   GOOGLE BUSINESS PROFILE
 ========================= */
 
-async function openCaseFromReview(reviewId){
-
- const existing=
-  cases.find(c=>
-   String(c.review_id)===String(reviewId)
-  );
-
- if(existing){
-
-  showPageByName("cases");
-  return;
-
- }
-
- const review=
-  reviews.find(r=>
-   String(r.id)===String(reviewId)
-  );
-
- if(!review)return;
-
- const result=
-  await supabaseClient
-  .from("cases")
-  .insert({
-   user_id:currentUser.id,
-   review_id:review.id,
-   title:"Review Case",
-   status:"Needs evidence",
-   priority:"medium",
-   evidence_notes:""
-  });
-
- if(result.error){
-
-  alert(result.error.message);
-  return;
-
- }
-
- await loadData();
-
- showPageByName("cases");
-
-}
-
-
-function useReviewForResponse(reviewId){
-
- const review=
-  reviews.find(r=>
-   String(r.id)===String(reviewId)
-  );
-
- if(!review)return;
-
- document.getElementById("responseInput").value=
-  review.review_text||
-  review.text||
-  review.content||
-  "";
-
- showPageByName("responses");
-
-}
-
-
-/* =========================
-   AI RESPONSES
-========================= */
-
-function setTone(tone,button){
-
- selectedTone=tone;
-
- document
-  .querySelectorAll(".toneBtn")
-  .forEach(b=>b.classList.remove("active"));
-
- if(button)button.classList.add("active");
-
-}
-
-
-function generateResponse(){
-
- const input=
-  document.getElementById("responseInput")
-  .value
-  .trim();
-
- const output=
-  document.getElementById("responseOutput");
-
- if(!input){
-
-  output.value=
-   "Please paste a review first.";
-
-  return;
-
- }
-
-
- let response="";
-
- if(selectedTone==="professional"){
-
-  response=
-   "Thank you for taking the time to share your feedback. "+
-   "We take customer concerns seriously and appreciate the opportunity to address them. "+
-   "Please contact our team directly so we can review the details and work toward a suitable resolution.";
-
- }
-
- else if(selectedTone==="warm"){
-
-  response=
-   "Thank you for sharing your experience with us. "+
-   "We're sorry to hear that your experience did not meet expectations. "+
-   "We genuinely value your feedback and would appreciate the opportunity to understand what happened and make things right.";
-
- }
-
- else if(selectedTone==="short"){
-
-  response=
-   "Thank you for your feedback. "+
-   "We take your concerns seriously. "+
-   "Please contact us directly so we can look into this further.";
-
- }
-
- else if(selectedTone==="factual"){
-
-  response=
-   "Thank you for your feedback. "+
-   "We would like to review the details of your experience accurately. "+
-   "Please contact our team directly with the relevant information so we can investigate the matter and respond appropriately.";
-
- }
-
- output.value=response;
-
-}
-
-
-async function copyResponse(){
-
- const text=
-  document.getElementById("responseOutput").value;
-
- if(!text)return;
-
- try{
-
-  await navigator.clipboard.writeText(text);
-
-  alert("Response copied ✓");
-
- }catch{
-
-  alert("Copy failed. Please select and copy the text manually.");
-
- }
-
-}
-
-
-function clearResponse(){
-
- document.getElementById("responseInput").value="";
- document.getElementById("responseOutput").value="";
-
-}
-
-
-/* =========================
-   ACTIVITY
-========================= */
-
-function refreshActivity(){
-
- const list=document.getElementById("activityList");
-
- if(!list)return;
-
- activityItems=[];
-
-
- reviews
-  .slice()
-  .reverse()
-  .slice(0,8)
-  .forEach(r=>{
-
-   activityItems.push({
-    icon:isIssue(r)?"⚠️":"★",
-    text:
-     (isIssue(r)
-      ?"Potential issue detected in a review."
-      :"Review added to your workspace."),
-    date:r.created_at
-   });
-
-  });
-
-
- cases
-  .slice()
-  .reverse()
-  .slice(0,8)
-  .forEach(c=>{
-
-   activityItems.push({
-    icon:/closed|resolved/i.test(c.status||"")
-     ?"✓"
-     :"◫",
-    text:
-     "Case "+
-     (c.status||"Needs evidence").toLowerCase()+
-     ".",
-    date:c.created_at
-   });
-
-  });
-
-
- activityItems.sort(
-  (a,b)=>
-   new Date(b.date||0)-
-   new Date(a.date||0)
- );
-
-
- activityItems=
-  activityItems.slice(0,15);
-
-
- if(!activityItems.length){
-
-  list.innerHTML=
-   '<div style="padding:35px;text-align:center;color:#8190a4;font-size:12px">'+
-   'No activity yet.'+
-   '</div>';
-
-  document.getElementById("notifyDot")
-   .classList.add("hidden");
-
-  return;
-
- }
-
-
- document.getElementById("notifyDot")
-  .classList.remove("hidden");
-
-
- list.innerHTML=
-  activityItems.map(item=>`
-
-   <div class="activityItem">
-
-    <div class="activityIcon">
-     ${item.icon}
-    </div>
-
-    <div class="activityText">
-     ${escapeHTML(item.text)}
-     <small>
-      ${escapeHTML(formatDate(item.date))}
-     </small>
-    </div>
-
-   </div>
-
-  `).join("");
-
-}
-
-
-/* =========================
-   PROFILE / BUSINESS
-========================= */
-
-function profileKey(){
-
- return "reviewshield_profile_"+currentUser.id;
-
-}
-
-function businessKey(){
-
- return "reviewshield_business_"+currentUser.id;
-
-}
-
-
-function loadLocalProfile(){
-
- if(!currentUser)return;
-
- try{
-
-  const profile=
-   JSON.parse(
-    localStorage.getItem(profileKey())||"{}"
-   );
-
-  const business=
-   JSON.parse(
-    localStorage.getItem(businessKey())||"{}"
-   );
-
-
-  document.getElementById("profileName").value=
-   profile.name||"";
-
-  document.getElementById("profileEmail").value=
-   currentUser.email||"";
-
-
-  document.getElementById("businessName").value=
-   business.name||"Acme Auto Care";
-
-  document.getElementById("businessCategory").value=
-   business.category||"";
-
-  document.getElementById("businessWebsite").value=
-   business.website||"";
-
-  document.getElementById("businessLocation").value=
-   business.location||"";
-
-
-  document.getElementById("businessTop").textContent=
-   (business.name||"Acme Auto Care")+" ▾";
-
-
-  const name=
-   profile.name||
-   currentUser.email||
-   "User";
-
-  document.getElementById("welcomeName").textContent=
-   "Good morning, "+
-   name.split(" ")[0]+
-   " 👋";
-
-  document.getElementById("sideAvatar").textContent=
-   initials(name);
-
- }catch(error){
-
-  console.error(error);
-
- }
-
-}
-
-
-function saveProfile(){
-
- const name=
-  document.getElementById("profileName").value.trim();
-
- localStorage.setItem(
-  profileKey(),
-  JSON.stringify({
-   name
-  })
- );
-
- document.getElementById("sideAvatar").textContent=
-  initials(name||currentUser.email);
-
- document.getElementById("welcomeName").textContent=
-  "Good morning, "+
-  (name||currentUser.email).split(" ")[0]+
-  " 👋";
-
- alert("Profile saved ✓");
-
-}
-
-
-function saveBusiness(){
-
- const business={
-  name:
-   document.getElementById("businessName").value.trim(),
-
-  category:
-   document.getElementById("businessCategory").value.trim(),
-
-  website:
-   document.getElementById("businessWebsite").value.trim(),
-
-  location:
-   document.getElementById("businessLocation").value.trim()
- };
-
- localStorage.setItem(
-  businessKey(),
-  JSON.stringify(business)
- );
-
- document.getElementById("businessTop").textContent=
-  (business.name||"Acme Auto Care")+" ▾";
-
- alert("Business profile saved ✓");
-
-}
-
-
-function googleConnectionInfo(){
+function googleConnect(){
 
  alert(
-  "Google Business Profile is not connected yet.\n\n"+
-  "A real connection requires Google OAuth + Business Profile API access. "+
-  "This button does not pretend that your account is connected."
+ "Google Business Profile connection requires a real Google OAuth flow and approved Business Profile API access. ReviewShield will not show a fake connected status."
  );
-
 }
 
 
@@ -3168,76 +1840,52 @@ function googleConnectionInfo(){
 function csvEscape(value){
 
  return '"'+
-  String(value??"")
-  .replace(/"/g,'""')+
-  '"';
-
+ String(value??"")
+ .replace(/"/g,'""')+
+ '"';
 }
 
-
 function exportReport(){
-
- if(!reviews.length && !cases.length){
-
-  alert("There is no data to export yet.");
-  return;
-
- }
-
 
  const rows=[];
 
  rows.push([
   "Type",
   "ID",
-  "Reviewer",
+  "Reviewer/Title",
   "Rating",
   "Review",
   "Assessment",
   "Issue Type",
-  "Case Status",
+  "Status",
   "Priority",
   "Evidence Notes",
   "Created At"
  ]);
 
-
  reviews.forEach(r=>{
-
-  const c=
-   cases.find(x=>
-    String(x.review_id)===String(r.id)
-   );
 
   rows.push([
    "Review",
    r.id,
-   r.reviewer_name||r.reviewer||"",
+   r.reviewer_name||"",
    r.rating||"",
-   r.review_text||r.text||r.content||"",
+   r.review_text||"",
    r.assessment||"",
    r.issue_type||"",
-   c?.status||"",
-   c?.priority||"",
-   c?.evidence_notes||"",
+   "",
+   "",
+   "",
    r.created_at||""
   ]);
-
  });
 
-
  cases.forEach(c=>{
-
-  if(
-   reviews.some(r=>
-    String(r.id)===String(c.review_id)
-   )
-  )return;
 
   rows.push([
    "Case",
    c.id,
-   "",
+   c.title||"",
    "",
    "",
    "",
@@ -3247,33 +1895,26 @@ function exportReport(){
    c.evidence_notes||"",
    c.created_at||""
   ]);
-
  });
 
-
  const csv=
-  rows
-  .map(row=>
-   row.map(csvEscape).join(",")
-  )
-  .join("\n");
-
+ rows.map(
+  row=>row.map(csvEscape).join(",")
+ ).join("\n");
 
  const blob=
-  new Blob(
-   [csv],
-   {type:"text/csv;charset=utf-8;"}
-  );
+ new Blob([csv],{
+  type:"text/csv;charset=utf-8;"
+ });
 
  const url=
-  URL.createObjectURL(blob);
+ URL.createObjectURL(blob);
 
- const a=
-  document.createElement("a");
+ const a=document.createElement("a");
 
  a.href=url;
  a.download=
-  "reviewshield-report-"+Date.now()+".csv";
+ "reviewshield-report-"+Date.now()+".csv";
 
  document.body.appendChild(a);
  a.click();
@@ -3281,134 +1922,67 @@ function exportReport(){
 
  URL.revokeObjectURL(url);
 
+ showToast("Report exported.");
 }
 
 
 /* =========================
-   NAVIGATION
+   STARTUP
 ========================= */
 
-const pageInfo={
- dashboard:{
-  title:"Dashboard",
-  sub:"Your reputation overview"
- },
- reviews:{
-  title:"Reviews",
-  sub:"Manage and analyze customer reviews"
- },
- analyzer:{
-  title:"AI Analyzer",
-  sub:"Analyze review risk signals"
- },
- cases:{
-  title:"Cases",
-  sub:"Manage evidence and case status"
- },
- responses:{
-  title:"AI Responses",
-  sub:"Generate professional customer responses"
- },
- activity:{
-  title:"Activity",
-  sub:"Notifications and workspace activity"
- },
- settings:{
-  title:"Settings",
-  sub:"Profile, business and integrations"
+async function init(){
+
+ const {data}=
+ await supabaseClient.auth.getSession();
+
+ if(data.session){
+
+  currentUser=data.session.user;
+
+  document.getElementById("authScreen")
+  .style.display="none";
+
+  applyUser();
+
+  loadProfile();
+
+  await loadData();
+
+ }else{
+
+  document.getElementById("authScreen")
+  .style.display="grid";
  }
-};
-
-
-function showPage(page,button){
-
- document
-  .querySelectorAll(".page")
-  .forEach(p=>
-   p.classList.remove("active")
-  );
-
- const target=
-  document.getElementById(
-   "page-"+page
-  );
-
- if(target){
-  target.classList.add("active");
- }
-
- document
-  .querySelectorAll(".navBtn")
-  .forEach(b=>
-   b.classList.remove("active")
-  );
-
- if(button){
-  button.classList.add("active");
- }
-
- const info=pageInfo[page];
-
- if(info){
-
-  document.getElementById("pageTitle").textContent=
-   info.title;
-
-  document.getElementById("pageSub").textContent=
-   info.sub;
-
- }
-
- document
-  .getElementById("sidebar")
-  .classList.remove("open");
-
- if(page==="activity"){
-  refreshActivity();
- }
-
- if(page==="settings"){
-  loadLocalProfile();
- }
-
 }
 
+supabaseClient.auth.onAuthStateChange(
+ async(event,session)=>{
 
-function showPageByName(page){
+  if(session){
 
- const btn=
-  Array.from(
-   document.querySelectorAll(".navBtn")
-  )
-  .find(b=>
-   b.getAttribute("onclick")?.includes(
-    "showPage('"+page+"'"
-   )
-  );
+   currentUser=session.user;
 
- showPage(page,btn);
+   document.getElementById("authScreen")
+   .style.display="none";
 
-}
+   applyUser();
 
+  }else{
 
-function toggleSidebar(){
+   currentUser=null;
 
- document
-  .getElementById("sidebar")
-  .classList.toggle("open");
+   document.getElementById("authScreen")
+   .style.display="grid";
 
-}
+   reviews=[];
+   cases=[];
 
+   destroyCharts();
+  }
+ }
+);
 
-/* =========================
-   SIGN OUT
-========================= */
-
-async function signOut(){
-
- await supabaseClient.auth.signOut();
-
-}
+init();
 
 
 /* =========================
@@ -3416,22 +1990,16 @@ async function signOut(){
 ========================= */
 
 setInterval(
- ()=>{
+ async()=>{
   if(currentUser){
-   loadData(false);
+   await loadData();
   }
  },
  15000
 );
 
-
-/* =========================
-   START
-========================= */
-
-init();
-
 </script>
 
 </body>
 </html>
+```
