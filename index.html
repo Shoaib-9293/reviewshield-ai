@@ -14,249 +14,66 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}.si
 <style>
 <style>
 .auth-screen{
-    position:fixed;
-    inset:0;
-    display:grid;
-    place-items:center;
-    z-index:50;
-    overflow:hidden;
-    isolation:isolate;
-    background:#050914;
-}
+   <div class="login-bg">
 
-.login-bg{
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    z-index:0;
-    background:
-        radial-gradient(circle at 15% 20%,rgba(44,111,255,.22),transparent 30%),
-        radial-gradient(circle at 85% 75%,rgba(255,55,75,.16),transparent 30%),
-        linear-gradient(135deg,#030711,#081321 55%,#030711);
-}
+  <div class="map-grid"></div>
 
-.map-grid{
-    position:absolute;
-    inset:-15%;
-    opacity:.20;
-    background-image:
-        linear-gradient(rgba(90,150,255,.18) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(90,150,255,.18) 1px,transparent 1px);
-    background-size:90px 90px;
-    transform:perspective(900px) rotateX(58deg) rotateZ(-8deg) scale(1.4);
-    mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);
-}
+  <div class="road r1"></div>
+  <div class="road r2"></div>
+  <div class="road r3"></div>
+  <div class="road r4"></div>
 
-.road{
-    position:absolute;
-    height:2px;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(70,145,255,.65),
-        rgba(70,145,255,.15),
-        transparent
-    );
-    box-shadow:0 0 12px rgba(70,145,255,.2);
-}
+  <div class="glow blue"></div>
+  <div class="glow red"></div>
 
-.road.r1{width:75%;top:25%;left:-5%;transform:rotate(13deg)}
-.road.r2{width:85%;top:58%;left:15%;transform:rotate(-17deg)}
-.road.r3{width:65%;top:75%;left:-5%;transform:rotate(7deg)}
-.road.r4{width:70%;top:42%;left:45%;transform:rotate(28deg)}
+  <div class="security-label">
+    AI-Powered Reputation Protection
+  </div>
 
-.glow{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(90px);
-    pointer-events:none;
-}
+  <div class="center-brand">
+    <div class="shield">🛡️</div>
+  </div>
 
-.glow.blue{
-    width:350px;
-    height:350px;
-    background:#1264ff;
-    opacity:.18;
-    top:-100px;
-    left:-80px;
-}
+  <div class="review-alert alert-negative">
+    <div class="icon">★</div>
+    <div>
+      <strong>Negative Review Detected</strong>
+      <span>Potential reputation risk</span>
+    </div>
+  </div>
 
-.glow.red{
-    width:300px;
-    height:300px;
-    background:#ff304b;
-    opacity:.14;
-    right:-70px;
-    bottom:-80px;
-}
+  <div class="review-alert alert-fake">
+    <div class="icon">⚠</div>
+    <div>
+      <strong>Fake Review Alert</strong>
+      <span>Suspicious activity detected</span>
+    </div>
+  </div>
 
-.security-label{
-    position:absolute;
-    top:28px;
-    left:50%;
-    transform:translateX(-50%);
-    padding:8px 16px;
-    border:1px solid rgba(80,140,255,.22);
-    border-radius:30px;
-    background:rgba(7,15,29,.55);
-    color:#9db8e8;
-    font-size:10px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    backdrop-filter:blur(12px);
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-    white-space:nowrap;
-}
+  <div class="review-alert alert-spam">
+    <div class="icon">✦</div>
+    <div>
+      <strong>Spam Review Blocked</strong>
+      <span>AI analysis completed</span>
+    </div>
+  </div>
 
-.center-brand{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-align:center;
-    pointer-events:none;
-    opacity:.09;
-}
+  <div class="review-alert alert-protected">
+    <div class="icon">✓</div>
+    <div>
+      <strong>Business Protected</strong>
+      <span>Reputation monitoring active</span>
+    </div>
+  </div>
 
-.shield{
-    width:190px;
-    height:220px;
-    margin:auto;
-    border:2px solid #4f8cff;
-    clip-path:polygon(
-        50% 0%,
-        90% 15%,
-        88% 60%,
-        50% 100%,
-        12% 60%,
-        10% 15%
-    );
-    box-shadow:
-        0 0 35px rgba(60,130,255,.5),
-        inset 0 0 30px rgba(60,130,255,.12);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:65px;
-}
+  <div class="particle p1"></div>
+  <div class="particle p2"></div>
+  <div class="particle p3"></div>
+  <div class="particle p4"></div>
+  <div class="particle p5"></div>
+  <div class="particle p6"></div>
 
-.review-alert{
-    position:absolute;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:12px 17px;
-    background:rgba(8,18,34,.72);
-    border:1px solid rgba(255,255,255,.09);
-    border-radius:14px;
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.35),
-        inset 0 1px rgba(255,255,255,.06);
-    animation:float 6s ease-in-out infinite;
-    z-index:1;
-}
-
-.review-alert .icon{
-    width:38px;
-    height:38px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:11px;
-    font-size:18px;
-}
-
-.review-alert strong{
-    display:block;
-    font-size:12px;
-    letter-spacing:.2px;
-    color:#f4f7ff;
-}
-
-.review-alert span{
-    display:block;
-    margin-top:3px;
-    font-size:10px;
-    color:#8f9db2;
-}
-
-.alert-negative{
-    top:17%;
-    left:8%;
-    border-color:rgba(255,65,82,.25);
-}
-
-.alert-negative .icon{
-    background:rgba(255,50,70,.12);
-    color:#ff5265;
-}
-
-.alert-fake{
-    right:7%;
-    top:30%;
-    animation-delay:1s;
-    border-color:rgba(255,174,60,.22);
-}
-
-.alert-fake .icon{
-    background:rgba(255,174,60,.10);
-    color:#ffb84c;
-}
-
-.alert-spam{
-    left:7%;
-    bottom:19%;
-    animation-delay:2s;
-    border-color:rgba(115,100,255,.27);
-}
-
-.alert-spam .icon{
-    background:rgba(115,100,255,.12);
-    color:#8d7cff;
-}
-
-.alert-protected{
-    right:8%;
-    bottom:17%;
-    animation-delay:3s;
-    border-color:rgba(40,220,155,.22);
-}
-
-.alert-protected .icon{
-    background:rgba(40,220,155,.10);
-    color:#32dfa1;
-}
-
-@keyframes float{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-12px)}
-}
-
-.particle{
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:#5c9cff;
-    border-radius:50%;
-    box-shadow:0 0 12px #4f8cff;
-    animation:particleMove 8s linear infinite;
-}
-
-.p1{left:20%;top:10%}
-.p2{left:34%;top:80%;animation-delay:2s}
-.p3{left:70%;top:15%;animation-delay:4s}
-.p4{left:82%;top:65%;animation-delay:1s}
-.p5{left:52%;top:25%;animation-delay:3s}
-.p6{left:12%;top:58%;animation-delay:5s}
-
-@keyframes particleMove{
-    0%{opacity:0;transform:translateY(20px)}
-    30%{opacity:1}
-    70%{opacity:.8}
-    100%{opacity:0;transform:translateY(-80px)}
-}
+</div>
 
 /* POLISHED LOGIN CARD */
 .auth-box{
