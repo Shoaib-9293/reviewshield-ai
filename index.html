@@ -12,137 +12,373 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}.si
 </head>
 <body>
 <style>
-.auth-screen{position:fixed;inset:0;background:#f6f7fb;display:grid;place-items:center;z-index:50}
-.auth-box{width:min(430px,92vw);background:#fff;border:1px solid #e5e8ef;border-radius:16px;padding:30px;box-shadow:0 18px 50px rgba(23,32,51,.08)}
-.auth-box .logo{margin-bottom:18px}.auth-box h1{margin:0 0 7px;font-size:25px}.auth-box p{font-size:13px;line-height:1.5}.auth-form{display:grid;gap:10px;margin-top:20px}.auth-form label{font-size:12px;font-weight:700}.auth-form input{border:1px solid #dfe4ec;border-radius:8px;padding:11px 12px;outline:none}.auth-form input:focus{border-color:#7b8fc8}.auth-error{color:#b33e3e;font-size:11px;min-height:16px}.auth-switch{text-align:center;margin-top:15px;font-size:12px}.auth-switch button{border:0;background:none;color:#4b63a3;font-weight:800;cursor:pointer}
+<style>
+.auth-screen{
+    position:fixed;
+    inset:0;
+    display:grid;
+    place-items:center;
+    z-index:50;
+    overflow:hidden;
+    isolation:isolate;
+    background:#050914;
+}
+
+.login-bg{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    z-index:0;
+    background:
+        radial-gradient(circle at 15% 20%,rgba(44,111,255,.22),transparent 30%),
+        radial-gradient(circle at 85% 75%,rgba(255,55,75,.16),transparent 30%),
+        linear-gradient(135deg,#030711,#081321 55%,#030711);
+}
+
+.map-grid{
+    position:absolute;
+    inset:-15%;
+    opacity:.20;
+    background-image:
+        linear-gradient(rgba(90,150,255,.18) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(90,150,255,.18) 1px,transparent 1px);
+    background-size:90px 90px;
+    transform:perspective(900px) rotateX(58deg) rotateZ(-8deg) scale(1.4);
+    mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);
+}
+
+.road{
+    position:absolute;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(70,145,255,.65),
+        rgba(70,145,255,.15),
+        transparent
+    );
+    box-shadow:0 0 12px rgba(70,145,255,.2);
+}
+
+.road.r1{width:75%;top:25%;left:-5%;transform:rotate(13deg)}
+.road.r2{width:85%;top:58%;left:15%;transform:rotate(-17deg)}
+.road.r3{width:65%;top:75%;left:-5%;transform:rotate(7deg)}
+.road.r4{width:70%;top:42%;left:45%;transform:rotate(28deg)}
+
+.glow{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    pointer-events:none;
+}
+
+.glow.blue{
+    width:350px;
+    height:350px;
+    background:#1264ff;
+    opacity:.18;
+    top:-100px;
+    left:-80px;
+}
+
+.glow.red{
+    width:300px;
+    height:300px;
+    background:#ff304b;
+    opacity:.14;
+    right:-70px;
+    bottom:-80px;
+}
+
+.security-label{
+    position:absolute;
+    top:28px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:8px 16px;
+    border:1px solid rgba(80,140,255,.22);
+    border-radius:30px;
+    background:rgba(7,15,29,.55);
+    color:#9db8e8;
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+    white-space:nowrap;
+}
+
+.center-brand{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    pointer-events:none;
+    opacity:.09;
+}
+
+.shield{
+    width:190px;
+    height:220px;
+    margin:auto;
+    border:2px solid #4f8cff;
+    clip-path:polygon(
+        50% 0%,
+        90% 15%,
+        88% 60%,
+        50% 100%,
+        12% 60%,
+        10% 15%
+    );
+    box-shadow:
+        0 0 35px rgba(60,130,255,.5),
+        inset 0 0 30px rgba(60,130,255,.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+}
+
+.review-alert{
+    position:absolute;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 17px;
+    background:rgba(8,18,34,.72);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:14px;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.06);
+    animation:float 6s ease-in-out infinite;
+    z-index:1;
+}
+
+.review-alert .icon{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:11px;
+    font-size:18px;
+}
+
+.review-alert strong{
+    display:block;
+    font-size:12px;
+    letter-spacing:.2px;
+    color:#f4f7ff;
+}
+
+.review-alert span{
+    display:block;
+    margin-top:3px;
+    font-size:10px;
+    color:#8f9db2;
+}
+
+.alert-negative{
+    top:17%;
+    left:8%;
+    border-color:rgba(255,65,82,.25);
+}
+
+.alert-negative .icon{
+    background:rgba(255,50,70,.12);
+    color:#ff5265;
+}
+
+.alert-fake{
+    right:7%;
+    top:30%;
+    animation-delay:1s;
+    border-color:rgba(255,174,60,.22);
+}
+
+.alert-fake .icon{
+    background:rgba(255,174,60,.10);
+    color:#ffb84c;
+}
+
+.alert-spam{
+    left:7%;
+    bottom:19%;
+    animation-delay:2s;
+    border-color:rgba(115,100,255,.27);
+}
+
+.alert-spam .icon{
+    background:rgba(115,100,255,.12);
+    color:#8d7cff;
+}
+
+.alert-protected{
+    right:8%;
+    bottom:17%;
+    animation-delay:3s;
+    border-color:rgba(40,220,155,.22);
+}
+
+.alert-protected .icon{
+    background:rgba(40,220,155,.10);
+    color:#32dfa1;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+}
+
+.particle{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:#5c9cff;
+    border-radius:50%;
+    box-shadow:0 0 12px #4f8cff;
+    animation:particleMove 8s linear infinite;
+}
+
+.p1{left:20%;top:10%}
+.p2{left:34%;top:80%;animation-delay:2s}
+.p3{left:70%;top:15%;animation-delay:4s}
+.p4{left:82%;top:65%;animation-delay:1s}
+.p5{left:52%;top:25%;animation-delay:3s}
+.p6{left:12%;top:58%;animation-delay:5s}
+
+@keyframes particleMove{
+    0%{opacity:0;transform:translateY(20px)}
+    30%{opacity:1}
+    70%{opacity:.8}
+    100%{opacity:0;transform:translateY(-80px)}
+}
+
+/* POLISHED LOGIN CARD */
+.auth-box{
+    position:relative;
+    z-index:5;
+    width:min(430px,92vw);
+    background:rgba(8,18,34,.88);
+    border:1px solid rgba(120,160,230,.18);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        0 0 60px rgba(40,100,255,.08),
+        inset 0 1px rgba(255,255,255,.07);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    color:#fff;
+}
+
+.auth-box .logo{
+    margin-bottom:18px;
+    background:linear-gradient(135deg,#4f8cff,#315fc7);
+    box-shadow:0 8px 25px rgba(79,140,255,.3);
+}
+
+.auth-box h1{
+    margin:0 0 7px;
+    font-size:25px;
+    color:#fff;
+}
+
+.auth-box p{
+    font-size:13px;
+    line-height:1.5;
+    color:#8f9db2;
+}
+
+.auth-form{
+    display:grid;
+    gap:10px;
+    margin-top:20px;
+}
+
+.auth-form label{
+    font-size:12px;
+    font-weight:700;
+    color:#b9c6da;
+}
+
+.auth-form input{
+    width:100%;
+    border:1px solid rgba(130,155,195,.18);
+    border-radius:9px;
+    padding:12px;
+    outline:none;
+    background:rgba(255,255,255,.045);
+    color:#fff;
+    transition:.2s;
+}
+
+.auth-form input::placeholder{
+    color:#65748b;
+}
+
+.auth-form input:focus{
+    border-color:#4f8cff;
+    box-shadow:0 0 0 3px rgba(79,140,255,.10);
+    background:rgba(255,255,255,.065);
+}
+
+.auth-form .primary{
+    margin-top:5px;
+    background:linear-gradient(135deg,#4f8cff,#3568d4);
+    box-shadow:0 10px 25px rgba(52,104,212,.25);
+    transition:.2s;
+}
+
+.auth-form .primary:hover{
+    transform:translateY(-1px);
+    box-shadow:0 14px 30px rgba(52,104,212,.35);
+}
+
+.auth-error{
+    color:#ff6978;
+    font-size:11px;
+    min-height:16px;
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:15px;
+    font-size:12px;
+    color:#7f8da2;
+}
+
+.auth-switch button{
+    border:0;
+    background:none;
+    color:#6fa0ff;
+    font-weight:800;
+    cursor:pointer;
+}
+
+@media(max-width:700px){
+    .review-alert{transform:scale(.82)}
+    .alert-negative{left:-25px}
+    .alert-fake{right:-30px}
+    .alert-spam{left:-30px}
+    .alert-protected{right:-30px}
+    .center-brand{opacity:.05}
+    .security-label{white-space:nowrap}
+}
+
+@media(max-width:500px){
+    .auth-box{
+        padding:24px;
+        border-radius:17px;
+    }
+
+    .review-alert{
+        opacity:.7;
+        transform:scale(.7);
+    }
+}
 </style>
-<div id="authScreen" class="auth-screen">
-  <div class="auth-box">
-    <div class="logo">R</div>
-    <div class="eyebrow">REVIEW MANAGEMENT PLATFORM</div>
-    <h1 id="authTitle">Create your account</h1>
-    <p class="muted" id="authSubtitle">Start building your ReviewShield workspace.</p>
-    <form class="auth-form" onsubmit="handleAuth(event)">
-      <div id="nameField"><label>Full name</label><input id="authName" autocomplete="name" placeholder="Your name"></div>
-      <div><label>Email</label><input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></div>
-      <div><label>Password</label><input id="authPassword" type="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters"></div>
-      <div id="authError" class="auth-error"></div>
-      <button class="primary" type="submit" id="authButton">Create account</button>
-    </form>
-    <div class="auth-switch"><span id="switchText">Already have an account?</span> <button type="button" onclick="toggleAuth()">Log in</button></div>
-  </div>
-</div>
-
-<div class="app">
-<aside class="side">
-<div class="brand"><span class="logo">R</span><span>ReviewShield AI</span></div>
-<div class="nav">
-<button class="active" onclick="show('dashboard',this)">⌂ &nbsp; Dashboard</button>
-<button onclick="show('reviews',this)">★ &nbsp; Reviews</button>
-<button onclick="show('analyzer',this)">⚑ &nbsp; AI Analyzer</button>
-<button onclick="show('cases',this)">▣ &nbsp; Cases</button>
-<button onclick="show('responses',this)">◈ &nbsp; AI Responses</button>
-<button onclick="show('settings',this)">⚙ &nbsp; Settings</button>
-</div>
-<div class="bottom"><div class="plan"><small>Current plan</small><b>Starter</b><button>Upgrade</button></div><div class="user"><div class="avatar">L</div><div><b>Lumos</b><small>Business Owner</small></div></div></div>
-</aside>
-<main class="main">
-<header class="top"><div class="business"><span class="muted">Business</span><strong>Acme Auto Care ▾</strong></div><div class="topright"><button class="ghost">?</button><button class="ghost">🔔</button><div class="avatar">L</div></div></header>
-
-<section id="dashboard" class="page">
-<div class="head"><div><div class="eyebrow">REVIEW HEALTH</div><h1>Good evening, Lumos 👋</h1><div class="muted">Monitor, analyze and organize your business reviews.</div></div><button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">＋ Analyze review</button></div>
-<div class="stats"><div class="card stat"><small>Average rating</small><strong>4.2 ★</strong><span class="green">↑ 0.2 this month</span></div><div class="card stat"><small>Total reviews</small><strong>248</strong><span class="green">↑ 14 this month</span></div><div class="card stat"><small>Potential issues</small><strong id="flagCount">7</strong><span class="amber">Needs attention</span></div><div class="card stat"><small>Open cases</small><strong id="caseCount">3</strong><span class="muted">4 resolved this month</span></div></div>
-<div class="card section"><h2>What ReviewShield does</h2><p class="muted">Analyze reviews for potential policy issues, organize evidence, prepare reporting information, and generate professional responses. Google makes the final decision on policy violations.</p></div>
-<div class="card section"><h2>Recent reviews</h2><div id="dashReviews" class="review-list"></div></div>
-</section>
-
-<section id="reviews" class="page hidden"><div class="head"><div><div class="eyebrow">REVIEWS</div><h1>Review inbox</h1><div class="muted">Demo reviews for the Phase 2 build.</div></div><button class="primary" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">Analyze a review</button></div><div class="card section"><div id="allReviews" class="review-list"></div></div></section>
-
-<section id="analyzer" class="page hidden"><div class="head"><div><div class="eyebrow">AI REVIEW ANALYZER</div><h1>Analyze a review</h1><div class="muted">This demo uses transparent rules; production AI will be connected later.</div></div></div><div class="card section"><div class="form"><label><b>Review text</b></label><textarea id="reviewText" placeholder="Paste a review here..."></textarea><button class="primary" onclick="analyze()">Analyze review</button><div id="analysisResult"></div></div></div></section>
-
-<section id="cases" class="page hidden"><div class="head"><div><div class="eyebrow">CASE MANAGEMENT</div><h1>Cases</h1><div class="muted">Track reviews that need evidence or reporting.</div></div></div><div class="card section" id="caseList"></div></section>
-
-<section id="responses" class="page hidden"><div class="head"><div><div class="eyebrow">AI RESPONSES</div><h1>Response assistant</h1><div class="muted">Generate a professional draft for a legitimate negative review.</div></div></div><div class="card section"><div class="form"><textarea id="responseText" placeholder="Paste the customer's review..."></textarea><button class="primary" onclick="generateResponse()">Generate draft</button><div id="responseResult"></div></div></div></section>
-
-<section id="settings" class="page hidden"><div class="head"><div><div class="eyebrow">SETTINGS</div><h1>Settings</h1><div class="muted">Google integration will be added after API access approval.</div></div></div><div class="card section"><h2>Google Business Profile</h2><p class="muted">Status: <b>Not connected</b></p><button class="primary" onclick="alert('Google OAuth will be enabled after the Business Profile API access stage.')">Connect Google</button></div></section>
-</main></div>
-
-<script>
-const reviews=[
-{id:1,name:"Sarah M.",rating:5,text:"Great service and very professional. The team was helpful and finished the work quickly.",assessment:"Likely legitimate",cls:"safe"},
-{id:2,name:"John D.",rating:1,text:"This place is a complete scam and the worst service ever. Everyone should stay away.",assessment:"Potential harassment / issue",cls:"flag"},
-{id:3,name:"Mike R.",rating:1,text:"Never went here. Stop contacting me.",assessment:"Potential spam",cls:"flag"},
-{id:4,name:"Emily K.",rating:4,text:"Good work overall. The waiting time was longer than expected, but staff were friendly.",assessment:"Likely legitimate",cls:"safe"}
-];
-let cases=[{name:"John D.",issue:"Potential harassment",status:"Needs evidence"},{name:"Mike R.",issue:"Potential spam",status:"Ready for review"},{name:"Promotional link",issue:"Potential off-topic content",status:"Reported"}];
-
-function reviewHTML(r){return `<div class="review"><div><b>${r.name}</b> &nbsp; <span class="badge ${r.cls}">${r.assessment}</span><small> · ${r.rating}/5 ★</small><p>“${r.text}”</p><small>Demo data · Google integration not connected</small></div><div class="actions"><button class="ghost" onclick="loadReview(${r.id})">Analyze</button></div></div>`}
-function render(){document.getElementById('dashReviews').innerHTML=reviews.slice(0,3).map(reviewHTML).join('');document.getElementById('allReviews').innerHTML=reviews.map(reviewHTML).join('');document.getElementById('caseList').innerHTML=cases.map(c=>`<div class="case"><div><b>${c.name}</b><div class="muted">${c.issue}</div></div><span class="status">${c.status}</span></div>`).join('');}
-function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active')}
-function loadReview(id){const r=reviews.find(x=>x.id===id);show('analyzer',document.querySelectorAll('.nav button')[2]);document.getElementById('reviewText').value=r.text;analyze()}
-function analyze(){const t=document.getElementById('reviewText').value.trim();if(!t){document.getElementById('analysisResult').innerHTML='<div class="result">Please paste a review first.</div>';return}let signals=[];if(/never (went|visited)|never been|didn.?t visit/i.test(t))signals.push('Reviewer states or suggests they did not visit the business.');if(/scam|fraud|worst|idiot|stupid|hate|trash/i.test(t))signals.push('Contains potentially abusive or accusatory language.');if(/http|www\\.|promo|discount code|buy now/i.test(t))signals.push('Possible promotional/link content detected.');const high=signals.length>0;document.getElementById('analysisResult').innerHTML=`<div class="result"><strong>${high?'Potential policy issue — review required':'No obvious policy signal detected'}</strong><div class="muted">${signals.length?signals.map(s=>'• '+s).join('<br>'):'The demo rules found no obvious signal. This does not mean the review is legitimate or illegitimate.'}</div><br><span class="badge ${high?'flag':'safe'}">${high?'Needs human review':'Likely legitimate'}</span><p class="muted">Recommendation: verify the facts and relevant Google policy before reporting. Google makes the final decision.</p></div>`}
-function generateResponse(){
-  const t=document.getElementById('responseText').value.trim();
-  if(!t){
-    document.getElementById('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';
-    return;
-  }
-  const draft='Thank you for sharing your feedback. We’re sorry to hear that your experience did not meet expectations. We take concerns like this seriously and would appreciate the opportunity to understand what happened and make things right. Please contact our team directly so we can look into this further.';
-  document.getElementById('responseResult').innerHTML='<div class="result"><strong>Draft response</strong><div id="draftText"></div><br><button class="ghost" onclick="copyDraft(this)">Copy draft</button></div>';
-  document.getElementById('draftText').textContent='“'+draft+'”';
-}
-function copyDraft(btn){
-  const draft=document.getElementById('draftText').innerText;
-  if(navigator.clipboard){navigator.clipboard.writeText(draft);}
-  btn.innerText='Copied';
-  setTimeout(function(){btn.innerText='Copy draft';},1200);
-}
-render();
-</script>
-<script>
-let authMode='signup';
-function toggleAuth(){
-  authMode=authMode==='signup'?'login':'signup';
-  document.getElementById('authTitle').innerText=authMode==='signup'?'Create your account':'Welcome back';
-  document.getElementById('authSubtitle').innerText=authMode==='signup'?'Start building your ReviewShield workspace.':'Log in to your ReviewShield workspace.';
-  document.getElementById('nameField').style.display=authMode==='signup'?'block':'none';
-  document.getElementById('authButton').innerText=authMode==='signup'?'Create account':'Log in';
-  document.getElementById('switchText').innerText=authMode==='signup'?'Already have an account?':'New to ReviewShield?';
-  document.querySelector('.auth-switch button').innerText=authMode==='signup'?'Log in':'Create account';
-  document.getElementById('authError').innerText='';
-}
-function handleAuth(e){
-  e.preventDefault();
-  const email=document.getElementById('authEmail').value.trim().toLowerCase();
-  const pass=document.getElementById('authPassword').value;
-  const name=document.getElementById('authName').value.trim()||'Lumos';
-  const key='reviewshield_users';
-  const users=JSON.parse(localStorage.getItem(key)||'[]');
-  const err=document.getElementById('authError');
-  if(authMode==='signup'){
-    if(users.some(u=>u.email===email)){err.innerText='An account with this email already exists.';return;}
-    users.push({email,password:pass,name});
-    localStorage.setItem(key,JSON.stringify(users));
-    localStorage.setItem('reviewshield_session',JSON.stringify({email,name}));
-  }else{
-    const user=users.find(u=>u.email===email&&u.password===pass);
-    if(!user){err.innerText='Incorrect email or password.';return;}
-    localStorage.setItem('reviewshield_session',JSON.stringify({email:user.email,name:user.name}));
-  }
-  applySession();
-}
-function applySession(){
-  const s=JSON.parse(localStorage.getItem('reviewshield_session')||'null');
-  if(!s)return;
-  document.getElementById('authScreen').style.display='none';
-  const name=s.name||'Lumos';
-  document.querySelectorAll('.user b').forEach(x=>x.innerText=name);
-  const title=document.querySelector('#dashboard h1');
-  if(title)title.innerText='Good evening, '+name+' 👋';
-}
-function logout(){
-  localStorage.removeItem('reviewshield_session');
-  location.reload();
-}
-applySession();
-</script></body></html>
