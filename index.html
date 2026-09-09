@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ReviewShield AI — Phase 2</title>
 
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap');
 
@@ -473,6 +476,76 @@ button{transition:.2s ease}
   color:#929dad;
 }
 
+/* CHARTS */
+
+.analytics-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:19px;
+}
+
+.chart-card{
+  min-width:0;
+}
+
+.chart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
+.chart-title{
+  font-family:Manrope,Inter,sans-serif;
+  font-size:16px;
+  font-weight:800;
+  margin:0 0 5px;
+}
+
+.chart-wrap{
+  height:320px;
+  margin-top:20px;
+  position:relative;
+}
+
+.chart-wrap.small{
+  height:300px;
+}
+
+.chart-empty{
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:#9aa5b5;
+  font-size:13px;
+  border:1px dashed #dce3ee;
+  border-radius:12px;
+  background:#fafbfd;
+}
+
+.live-dot{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#e8f8f0;
+  color:#217b59;
+  font-size:10px;
+  font-weight:800;
+}
+
+.live-dot:before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#15966a;
+  box-shadow:0 0 0 4px rgba(21,150,106,.12);
+}
+
 .auth-wrap{
   position:fixed;
   inset:0;
@@ -614,6 +687,10 @@ button{transition:.2s ease}
   .stats{
     grid-template-columns:repeat(2,1fr);
   }
+
+  .analytics-grid{
+    grid-template-columns:1fr;
+  }
 }
 
 @media(max-width:650px){
@@ -657,6 +734,14 @@ button{transition:.2s ease}
 
   .auth-box{
     padding:25px;
+  }
+
+  .chart-wrap{
+    height:270px;
+  }
+
+  .chart-wrap.small{
+    height:260px;
   }
 }
 </style>
@@ -988,6 +1073,124 @@ button{transition:.2s ease}
       </div>
 
 
+      <!-- REAL ANALYTICS -->
+
+      <div class="analytics-grid">
+
+        <!-- REVIEWS OVER TIME -->
+        <div class="card section chart-card">
+
+          <div class="chart-header">
+
+            <div>
+
+              <div class="chart-title">
+                Reviews over time
+              </div>
+
+              <div class="muted">
+                Number of reviews saved to your account by date.
+              </div>
+
+            </div>
+
+            <span class="live-dot">
+              LIVE DATA
+            </span>
+
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="reviewsChart"></canvas>
+
+            <div
+              id="reviewsChartEmpty"
+              class="chart-empty hidden"
+            >
+              No review data yet.
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- RATING DISTRIBUTION -->
+        <div class="card section chart-card">
+
+          <div class="chart-header">
+
+            <div>
+
+              <div class="chart-title">
+                Rating distribution
+              </div>
+
+              <div class="muted">
+                Actual ratings from saved reviews.
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="chart-wrap small">
+
+            <canvas id="ratingChart"></canvas>
+
+            <div
+              id="ratingChartEmpty"
+              class="chart-empty hidden"
+            >
+              No ratings available yet.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- STATUS CHART -->
+
+      <div class="card section chart-card">
+
+        <div class="chart-header">
+
+          <div>
+
+            <div class="chart-title">
+              Review status
+            </div>
+
+            <div class="muted">
+              Potential policy issues compared with reviews without obvious signals.
+            </div>
+
+          </div>
+
+          <span class="live-dot">
+            SUPABASE
+          </span>
+
+        </div>
+
+        <div class="chart-wrap small">
+
+          <canvas id="statusChart"></canvas>
+
+          <div
+            id="statusChartEmpty"
+            class="chart-empty hidden"
+          >
+            Analyze reviews to populate this chart.
+          </div>
+
+        </div>
+
+      </div>
+
+
       <div class="card section">
 
         <h2>
@@ -1294,6 +1497,15 @@ let currentUser = null;
 let signupMode = false;
 
 
+/* CHART INSTANCES */
+
+let reviewsChart = null;
+let ratingChart = null;
+let statusChart = null;
+
+
+/* AUTH MODE */
+
 function toggleAuthMode(){
 
   signupMode = !signupMode;
@@ -1326,6 +1538,8 @@ function toggleAuthMode(){
   document.getElementById('authMsg').textContent = '';
 }
 
+
+/* AUTH */
 
 async function handleAuth(){
 
@@ -1423,6 +1637,8 @@ async function handleAuth(){
 }
 
 
+/* START APP */
+
 async function startApp(user){
 
   currentUser = user;
@@ -1487,6 +1703,8 @@ async function startApp(user){
 }
 
 
+/* SIGN OUT */
+
 async function signOut(){
 
   await supabaseClient.auth.signOut();
@@ -1495,6 +1713,8 @@ async function signOut(){
 
   reviews = [];
   cases = [];
+
+  destroyCharts();
 
 
   document
@@ -1509,6 +1729,8 @@ async function signOut(){
     '<span class="green">Signed out successfully.</span>';
 }
 
+
+/* NORMALIZE REVIEW */
 
 function normalizeReview(r){
 
@@ -1528,6 +1750,8 @@ function normalizeReview(r){
 }
 
 
+/* NORMALIZE CASE */
+
 function normalizeCase(c){
 
   return {
@@ -1535,6 +1759,8 @@ function normalizeCase(c){
   };
 }
 
+
+/* LOAD SUPABASE DATA */
 
 async function loadData(showStatus=false){
 
@@ -1596,6 +1822,8 @@ async function loadData(showStatus=false){
 }
 
 
+/* REVIEW HTML */
+
 function reviewHTML(r){
 
   const id = r.id;
@@ -1638,7 +1866,7 @@ function reviewHTML(r){
 
       <button
         class="ghost"
-        onclick="loadReview(${id})"
+        onclick="loadReview('${escapeHTML(id)}')"
       >
         Analyze
       </button>
@@ -1649,6 +1877,8 @@ function reviewHTML(r){
   `;
 }
 
+
+/* ESCAPE HTML */
 
 function escapeHTML(s){
 
@@ -1664,6 +1894,8 @@ function escapeHTML(s){
   );
 }
 
+
+/* UPDATE DASHBOARD STATS */
 
 function updateStats(){
 
@@ -1730,6 +1962,8 @@ function updateStats(){
   }
 }
 
+
+/* RENDER EVERYTHING */
 
 function render(){
 
@@ -1804,8 +2038,550 @@ function render(){
     : '<div class="empty">' +
       'No cases yet.' +
       '</div>';
+
+
+  /* UPDATE REAL CHARTS */
+
+  updateCharts();
 }
 
+
+/* CHART EMPTY STATE */
+
+function setChartEmpty(canvasId,emptyId,isEmpty){
+
+  const canvas =
+    document.getElementById(canvasId);
+
+  const empty =
+    document.getElementById(emptyId);
+
+  if(!canvas || !empty) return;
+
+  canvas.classList.toggle(
+    'hidden',
+    isEmpty
+  );
+
+  empty.classList.toggle(
+    'hidden',
+    !isEmpty
+  );
+}
+
+
+/* DESTROY OLD CHARTS */
+
+function destroyCharts(){
+
+  if(reviewsChart){
+    reviewsChart.destroy();
+    reviewsChart = null;
+  }
+
+  if(ratingChart){
+    ratingChart.destroy();
+    ratingChart = null;
+  }
+
+  if(statusChart){
+    statusChart.destroy();
+    statusChart = null;
+  }
+}
+
+
+/* REAL SUPABASE CHARTS */
+
+function updateCharts(){
+
+  const reviewsCanvas =
+    document.getElementById('reviewsChart');
+
+  const ratingCanvas =
+    document.getElementById('ratingChart');
+
+  const statusCanvas =
+    document.getElementById('statusChart');
+
+
+  if(
+    !reviewsCanvas ||
+    !ratingCanvas ||
+    !statusCanvas
+  ){
+    return;
+  }
+
+
+  /*
+    1. REVIEWS OVER TIME
+
+    Uses actual created_at timestamps
+    from the Supabase reviews table.
+  */
+
+  if(reviewsChart){
+    reviewsChart.destroy();
+    reviewsChart = null;
+  }
+
+
+  if(reviews.length === 0){
+
+    setChartEmpty(
+      'reviewsChart',
+      'reviewsChartEmpty',
+      true
+    );
+
+  }else{
+
+    setChartEmpty(
+      'reviewsChart',
+      'reviewsChartEmpty',
+      false
+    );
+
+
+    const grouped = {};
+
+
+    reviews.forEach(function(r){
+
+      const d =
+        new Date(
+          r.created_at || Date.now()
+        );
+
+
+      if(isNaN(d.getTime())) return;
+
+
+      const key =
+        d.getFullYear() +
+        '-' +
+        String(d.getMonth()+1).padStart(2,'0') +
+        '-' +
+        String(d.getDate()).padStart(2,'0');
+
+
+      if(!grouped[key]){
+        grouped[key] = 0;
+      }
+
+
+      grouped[key]++;
+    });
+
+
+    const keys =
+      Object.keys(grouped).sort();
+
+
+    const labels =
+      keys.map(function(key){
+
+        const parts =
+          key.split('-');
+
+        const date =
+          new Date(
+            Number(parts[0]),
+            Number(parts[1])-1,
+            Number(parts[2])
+          );
+
+        return date.toLocaleDateString(
+          undefined,
+          {
+            month:'short',
+            day:'numeric'
+          }
+        );
+      });
+
+
+    const values =
+      keys.map(
+        key => grouped[key]
+      );
+
+
+    reviewsChart =
+      new Chart(
+        reviewsCanvas,
+        {
+          type:'line',
+
+          data:{
+            labels:labels,
+
+            datasets:[{
+
+              label:'Reviews',
+
+              data:values,
+
+              borderWidth:3,
+
+              tension:.35,
+
+              fill:true,
+
+              pointRadius:4,
+
+              pointHoverRadius:7,
+
+              borderColor:'#4f7cff',
+
+              backgroundColor:'rgba(79,124,255,.10)',
+
+              pointBackgroundColor:'#4f7cff',
+
+              pointBorderColor:'#ffffff',
+
+              pointBorderWidth:2
+
+            }]
+          },
+
+          options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            interaction:{
+              intersect:false,
+              mode:'index'
+            },
+
+            plugins:{
+
+              legend:{
+                display:false
+              },
+
+              tooltip:{
+                backgroundColor:'#0b1220',
+                padding:12,
+                cornerRadius:9,
+
+                callbacks:{
+                  label:function(context){
+                    return ' Reviews: ' +
+                      context.parsed.y;
+                  }
+                }
+              }
+            },
+
+            scales:{
+
+              x:{
+                grid:{
+                  display:false
+                },
+
+                ticks:{
+                  color:'#8b97a9',
+                  maxRotation:0
+                }
+              },
+
+              y:{
+
+                beginAtZero:true,
+
+                ticks:{
+                  precision:0,
+                  color:'#8b97a9'
+                },
+
+                grid:{
+                  color:'#edf1f6'
+                }
+              }
+            }
+          }
+        }
+      );
+  }
+
+
+  /*
+    2. RATING DISTRIBUTION
+
+    Uses actual rating values
+    stored in Supabase.
+  */
+
+  if(ratingChart){
+    ratingChart.destroy();
+    ratingChart = null;
+  }
+
+
+  const ratingCounts = {
+    1:0,
+    2:0,
+    3:0,
+    4:0,
+    5:0
+  };
+
+
+  reviews.forEach(function(r){
+
+    const rating =
+      Number(r.rating);
+
+
+    if(
+      Number.isFinite(rating) &&
+      rating >= 1 &&
+      rating <= 5
+    ){
+
+      ratingCounts[
+        Math.round(rating)
+      ]++;
+    }
+  });
+
+
+  const totalRatings =
+    Object.values(ratingCounts)
+      .reduce(
+        (a,b) => a+b,
+        0
+      );
+
+
+  if(totalRatings === 0){
+
+    setChartEmpty(
+      'ratingChart',
+      'ratingChartEmpty',
+      true
+    );
+
+  }else{
+
+    setChartEmpty(
+      'ratingChart',
+      'ratingChartEmpty',
+      false
+    );
+
+
+    ratingChart =
+      new Chart(
+        ratingCanvas,
+        {
+          type:'bar',
+
+          data:{
+
+            labels:[
+              '1 Star',
+              '2 Stars',
+              '3 Stars',
+              '4 Stars',
+              '5 Stars'
+            ],
+
+            datasets:[{
+
+              label:'Reviews',
+
+              data:[
+                ratingCounts[1],
+                ratingCounts[2],
+                ratingCounts[3],
+                ratingCounts[4],
+                ratingCounts[5]
+              ],
+
+              borderRadius:8,
+
+              borderWidth:0,
+
+              backgroundColor:[
+                '#d64545',
+                '#d98b45',
+                '#c9a63c',
+                '#6d8dff',
+                '#15966a'
+              ]
+            }]
+          },
+
+          options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+              legend:{
+                display:false
+              },
+
+              tooltip:{
+                backgroundColor:'#0b1220',
+                padding:12,
+                cornerRadius:9
+              }
+            },
+
+            scales:{
+
+              x:{
+                grid:{
+                  display:false
+                },
+
+                ticks:{
+                  color:'#8b97a9'
+                }
+              },
+
+              y:{
+
+                beginAtZero:true,
+
+                ticks:{
+                  precision:0,
+                  color:'#8b97a9'
+                },
+
+                grid:{
+                  color:'#edf1f6'
+                }
+              }
+            }
+          }
+        }
+      );
+  }
+
+
+  /*
+    3. POTENTIAL ISSUES VS LEGITIMATE
+
+    Uses the same assessment logic
+    used by the dashboard statistics.
+  */
+
+  if(statusChart){
+    statusChart.destroy();
+    statusChart = null;
+  }
+
+
+  if(reviews.length === 0){
+
+    setChartEmpty(
+      'statusChart',
+      'statusChartEmpty',
+      true
+    );
+
+  }else{
+
+    setChartEmpty(
+      'statusChart',
+      'statusChartEmpty',
+      false
+    );
+
+
+    const potentialIssues =
+      reviews.filter(
+        r =>
+          r.issue_type ||
+          /Potential|Needs|issue/i.test(
+            r.assessment || ''
+          )
+      ).length;
+
+
+    const likelyLegitimate =
+      reviews.length -
+      potentialIssues;
+
+
+    statusChart =
+      new Chart(
+        statusCanvas,
+        {
+          type:'doughnut',
+
+          data:{
+
+            labels:[
+              'Potential issues',
+              'Likely legitimate'
+            ],
+
+            datasets:[{
+
+              data:[
+                potentialIssues,
+                likelyLegitimate
+              ],
+
+              borderWidth:3,
+
+              borderColor:'#ffffff',
+
+              backgroundColor:[
+                '#d64545',
+                '#15966a'
+              ]
+            }]
+          },
+
+          options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            cutout:'68%',
+
+            plugins:{
+
+              legend:{
+                position:'bottom',
+
+                labels:{
+                  padding:18,
+                  usePointStyle:true,
+                  color:'#526078',
+                  font:{
+                    weight:'600'
+                  }
+                }
+              },
+
+              tooltip:{
+                backgroundColor:'#0b1220',
+                padding:12,
+                cornerRadius:9
+              }
+            }
+          }
+        }
+      );
+  }
+}
+
+
+/* NAVIGATION */
 
 function show(id,btn){
 
@@ -1832,6 +2608,8 @@ function show(id,btn){
     btn.classList.add('active');
 }
 
+
+/* LOAD REVIEW */
 
 function loadReview(id){
 
@@ -1860,6 +2638,8 @@ function loadReview(id){
   analyze(false);
 }
 
+
+/* ANALYZER */
 
 async function analyze(saveToDatabase=true){
 
@@ -2101,6 +2881,11 @@ async function analyze(saveToDatabase=true){
 
     updateStats();
 
+    /*
+      render() now also updates
+      all real charts automatically.
+    */
+
     render();
 
 
@@ -2114,6 +2899,8 @@ async function analyze(saveToDatabase=true){
   }
 }
 
+
+/* AI RESPONSE */
 
 function generateResponse(){
 
@@ -2173,6 +2960,8 @@ function generateResponse(){
     '“' + draft + '”';
 }
 
+
+/* COPY RESPONSE */
 
 function copyDraft(btn){
 
@@ -2253,6 +3042,8 @@ supabaseClient.auth
 
         reviews = [];
         cases = [];
+
+        destroyCharts();
 
 
         document
