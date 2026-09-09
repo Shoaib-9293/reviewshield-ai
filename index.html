@@ -239,10 +239,20 @@ supabaseClient.auth.getSession().then(async function({data}){
 });
 
 supabaseClient.auth.onAuthStateChange(function(event,session){
+  if(event==='SIGNED_IN' && session && session.user){
+    startApp(session.user);
+  }
+
   if(event==='SIGNED_OUT'){
     currentUser=null;
+    reviews=[];
+    cases=[];
+
     document.getElementById('appShell').classList.add('hidden');
     document.getElementById('authWrap').classList.remove('hidden');
+
+    document.getElementById('authEmail').value='';
+    document.getElementById('authPassword').value='';
   }
 });
 
