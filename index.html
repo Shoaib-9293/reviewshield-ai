@@ -229,6 +229,15 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .rc-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.rc-flow{display:flex;align-items:center;gap:10px;margin:18px 0 22px}.rc-step{min-width:105px;padding:12px;border:1px solid var(--rs-border);border-radius:11px;background:rgba(255,255,255,.025);text-align:center}.rc-step span{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;margin:0 auto 7px;background:#172b45;color:#fff;font-weight:800}.rc-step.active{border-color:rgba(79,140,255,.42);background:rgba(79,140,255,.08)}.rc-step.active span{background:var(--rs-accent)}.rc-step b,.rc-step small{display:block}.rc-step small{margin-top:4px;color:var(--rs-muted);font-size:10px}.rc-line{height:1px;background:var(--rs-border);flex:1}.rc-guide{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rc-guide>div{padding:14px;border:1px solid var(--rs-border);border-radius:11px;background:rgba(255,255,255,.02)}.rc-guide p{margin:6px 0 0;font-size:12px;line-height:1.5}@media(max-width:700px){.rc-flow{overflow-x:auto;align-items:stretch}.rc-step{min-width:95px}.rc-line{min-width:18px}.rc-guide{grid-template-columns:1fr}.rc-head{flex-direction:column}}
 </style>
 
+
+<style id="removal-workflow-fix">
+.rc-workflow-nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.rc-workflow-nav button{border:1px solid #29415e;background:#0f2035;color:#cfe0f7;border-radius:9px;padding:10px 13px;font-weight:800;font-size:11px;cursor:pointer}
+.rc-workflow-nav button:hover{border-color:#4f8cff;background:#142b48}
+.rc-workflow-panel{scroll-margin-top:20px}
+.rc-history-item{padding:12px 0;border-bottom:1px solid #20354f}
+.rc-history-item:last-child{border-bottom:0}
+</style>
 </head>
 <body>
 
@@ -402,13 +411,21 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 <section id="removal" class="page hidden">
 <div class="head"><div><div class="eyebrow">GOOGLE REVIEW REMOVAL</div><h1>Removal Center</h1><div class="muted">Prepare evidence, report eligible reviews, and track the Google decision.</div></div></div>
 <div class="card section rc-warning"><div class="rc-warning-icon">!</div><div><b>Important: ReviewShield does not guarantee removal.</b><p class="muted">Only Google decides whether a review violates its policies. Report a review only when there is a genuine policy-based reason.</p></div></div>
+<div class="rc-workflow-nav" aria-label="Removal workflow navigation">
+  <button type="button" onclick="removalGo('analyze')">🤖 AI Analysis</button>
+  <button type="button" onclick="removalGo('evidence')">📋 Evidence</button>
+  <button type="button" onclick="removalGo('report')">📤 Report</button>
+  <button type="button" onclick="removalGo('status')">📊 Status Tracking</button>
+  <button type="button" onclick="removalGo('appeal')">⚖️ Appeal</button>
+  <button type="button" onclick="removalGo('history')">🕘 Case History</button>
+</div>
 <div class="grid2">
-  <div class="card section"><h2>1. Select a review</h2>
+  <div id="removalAnalyzeSection" class="card section rc-workflow-panel"><h2>1. Select a review</h2>
     <select id="removalReviewSelect" class="rc-select" onchange="prepareRemovalReview()"><option value="">Choose a review...</option></select>
     <div id="removalReviewPreview" class="rc-preview"><div class="empty" style="padding:24px 8px">Select a review to begin.</div></div>
     <div id="removalAnalyzerPanel" class="rc-analyzer-panel hidden"></div>
   </div>
-  <div class="card section"><h2>2. Build your evidence</h2>
+  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><h2>2. Build your evidence</h2>
     <label class="rc-check"><input type="checkbox" id="evNonGenuine"> Non-genuine experience signal</label>
     <label class="rc-check"><input type="checkbox" id="evSpam"> Spam, repetitive, or irrelevant content</label>
     <label class="rc-check"><input type="checkbox" id="evAbuse"> Abusive, threatening, or harassing language</label>
@@ -419,11 +436,17 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
     <div class="muted rc-tip">Keep notes factual. Do not include passwords, payment details, or unnecessary personal information.</div>
   </div>
 </div>
-<div class="card section"><div class="rc-head"><div><h2>3. Report &amp; track</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
-  <div class="rc-flow"><div class="rc-step active"><span>1</span><b>Analyze</b><small>Review signals</small></div><div class="rc-line"></div><div class="rc-step"><span>2</span><b>Evidence</b><small>Document facts</small></div><div class="rc-line"></div><div class="rc-step"><span>3</span><b>Report</b><small>Google tool</small></div><div class="rc-line"></div><div class="rc-step"><span>4</span><b>Decision</b><small>Track result</small></div></div>
+<div id="removalReportSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>3. Report &amp; track</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
+  <div class="rc-flow">
+  <button type="button" class="rc-step active" onclick="removalGo('analyze')"><span>1</span><b>Analyze</b><small>Review signals</small></button><div class="rc-line"></div>
+  <button type="button" class="rc-step" onclick="removalGo('evidence')"><span>2</span><b>Evidence</b><small>Document facts</small></button><div class="rc-line"></div>
+  <button type="button" class="rc-step" onclick="removalGo('report')"><span>3</span><b>Report</b><small>Google tool</small></button><div class="rc-line"></div>
+  <button type="button" class="rc-step" onclick="removalGo('status')"><span>4</span><b>Decision</b><small>Track result</small></button>
+</div>
   <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">Mark as Reported</button><button class="ghost" type="button" onclick="setRemovalStatus('Decision pending')">Decision pending</button><button class="ghost" type="button" onclick="setRemovalStatus('Removed')">Removed</button><button class="ghost" type="button" onclick="setRemovalStatus('No policy violation')">No policy violation</button><button class="ghost" type="button" onclick="setRemovalStatus('Appeal submitted')">Appeal submitted</button><button class="ghost" type="button" onclick="setRemovalStatus('Escalated')">Escalated</button></div>
   <div id="removalStatusMessage" class="result">Select a review, prepare evidence, then use Google's official tool to report it.</div>
 </div>
+<div id="removalHistorySection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>Case History</h2><div class="muted">Saved workflow activity for the selected review.</div></div></div><div id="removalCaseHistory"><div class="empty">Select a review to view its history.</div></div></div>
 <div class="card section"><h2>Reporting guide</h2><div class="rc-guide"><div><b>Report only genuine policy concerns</b><p class="muted">A negative or unfair review is not automatically removable.</p></div><div><b>Keep evidence factual</b><p class="muted">Record verifiable context that supports the suspected policy issue.</p></div><div><b>Track Google's decision</b><p class="muted">Use Google's review-management flow for the official status.</p></div><div><b>Use appeal when appropriate</b><p class="muted">If a report is denied, follow Google's available appeal process.</p></div></div></div>
 </section>
 
@@ -897,13 +920,37 @@ function prepareRemovalReview(){
   renderRemovalAnalyzer(r);
   if($('removalEvidence'))$('removalEvidence').value=state.evidence||'';
   ['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>{const el=$('ev'+k);if(el)el.checked=!!checks[k]});
-  if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');
+  if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');renderRemovalCaseHistory();
 }
 function captureRemovalState(){const r=selectedRemovalReview();if(!r)return null;const all=getRemovalState(),current=all[String(r.id)]||{},checks={};['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>checks[k]=!!$('ev'+k)?.checked);all[String(r.id)]={...current,evidence:$('removalEvidence')?.value||'',checks,updatedAt:new Date().toISOString()};saveRemovalState(all);return all[String(r.id)]}
-function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status)}
+function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status);renderRemovalCaseHistory()}
 function updateRemovalMessage(status){const box=$('removalStatusMessage');if(!box)return;const messages={'Not started':"Select a review, prepare evidence, then use Google's official tool to report it.",'Reported':'Marked as reported. Keep the Google confirmation/details available for your records.','Decision pending':'Google is reviewing the report. Check the official review-management tool for the current decision.','Removed':'Marked as removed. Verify the review is no longer visible in Google.','No policy violation':'Marked as no policy violation. If Google offers an appeal, use the official appeal flow when appropriate.','Appeal submitted':"Marked as appeal submitted. Follow Google's instructions and monitor the review-management status.",'Escalated':'Marked as escalated. Check the email/account instructions provided by Google.'};box.innerHTML='<b>'+escapeHTML(messages[status]||messages['Not started'])+'</b>'}
 function openGoogleRemovalTool(){const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}captureRemovalState();window.open('https://support.google.com/business/workflow/9945796','_blank','noopener,noreferrer');if(typeof addActivity==='function')addActivity('Opened Google Review Management Tool');showToast('Google Review Management Tool opened.')}
-function initRemovalCenter(){populateRemovalReviews();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',captureRemovalState);el.addEventListener('input',captureRemovalState)})}
+function renderRemovalCaseHistory(){
+  const box=$('removalCaseHistory'); if(!box)return;
+  const r=selectedRemovalReview(); if(!r){box.innerHTML='<div class="empty">Select a review to view its history.</div>';return}
+  const state=removalStateForReview(r.id);
+  const items=[];
+  if(state.updatedAt)items.push({text:'Workflow updated — '+(state.status||'Not started'),date:state.updatedAt});
+  const reviewActs=(activity||[]).filter(a=>/Removal Center/i.test(a.text||''));
+  reviewActs.slice(0,12).forEach(a=>items.push(a));
+  items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  box.innerHTML=items.length?items.slice(0,12).map(a=>`<div class="rc-history-item"><b>${escapeHTML(a.text||'Workflow activity')}</b><div class="muted" style="margin-top:4px;font-size:11px">${new Date(a.date).toLocaleString()}</div></div>`).join(''):'<div class="empty">No workflow history yet. Use the workflow buttons to begin.</div>';
+}
+function removalGo(step){
+  const map={analyze:'removalAnalyzeSection',evidence:'removalEvidenceSection',report:'removalReportSection',status:'removalReportSection',history:'removalHistorySection'};
+  if(step==='appeal'){
+    const r=selectedRemovalReview();
+    if(!r){showToast('Select a review first.');return}
+    setRemovalStatus('Appeal submitted');
+    openGoogleRemovalTool();
+    return;
+  }
+  const el=$(map[step]);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+  if(step==='history')renderRemovalCaseHistory();
+}
+function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',captureRemovalState);el.addEventListener('input',captureRemovalState)})}
 
 function show(id,btn){
   document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
