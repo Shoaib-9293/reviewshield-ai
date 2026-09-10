@@ -680,19 +680,16 @@ async function analyze(saveToDatabase=true){
     return;
   }
 
+  /* Supabase-safe save: keep the database payload compatible with the
+     existing reviews table. Advanced analyzer results stay in the UI,
+     while the core review record uses the fields already used by Phase 2/3. */
   const record={
     user_id:currentUser.id,
-    name:reviewerName,
-    reviewer_name:reviewerName,
+    name:reviewerName || 'Manual review',
     rating:rating?Number(rating):(findings.length?1:5),
     text:t,
-    review_text:t,
     assessment,
-    issue_type:issueType,
-    risk_level:risk,
-    risk_score:score,
-    confidence,
-    evidence_notes:findings.map(x=>x.reason+' Matched: '+x.match).join(' | ')
+    issue_type:issueType || null
   };
 
   const {data,error}=await supabaseClient.from('reviews').insert(record).select().single();
@@ -706,11 +703,10 @@ async function analyze(saveToDatabase=true){
   if(findings.length){
     const c={
       user_id:currentUser.id,
-      name:reviewerName,
+      name:reviewerName || 'Manual review',
       issue:issueType||'Potential policy issue',
       status:'Needs evidence',
-      priority:risk==='High'?'high':risk==='Medium'?'medium':'low',
-      evidence_notes:findings.map(x=>`${x.cat}: ${x.reason} Matched "${x.match}"`).join(' | ')
+      priority:risk==='High'?'high':risk==='Medium'?'medium':'low'
     };
     const {data:caseData,error:caseError}=await supabaseClient.from('cases').insert(c).select().single();
     if(!caseError&&caseData)cases.push(normalizeCase(caseData));
