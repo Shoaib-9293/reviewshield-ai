@@ -238,6 +238,13 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .rc-workflow-nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .rc-workflow-nav button{border:1px solid #29415e;background:#0f2035;color:#cfe0f7;border-radius:9px;padding:10px 13px;font-weight:800;font-size:11px;cursor:pointer}
 .rc-workflow-nav button:hover{border-color:#4f8cff;background:#142b48}
+.rc-workflow-nav{align-items:stretch;background:#0b1727;border:1px solid #1e3550;border-radius:14px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.rc-workflow-nav button{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:145px;min-height:46px;transition:.18s ease}
+.rc-workflow-nav button.active{color:#fff;border-color:#4f8cff;background:linear-gradient(135deg,#16345d,#102746);transform:translateY(-1px)}
+.rc-nav-num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1a304b;color:#9fc1f5;font-size:10px;font-weight:900;flex:0 0 auto}
+.rc-workflow-nav button.active .rc-nav-num{background:#4f8cff;color:#fff}
+@media(max-width:760px){.rc-workflow-nav{display:grid;grid-template-columns:1fr 1fr}.rc-workflow-nav button{min-width:0}}
+@media(max-width:480px){.rc-workflow-nav{grid-template-columns:1fr}.rc-workflow-nav button{justify-content:flex-start;padding-left:14px}}
 .rc-workflow-panel{scroll-margin-top:20px}
 .rc-history-item{padding:12px 0;border-bottom:1px solid #20354f}
 .rc-history-item:last-child{border-bottom:0}
@@ -416,20 +423,20 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 <div class="head"><div><div class="eyebrow">GOOGLE REVIEW REMOVAL</div><h1>Removal Center</h1><div class="muted">Prepare evidence, report eligible reviews, and track the Google decision.</div></div></div>
 <div class="card section rc-warning"><div class="rc-warning-icon">!</div><div><b>Important: ReviewShield does not guarantee removal.</b><p class="muted">Only Google decides whether a review violates its policies. Report a review only when there is a genuine policy-based reason.</p></div></div>
 <div class="rc-workflow-nav" aria-label="Removal workflow navigation">
-  <button type="button" onclick="removalGo('analyze')">🤖 AI Analysis</button>
-  <button type="button" onclick="removalGo('evidence')">📋 Evidence</button>
-  <button type="button" onclick="removalGo('report')">📤 Report</button>
-  <button type="button" onclick="removalGo('status')">📊 Status Tracking</button>
-  <button type="button" onclick="removalGo('appeal')">⚖️ Appeal</button>
-  <button type="button" onclick="removalGo('history')">🕘 Case History</button>
+  <button type="button" class="active" onclick="removalGo('analyze')"><span class="rc-nav-num">1</span><span>🤖 AI Analysis</span></button>
+  <button type="button" onclick="removalGo('evidence')"><span class="rc-nav-num">2</span><span>📋 Evidence</span></button>
+  <button type="button" onclick="removalGo('report')"><span class="rc-nav-num">3</span><span>📤 Report</span></button>
+  <button type="button" onclick="removalGo('status')"><span class="rc-nav-num">4</span><span>📊 Status Tracking</span></button>
+  <button type="button" onclick="removalGo('appeal')"><span class="rc-nav-num">5</span><span>⚖️ Appeal</span></button>
+  <button type="button" onclick="removalGo('history')"><span class="rc-nav-num">6</span><span>🕘 Case History</span></button>
 </div>
 <div class="grid2">
-  <div id="removalAnalyzeSection" class="card section rc-workflow-panel"><h2>1. Select a review</h2>
+  <div id="removalAnalyzeSection" class="card section rc-workflow-panel"><h2>1. AI Analysis</h2>
     <select id="removalReviewSelect" class="rc-select" onchange="prepareRemovalReview()"><option value="">Choose a review...</option></select>
     <div id="removalReviewPreview" class="rc-preview"><div class="empty" style="padding:24px 8px">Select a review to begin.</div></div>
     <div id="removalAnalyzerPanel" class="rc-analyzer-panel hidden"></div>
   </div>
-  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>2. Build your evidence</h2><div class="muted">Document only facts that can be verified. Your evidence stays attached to the selected review.</div></div><span id="evidenceProgress" class="status">0 / 6</span></div>
+  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>2. Evidence</h2><div class="muted">Document only facts that can be verified. Your evidence stays attached to the selected review.</div></div><span id="evidenceProgress" class="status">0 / 6</span></div>
     <div class="rc-evidence-toolbar"><button type="button" class="ghost" onclick="applyAnalyzerEvidence()">✨ Apply analyzer suggestions</button><button type="button" class="ghost" onclick="clearRemovalEvidence()">Clear evidence</button><button type="button" class="primary" onclick="saveRemovalEvidence()">💾 Save evidence</button></div>
     <div class="rc-evidence-grid">
     <label class="rc-check"><input type="checkbox" id="evNonGenuine"> Non-genuine experience signal</label>
@@ -443,13 +450,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
   </div>
 </div>
 <div id="removalReportSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>3. 📤 Report</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
-  <div class="rc-flow">
-  <button type="button" class="rc-step active" onclick="removalGo('analyze')"><span>1</span><b>Analyze</b><small>Review signals</small></button><div class="rc-line"></div>
-  <button type="button" class="rc-step" onclick="removalGo('evidence')"><span>2</span><b>Evidence</b><small>Document facts</small></button><div class="rc-line"></div>
-  <button type="button" class="rc-step" onclick="removalGo('report')"><span>3</span><b>Report</b><small>Google tool</small></button><div class="rc-line"></div>
-  <button type="button" class="rc-step" onclick="removalGo('status')"><span>4</span><b>Decision</b><small>Track result</small></button>
-</div>
-  <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">Mark as Reported</button><button class="ghost" type="button" onclick="setRemovalStatus('Decision pending')">Decision pending</button><button class="ghost" type="button" onclick="setRemovalStatus('Removed')">Removed</button><button class="ghost" type="button" onclick="setRemovalStatus('No policy violation')">No policy violation</button><button class="ghost" type="button" onclick="setRemovalStatus('Appeal submitted')">Appeal submitted</button><button class="ghost" type="button" onclick="setRemovalStatus('Escalated')">Escalated</button></div>
+  <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">✓ Mark as Reported</button></div>
   <div id="removalStatusMessage" class="result">Select a review, prepare evidence, then use Google's official tool to report it.</div>
 </div>
 <div id="removalStatusSection" class="card section rc-workflow-panel">
@@ -472,7 +473,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 <div id="appealMessage" class="result">No appeal submitted yet.</div>
 </div>
 </div>
-<div id="removalHistorySection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>Case History</h2><div class="muted">Saved workflow activity for the selected review.</div></div></div><div id="removalCaseHistory"><div class="empty">Select a review to view its history.</div></div></div>
+<div id="removalHistorySection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>6. 🕘 Case History</h2><div class="muted">Saved workflow activity for the selected review.</div></div></div><div id="removalCaseHistory"><div class="empty">Select a review to view its history.</div></div></div>
 <div class="card section"><h2>Reporting guide</h2><div class="rc-guide"><div><b>Report only genuine policy concerns</b><p class="muted">A negative or unfair review is not automatically removable.</p></div><div><b>Keep evidence factual</b><p class="muted">Record verifiable context that supports the suspected policy issue.</p></div><div><b>Track Google's decision</b><p class="muted">Use Google's review-management flow for the official status.</p></div><div><b>Use appeal when appropriate</b><p class="muted">If a report is denied, follow Google's available appeal process.</p></div></div></div>
 </section>
 
@@ -1013,12 +1014,7 @@ function removalGo(step){
   const map={analyze:'removalAnalyzeSection',evidence:'removalEvidenceSection',report:'removalReportSection',status:'removalStatusSection',appeal:'removalAppealSection',history:'removalHistorySection'};
   const el=$(map[step]);
   if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  const r=selectedRemovalReview();
-  if(step==='history' && r)renderRemovalCaseHistory();
-  if(!r){
-    const msg=$('removalStatusMessage');
-    if(msg)msg.innerHTML='<span class="amber">Select a review first to work with this section.</span>';
-  }
+  if(step==='history')renderRemovalCaseHistory();
   document.querySelectorAll('.rc-workflow-nav button').forEach(b=>b.classList.remove('active'));
   const active=[...document.querySelectorAll('.rc-workflow-nav button')].find(b=>b.getAttribute('onclick')===`removalGo('${step}')`);
   if(active)active.classList.add('active');
