@@ -231,6 +231,8 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 
 
 <style id="removal-workflow-fix">
+.rc-workflow-nav button{cursor:pointer}
+.rc-workflow-nav button.active{border-color:#4f8cff;background:#13284a;box-shadow:0 0 0 1px rgba(79,140,255,.25)}
 .rc-workflow-nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .rc-workflow-nav button{border:1px solid #29415e;background:#0f2035;color:#cfe0f7;border-radius:9px;padding:10px 13px;font-weight:800;font-size:11px;cursor:pointer}
 .rc-workflow-nav button:hover{border-color:#4f8cff;background:#142b48}
@@ -969,11 +971,17 @@ function submitRemovalAppeal(){
 }
 function removalGo(step){
   const map={analyze:'removalAnalyzeSection',evidence:'removalEvidenceSection',report:'removalReportSection',status:'removalStatusSection',appeal:'removalAppealSection',history:'removalHistorySection'};
-  const r=selectedRemovalReview();
-  if(!r){showToast('Select a review first.');return}
   const el=$(map[step]);
   if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  if(step==='history')renderRemovalCaseHistory();
+  const r=selectedRemovalReview();
+  if(step==='history' && r)renderRemovalCaseHistory();
+  if(!r){
+    const msg=$('removalStatusMessage');
+    if(msg)msg.innerHTML='<span class="amber">Select a review first to work with this section.</span>';
+  }
+  document.querySelectorAll('.rc-workflow-nav button').forEach(b=>b.classList.remove('active'));
+  const active=[...document.querySelectorAll('.rc-workflow-nav button')].find(b=>b.getAttribute('onclick')===`removalGo('${step}')`);
+  if(active)active.classList.add('active');
 }
 function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',captureRemovalState);el.addEventListener('input',captureRemovalState)})}
 
