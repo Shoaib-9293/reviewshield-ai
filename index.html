@@ -111,7 +111,9 @@ button{cursor:pointer}
 }
 
 .rc-analyzer-panel{margin-top:14px;border:1px solid #e7eaf0;border-radius:12px;padding:15px;background:#fbfcff}.rc-analyzer-panel.hidden{display:none}.rc-signals{display:grid;gap:8px;margin-top:9px}.rc-signal{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px;border:1px solid #e8ebf1;border-radius:10px;background:#fff}.rc-signal small{display:block;color:#7b8493;margin-top:3px;line-height:1.4}.rc-signal .badge{white-space:nowrap}
-.rc-status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.rc-status-card{border:1px solid #29415e;background:#0d1a2b;color:#eef4ff;border-radius:12px;padding:15px;text-align:left;cursor:pointer;transition:.18s}.rc-status-card:hover{border-color:#4f8cff;transform:translateY(-1px);background:#10233a}.rc-status-card b{display:block;font-size:13px;margin-bottom:5px}.rc-status-card small{color:#8297b0;font-size:11px}.rc-appeal-box{display:grid;gap:12px}.rc-appeal-info{padding:13px;border:1px solid #29415e;border-radius:12px;background:#0d1a2b}@media(max-width:700px){.rc-status-grid{grid-template-columns:1fr}}</style>
+.rc-status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.rc-status-card{border:1px solid #29415e;background:#0d1a2b;color:#eef4ff;border-radius:12px;padding:15px;text-align:left;cursor:pointer;transition:.18s}.rc-status-card:hover{border-color:#4f8cff;transform:translateY(-1px);background:#10233a}.rc-status-card b{display:block;font-size:13px;margin-bottom:5px}.rc-status-card small{color:#8297b0;font-size:11px}.rc-appeal-box{display:grid;gap:12px}.rc-appeal-info{padding:13px;border:1px solid #29415e;border-radius:12px;background:#0d1a2b}@media(max-width:700px){.rc-status-grid{grid-template-columns:1fr}}
+.rc-evidence-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.rc-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rc-evidence-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px}.rc-evidence-toolbar .primary,.rc-evidence-toolbar .ghost{min-height:38px}@media(max-width:700px){.rc-evidence-grid{grid-template-columns:1fr}}
+</style>
 
 <style id="professional-theme">
 :root{
@@ -427,15 +429,17 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
     <div id="removalReviewPreview" class="rc-preview"><div class="empty" style="padding:24px 8px">Select a review to begin.</div></div>
     <div id="removalAnalyzerPanel" class="rc-analyzer-panel hidden"></div>
   </div>
-  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><h2>2. Build your evidence</h2>
+  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>2. Build your evidence</h2><div class="muted">Document only facts that can be verified. Your evidence stays attached to the selected review.</div></div><span id="evidenceProgress" class="status">0 / 6</span></div>
+    <div class="rc-evidence-toolbar"><button type="button" class="ghost" onclick="applyAnalyzerEvidence()">✨ Apply analyzer suggestions</button><button type="button" class="ghost" onclick="clearRemovalEvidence()">Clear evidence</button><button type="button" class="primary" onclick="saveRemovalEvidence()">💾 Save evidence</button></div>
+    <div class="rc-evidence-grid">
     <label class="rc-check"><input type="checkbox" id="evNonGenuine"> Non-genuine experience signal</label>
     <label class="rc-check"><input type="checkbox" id="evSpam"> Spam, repetitive, or irrelevant content</label>
     <label class="rc-check"><input type="checkbox" id="evAbuse"> Abusive, threatening, or harassing language</label>
     <label class="rc-check"><input type="checkbox" id="evPromo"> Promotional or advertising content</label>
     <label class="rc-check"><input type="checkbox" id="evConflict"> Conflict-of-interest or manipulation signal</label>
-    <label class="rc-check"><input type="checkbox" id="evOther"> Other policy-relevant evidence</label>
+    <label class="rc-check"><input type="checkbox" id="evOther"> Other policy-relevant evidence</label></div>
     <textarea id="removalEvidence" class="rc-textarea" placeholder="Write factual evidence notes: what happened, what can be verified, and why the review may violate a policy..."></textarea>
-    <div class="muted rc-tip">Keep notes factual. Do not include passwords, payment details, or unnecessary personal information.</div>
+    <div class="rc-evidence-footer"><span id="evidenceSaveMessage" class="muted">Evidence is autosaved while you edit.</span><span class="muted">Do not include passwords, payment details, or unnecessary personal information.</span></div>
   </div>
 </div>
 <div id="removalReportSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>3. 📤 Report</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
@@ -940,10 +944,46 @@ function prepareRemovalReview(){
   const state=removalStateForReview(r.id),checks=state.checks||{};
   if(preview)preview.innerHTML=`<div><b>${escapeHTML(r.name||'Review')}</b> <span class="badge ${escapeHTML(r.cls||'')}">${escapeHTML(r.assessment||'Review')}</span></div><small class="muted">${'★'.repeat(Math.max(0,Math.min(5,Number(r.rating)||0)))} · ${escapeHTML(r.reviewer_name||'Reviewer')}</small><p>“${escapeHTML(r.text||'')}”</p>`;
   renderRemovalAnalyzer(r);
-  if($('removalEvidence'))$('removalEvidence').value=state.evidence||'';if($('appealNotes'))$('appealNotes').value=state.appealNotes||'';
+  if($('removalEvidence'))$('removalEvidence').value=state.evidence||'';if($('appealNotes'))$('appealNotes').value=state.appealNotes||'';updateEvidenceProgress();if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent=state.evidenceSavedAt?'Evidence saved ✓':'Evidence is autosaved while you edit.';
   ['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>{const el=$('ev'+k);if(el)el.checked=!!checks[k]});
   if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');renderRemovalCaseHistory();
 }
+function updateEvidenceProgress(){
+  const ids=['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther'];
+  const count=ids.filter(id=>$(id)?.checked).length;
+  const el=$('evidenceProgress'); if(el)el.textContent=count+' / 6';
+}
+function saveRemovalEvidence(){
+  const r=selectedRemovalReview();
+  if(!r){showToast('Select a review first.');return}
+  const state=captureRemovalState()||{};
+  state.evidenceSavedAt=new Date().toISOString();
+  const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Evidence saved just now ✓';
+  if(typeof addActivity==='function')addActivity('Evidence saved for review '+(r.reviewer_name||'selected review'));
+  showToast('Evidence saved successfully.');
+  renderRemovalCaseHistory();
+}
+function clearRemovalEvidence(){
+  const r=selectedRemovalReview(); if(!r){showToast('Select a review first.');return}
+  ['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther'].forEach(id=>{if($(id))$(id).checked=false});
+  if($('removalEvidence'))$('removalEvidence').value='';
+  captureRemovalState();updateEvidenceProgress();
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Evidence cleared and saved.';
+}
+function applyAnalyzerEvidence(){
+  const r=selectedRemovalReview(); if(!r){showToast('Select a review first.');return}
+  const a=analyzeReviewText(r.text||''); const cats=new Set(a.findings.map(x=>x.cat));
+  const map={evNonGenuine:cats.has('Non-genuine experience'),evSpam:cats.has('Spam / repetitive content')||cats.has('Irrelevant / off-topic'),evAbuse:cats.has('Abusive / harassing language')||cats.has('Threatening language'),evPromo:cats.has('Promotional / advertising content'),evConflict:cats.has('Conflict of interest signal')||cats.has('Incentive / review manipulation signal')};
+  Object.entries(map).forEach(([id,on])=>{if($(id)&&on)$(id).checked=true});
+  if($('evOther')&&!a.findings.length)$('evOther').checked=true;
+  const suggestions=a.evidenceSuggestions||[];
+  if($('removalEvidence')){const existing=$('removalEvidence').value.trim();const block=suggestions.map(x=>'• '+x).join('\n');if(!existing)$('removalEvidence').value=block;else if(block&&!existing.includes(block))$('removalEvidence').value=existing+'\n\nAI analyzer suggestions:\n'+block;}
+  captureRemovalState();updateEvidenceProgress();
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Analyzer suggestions applied and saved ✓';
+  showToast('Analyzer evidence suggestions applied.');
+}
+
 function captureRemovalState(){const r=selectedRemovalReview();if(!r)return null;const all=getRemovalState(),current=all[String(r.id)]||{},checks={};['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>checks[k]=!!$('ev'+k)?.checked);all[String(r.id)]={...current,evidence:$('removalEvidence')?.value||'',checks,updatedAt:new Date().toISOString()};saveRemovalState(all);return all[String(r.id)]}
 function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;if($('removalStatusBadge2'))$('removalStatusBadge2').textContent=status;if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Current status: '+status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status);renderRemovalCaseHistory()}
 function updateRemovalMessage(status){const box=$('removalStatusMessage');if(!box)return;const messages={'Not started':"Select a review, prepare evidence, then use Google's official tool to report it.",'Reported':'Marked as reported. Keep the Google confirmation/details available for your records.','Decision pending':'Google is reviewing the report. Check the official review-management tool for the current decision.','Removed':'Marked as removed. Verify the review is no longer visible in Google.','No policy violation':'Marked as no policy violation. If Google offers an appeal, use the official appeal flow when appropriate.','Appeal submitted':"Marked as appeal submitted. Follow Google's instructions and monitor the review-management status.",'Escalated':'Marked as escalated. Check the email/account instructions provided by Google.'};box.innerHTML='<b>'+escapeHTML(messages[status]||messages['Not started'])+'</b>'}
@@ -983,7 +1023,7 @@ function removalGo(step){
   const active=[...document.querySelectorAll('.rc-workflow-nav button')].find(b=>b.getAttribute('onclick')===`removalGo('${step}')`);
   if(active)active.classList.add('active');
 }
-function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',captureRemovalState);el.addEventListener('input',captureRemovalState)})}
+function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',()=>{captureRemovalState();updateEvidenceProgress()});el.addEventListener('input',()=>{captureRemovalState();updateEvidenceProgress()})});updateEvidenceProgress()}
 
 function show(id,btn){
   document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
