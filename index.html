@@ -248,6 +248,10 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .rc-workflow-panel{scroll-margin-top:20px}
 .rc-history-item{padding:12px 0;border-bottom:1px solid #20354f}
 .rc-history-item:last-child{border-bottom:0}
+
+.rc-case-link{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rc-case-link b{color:#172033}
+.rc-linked{color:#16804a;font-weight:700}
 </style>
 </head>
 <body>
@@ -450,7 +454,8 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
   </div>
 </div>
 <div id="removalReportSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>3. 📤 Report</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
-  <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">✓ Mark as Reported</button></div>
+  <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">✓ Mark as Reported</button><button class="ghost" type="button" onclick="createRemovalCase()">▣ Create / Link Case</button></div>
+  <div id="removalCaseLink" class="result" style="margin-top:10px">No ReviewShield case linked yet.</div>
   <div id="removalStatusMessage" class="result">Select a review, prepare evidence, then use Google's official tool to report it.</div>
 </div>
 <div id="removalStatusSection" class="card section rc-workflow-panel">
@@ -947,7 +952,7 @@ function prepareRemovalReview(){
   renderRemovalAnalyzer(r);
   if($('removalEvidence'))$('removalEvidence').value=state.evidence||'';if($('appealNotes'))$('appealNotes').value=state.appealNotes||'';updateEvidenceProgress();if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent=state.evidenceSavedAt?'Evidence saved ✓':'Evidence is autosaved while you edit.';
   ['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>{const el=$('ev'+k);if(el)el.checked=!!checks[k]});
-  if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');renderRemovalCaseHistory();
+  if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');renderRemovalCaseLink();renderRemovalCaseHistory();
 }
 function updateEvidenceProgress(){
   const ids=['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther'];
@@ -960,6 +965,8 @@ function saveRemovalEvidence(){
   const state=captureRemovalState()||{};
   state.evidenceSavedAt=new Date().toISOString();
   const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);
+  syncRemovalCase(r,state);
+  renderRemovalCaseLink();
   if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Evidence saved just now ✓';
   if(typeof addActivity==='function')addActivity('Evidence saved for review '+(r.reviewer_name||'selected review'));
   showToast('Evidence saved successfully.');
@@ -986,7 +993,47 @@ function applyAnalyzerEvidence(){
 }
 
 function captureRemovalState(){const r=selectedRemovalReview();if(!r)return null;const all=getRemovalState(),current=all[String(r.id)]||{},checks={};['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>checks[k]=!!$('ev'+k)?.checked);all[String(r.id)]={...current,evidence:$('removalEvidence')?.value||'',checks,updatedAt:new Date().toISOString()};saveRemovalState(all);return all[String(r.id)]}
-function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;if($('removalStatusBadge2'))$('removalStatusBadge2').textContent=status;if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Current status: '+status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status);renderRemovalCaseHistory()}
+function removalCasePriority(r){const a=analyzeReviewText(r?.text||'');return a.risk==='High'?'high':a.risk==='Medium'?'medium':'low'}
+function removalCaseStatus(status){return status==='Removed'||status==='No policy violation'?'Closed':status==='Not started'?'Needs evidence':status}
+function removalCaseMarker(r){return '[ReviewShield Removal] '+String(r.id)+' | '+String(r.reviewer_name||r.name||'Reviewer')}
+function renderRemovalCaseLink(){
+ const box=$('removalCaseLink');if(!box)return;
+ const r=selectedRemovalReview();if(!r){box.textContent='Select a review to create or link a case.';return}
+ const st=removalStateForReview(r.id),cid=st.caseId;
+ const c=cid?cases.find(x=>String(x.id)===String(cid)):null;
+ if(c)box.innerHTML='<div class="rc-case-link"><span><span class="rc-linked">✓ Case linked</span> · '+escapeHTML(c.name||'Review case')+' · '+escapeHTML(c.status||'Needs evidence')+'</span><button type="button" class="ghost" onclick="openRemovalCase()">Open Case</button></div>';
+ else box.innerHTML='<div class="rc-case-link"><span>No ReviewShield case linked yet.</span><button type="button" class="ghost" onclick="createRemovalCase()">Create case</button></div>';
+}
+async function createRemovalCase(){
+ const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
+ const st=removalStateForReview(r.id);if(st.caseId){renderRemovalCaseLink();showToast('This review is already linked to a case.');return}
+ if(!currentUser){showToast('Please sign in first.');return}
+ const a=analyzeReviewText(r.text||'');
+ const existingEvidence=String(st.evidence||'').trim();
+ const marker=removalCaseMarker(r);
+ const notes=[marker,'Review text: '+String(r.text||'').slice(0,500),existingEvidence?'Evidence notes: '+existingEvidence:''].filter(Boolean).join('\\n\\n');
+ const c={user_id:currentUser.id,name:'Review Removal — '+(r.reviewer_name||r.name||'Reviewer'),issue:a.issueType||'Potential policy issue',status:removalCaseStatus(st.status||'Needs evidence'),priority:removalCasePriority(r),evidence_notes:notes};
+ const {data,error}=await supabaseClient.from('cases').insert(c).select().single();
+ if(error){showToast('Case creation failed: '+error.message);return}
+ cases.push(normalizeCase(data));
+ const all=getRemovalState();all[String(r.id)]={...st,caseId:data.id,caseCreatedAt:new Date().toISOString(),updatedAt:new Date().toISOString()};saveRemovalState(all);
+ updateStats();renderCases();renderRemovalCaseLink();
+ if(typeof addActivity==='function')addActivity('Removal Center: case created for '+(r.reviewer_name||'selected review'));
+ showToast('ReviewShield case created and linked.');renderRemovalCaseHistory();
+}
+function openRemovalCase(){
+ const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
+ const st=removalStateForReview(r.id),cid=st.caseId;if(!cid){createRemovalCase();return}
+ const btn=[...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick')?.includes("show('cases'"));show('cases',btn);setTimeout(()=>{const c=cases.find(x=>String(x.id)===String(cid));if(c)showToast('Linked case: '+(c.name||'Review case'));},50);
+}
+async function syncRemovalCase(r,state){
+ if(!r||!state?.caseId||!currentUser)return;
+ const payload={status:removalCaseStatus(state.status||'Needs evidence'),priority:removalCasePriority(r),evidence_notes:[removalCaseMarker(r),'Review text: '+String(r.text||'').slice(0,500),state.evidence?'Evidence notes: '+state.evidence:'',state.appealNotes?'Appeal notes: '+state.appealNotes:''].filter(Boolean).join('\\n\\n')};
+ const {data,error}=await supabaseClient.from('cases').update(payload).eq('id',state.caseId).eq('user_id',currentUser.id).select().single();
+ if(!error&&data){const i=cases.findIndex(x=>String(x.id)===String(data.id));if(i>=0)cases[i]=normalizeCase(data);else cases.push(normalizeCase(data));renderCases();renderRemovalCaseLink();}
+}
+
+function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;if($('removalStatusBadge2'))$('removalStatusBadge2').textContent=status;if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Current status: '+status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status);renderRemovalCaseHistory();renderRemovalCaseLink();syncRemovalCase(r,state)}
 function updateRemovalMessage(status){const box=$('removalStatusMessage');if(!box)return;const messages={'Not started':"Select a review, prepare evidence, then use Google's official tool to report it.",'Reported':'Marked as reported. Keep the Google confirmation/details available for your records.','Decision pending':'Google is reviewing the report. Check the official review-management tool for the current decision.','Removed':'Marked as removed. Verify the review is no longer visible in Google.','No policy violation':'Marked as no policy violation. If Google offers an appeal, use the official appeal flow when appropriate.','Appeal submitted':"Marked as appeal submitted. Follow Google's instructions and monitor the review-management status.",'Escalated':'Marked as escalated. Check the email/account instructions provided by Google.'};box.innerHTML='<b>'+escapeHTML(messages[status]||messages['Not started'])+'</b>'}
 function openGoogleRemovalTool(){const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}captureRemovalState();window.open('https://support.google.com/business/workflow/9945796','_blank','noopener,noreferrer');if(typeof addActivity==='function')addActivity('Opened Google Review Management Tool');showToast('Google Review Management Tool opened.')}
 function renderRemovalCaseHistory(){
@@ -1004,6 +1051,7 @@ function submitRemovalAppeal(){
  const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
  const state=captureRemovalState()||{};state.appealNotes=$('appealNotes')?.value||'';state.status='Appeal submitted';state.updatedAt=new Date().toISOString();
  const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);
+ syncRemovalCase(r,state);renderRemovalCaseLink();
  if($('removalStatusBadge'))$('removalStatusBadge').textContent='Appeal submitted';
  if($('removalStatusBadge2'))$('removalStatusBadge2').textContent='Appeal submitted';
  if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Appeal submitted. Continue tracking the Google decision.';
@@ -1019,7 +1067,7 @@ function removalGo(step){
   const active=[...document.querySelectorAll('.rc-workflow-nav button')].find(b=>b.getAttribute('onclick')===`removalGo('${step}')`);
   if(active)active.classList.add('active');
 }
-function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',()=>{captureRemovalState();updateEvidenceProgress()});el.addEventListener('input',()=>{captureRemovalState();updateEvidenceProgress()})});updateEvidenceProgress()}
+function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseLink();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',()=>{captureRemovalState();updateEvidenceProgress()});el.addEventListener('input',()=>{captureRemovalState();updateEvidenceProgress()})});updateEvidenceProgress()}
 
 function show(id,btn){
   document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
