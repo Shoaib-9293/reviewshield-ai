@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ReviewShield AI">
+<title>ReviewShield AI — Phase 3</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f7fb;color:#172033}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.side{width:245px;background:#fff;border-right:1px solid #e6e9ef;padding:22px 15px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;height:100vh}
+.brand{font-weight:800;font-size:17px;padding:0 10px 28px;display:flex;align-items:center;gap:9px}
+.logo{width:34px;height:34px;border-radius:9px;background:#172033;color:white;display:grid;place-items:center}
+.nav button{width:100%;border:0;background:none;text-align:left;padding:12px;border-radius:9px;color:#687386;cursor:pointer;font-weight:650;margin-bottom:2px}
+.nav button.active{background:#eef1f8;color:#172033}
+.bottom{margin-top:auto}
+.plan{padding:14px;border:1px solid #e7eaf0;border-radius:12px;background:#fafbfc;margin-bottom:12px}
+.plan small{display:block;color:#8b94a3}
+.plan button,.primary{background:#172033;color:#fff;border:0;border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}
+.plan button{width:100%;margin-top:9px}
+.user{display:flex;gap:9px;align-items:center;padding:6px}
+.avatar{width:33px;height:33px;border-radius:50%;background:#dfe4ee;display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+.main{margin-left:245px;width:calc(100% - 245px)}
+.top{height:68px;background:#fff;border-bottom:1px solid #e6e9ef;padding:0 32px;display:flex;justify-content:space-between;align-items:center}
+.business{font-size:13px}
+.business strong{margin-left:8px}
+.topright{display:flex;gap:9px;align-items:center}
+.ghost{border:1px solid #e3e7ee;background:#fff;border-radius:8px;padding:8px 11px;cursor:pointer}
+.page{padding:30px;max-width:1400px;margin:auto}
+.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.head h1{margin:0 0 5px;font-size:26px}
+.muted{color:#7d8798}
+.eyebrow{font-size:10px;letter-spacing:.12em;font-weight:800;color:#9aa3b1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:12px}
+.stat{padding:18px}
+.stat small{color:#8a94a5}
+.stat strong{display:block;font-size:26px;margin:7px 0}
+.green{color:#267c55}
+.amber{color:#9d691a}
+.danger{color:#b33e3e}
+.section{margin-top:18px;padding:20px}
+.section h2{font-size:16px;margin:0 0 4px}
+.review-list{display:grid;gap:10px;margin-top:15px}
+.review{border:1px solid #e8ebf0;border-radius:10px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:12px}
+.review p{margin:7px 0;color:#505c70;font-size:13px;line-height:1.5}
+.review small{color:#9aa3b1}
+.badge{display:inline-block;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:800}
+.flag{background:#fff0df;color:#9b651a}
+.safe{background:#e9f6ef;color:#287b55}
+.danger-badge{background:#fbe8e8;color:#b33e3e}
+.actions{display:flex;gap:7px;align-items:center}
+.hidden{display:none!important}
+.form{display:grid;gap:12px;max-width:760px}
+.form textarea,.form input,.form select,.field input,.field select,.field textarea{width:100%;border:1px solid #dfe4ec;border-radius:9px;padding:12px;background:#fff}
+.form textarea{min-height:150px;resize:vertical}
+.result{padding:15px;border-radius:10px;background:#f7f8fb;border:1px solid #e6e9ef}
+.result strong{display:block;margin-bottom:6px}
+.case{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid #edf0f4}
+.case:first-child{border-top:0}
+.status{padding:5px 8px;border-radius:6px;background:#eef1f8;font-size:10px;font-weight:800}
+.empty{padding:45px;text-align:center;color:#8b94a3}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filter-btn{border:1px solid #e3e7ee;background:#fff;border-radius:8px;padding:8px 11px;color:#687386;font-size:12px;font-weight:700}
+.filter-btn.active{background:#172033;color:#fff;border-color:#172033}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.field{display:grid;gap:7px}
+.field label{font-size:12px;font-weight:700}
+.profile-avatar{width:74px;height:74px;border-radius:50%;background:#dfe4ee;display:grid;place-items:center;font-size:26px;font-weight:800;margin-bottom:12px}
+.notification{padding:12px 0;border-top:1px solid #edf0f4;font-size:13px}
+.notification:first-child{border-top:0}
+.analyzer-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.analysis-item{padding:11px;border:1px solid #223852;border-radius:9px;background:#0a1727}
+.analysis-item small{display:block;color:var(--rs-muted);margin-bottom:4px}
+.analysis-item b{color:#fff}
+.signal-list{margin:10px 0 0;padding-left:18px}
+.confidence{font-weight:800}
+@media(max-width:600px){.analyzer-options,.analysis-grid{grid-template-columns:1fr}}
+.chart-wrap{position:relative;height:300px}
+.auth-wrap{position:fixed;inset:0;background:rgba(23,32,51,.35);display:grid;place-items:center;z-index:9999}
+.auth-box{width:min(420px,92vw);background:#fff;border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.auth-box h1{margin:0 0 6px;font-size:24px}
+.auth-box p{margin:0 0 20px;color:#7d8798;font-size:13px}
+.auth-box input{width:100%;padding:12px;border:1px solid #dfe4ec;border-radius:9px;margin-bottom:10px}
+.auth-box .primary{width:100%;margin-top:4px}
+.auth-switch{text-align:center;margin-top:15px;font-size:13px}
+.auth-switch button{border:0;background:none;color:#172033;font-weight:800;cursor:pointer}
+.auth-msg{font-size:12px;margin-top:12px;line-height:1.5;min-height:18px}
+.top-email{font-size:12px;color:#7d8798}
+@media(max-width:900px){
+.side{width:72px}
+.brand span:last-child,.nav button span,.plan,.user div:last-child{display:none}
+.nav button{text-align:center}
+.main{margin-left:72px;width:calc(100% - 72px)}
+.stats{grid-template-columns:repeat(2,1fr)}
+.grid2{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+.page{padding:18px}
+.stats{grid-template-columns:1fr}
+.head{gap:12px;flex-direction:column}
+.review{grid-template-columns:1fr}
+.case{grid-template-columns:1fr}
+.top{padding:0 16px}
+.business{display:none}
+.topright{margin-left:auto}
+.top-email{display:none}
+}
+
+.rc-analyzer-panel{margin-top:14px;border:1px solid #e7eaf0;border-radius:12px;padding:15px;background:#fbfcff}.rc-analyzer-panel.hidden{display:none}.rc-signals{display:grid;gap:8px;margin-top:9px}.rc-signal{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px;border:1px solid #e8ebf1;border-radius:10px;background:#fff}.rc-signal small{display:block;color:#7b8493;margin-top:3px;line-height:1.4}.rc-signal .badge{white-space:nowrap}
+.rc-status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.rc-status-card{border:1px solid #29415e;background:#0d1a2b;color:#eef4ff;border-radius:12px;padding:15px;text-align:left;cursor:pointer;transition:.18s}.rc-status-card:hover{border-color:#4f8cff;transform:translateY(-1px);background:#10233a}.rc-status-card b{display:block;font-size:13px;margin-bottom:5px}.rc-status-card small{color:#8297b0;font-size:11px}.rc-appeal-box{display:grid;gap:12px}.rc-appeal-info{padding:13px;border:1px solid #29415e;border-radius:12px;background:#0d1a2b}@media(max-width:700px){.rc-status-grid{grid-template-columns:1fr}}
+.rc-evidence-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.rc-evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rc-evidence-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px}.rc-evidence-toolbar .primary,.rc-evidence-toolbar .ghost{min-height:38px}@media(max-width:700px){.rc-evidence-grid{grid-template-columns:1fr}}
+</style>
+
+<style id="professional-theme">
+:root{
+  --rs-bg:#07111f;
+  --rs-panel:#0d1a2b;
+  --rs-panel-2:#101f33;
+  --rs-border:#1d3048;
+  --rs-text:#edf4ff;
+  --rs-muted:#8fa2ba;
+  --rs-accent:#4f8cff;
+  --rs-accent-2:#6ea2ff;
+  --rs-success:#36d399;
+  --rs-warning:#f6bd60;
+  --rs-danger:#ff6b78;
+}
+body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);color:var(--rs-text)}
+.side,.top,.card,.auth-box{
+  background:rgba(13,26,43,.96);
+  border-color:var(--rs-border);
+  color:var(--rs-text);
+}
+.side{box-shadow:14px 0 35px rgba(0,0,0,.16)}
+.logo{background:linear-gradient(135deg,var(--rs-accent),#7b61ff);box-shadow:0 7px 20px rgba(79,140,255,.28)}
+.brand{color:#fff}
+.nav button{color:#91a3ba;transition:.2s ease}
+.nav button:hover{background:#14263d;color:#fff;transform:translateX(2px)}
+.nav button.active{background:linear-gradient(90deg,rgba(79,140,255,.22),rgba(79,140,255,.08));color:#fff;border:1px solid rgba(79,140,255,.22)}
+.plan{background:linear-gradient(145deg,#11233a,#0b1829);border-color:#223852}
+.plan small,.muted,.stat small,.review small,.top-email{color:var(--rs-muted)}
+.plan button,.primary{
+  background:linear-gradient(135deg,#4f8cff,#356fe0);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 8px 22px rgba(30,94,210,.24);
+  transition:.2s ease;
+}
+.plan button:hover,.primary:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 11px 28px rgba(30,94,210,.32)}
+.ghost,.filter-btn{
+  background:#101f33;
+  color:#b9c8dc;
+  border-color:#263c57;
+  transition:.2s ease;
+}
+.ghost:hover,.filter-btn:hover{background:#172a43;color:#fff;border-color:#3b5d85}
+.filter-btn.active{background:#4f8cff;color:#fff;border-color:#4f8cff;box-shadow:0 6px 18px rgba(79,140,255,.22)}
+.stat,.section{box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.stat strong{color:#fff}
+.review{background:#0c192a;border-color:#20354f;transition:.2s ease}
+.review:hover{border-color:#365b86;transform:translateY(-1px);box-shadow:0 9px 24px rgba(0,0,0,.14)}
+.review p{color:#b8c6d8}
+.result{background:#0b1829;border-color:#223852;color:#dce8f8}
+.form textarea,.form input,.form select,.field input,.field select,.field textarea,.auth-box input{
+  background:#0a1727;color:#edf4ff;border-color:#29415e;
+}
+.form textarea:focus,.form input:focus,.form select:focus,.field input:focus,.field select:focus,.field textarea:focus,.auth-box input:focus{
+  outline:none;border-color:#4f8cff;box-shadow:0 0 0 3px rgba(79,140,255,.12)
+}
+.form textarea::placeholder,.form input::placeholder,.field input::placeholder,.field textarea::placeholder,.auth-box input::placeholder{color:#687d97}
+.case{border-color:#20354f}
+.status{background:#162a43;color:#b9c9dd}
+.safe{background:rgba(54,211,153,.13);color:#55e0aa}
+.flag{background:rgba(246,189,96,.13);color:#f6c979}
+.danger-badge{background:rgba(255,107,120,.13);color:#ff8a95}
+.auth-wrap{background:radial-gradient(circle at 50% 20%,rgba(79,140,255,.16),rgba(2,8,16,.82))}
+.auth-box{box-shadow:0 30px 90px rgba(0,0,0,.48);border:1px solid #29415e}
+.auth-box h1{color:#fff}
+.auth-box p{color:#8fa2ba}
+.auth-switch button{color:#76a7ff}
+.eyebrow{color:#6ea2ff}
+.green{color:var(--rs-success)}
+.amber{color:var(--rs-warning)}
+.danger{color:var(--rs-danger)}
+.empty{color:#7489a3}
+.chart-wrap canvas{filter:saturate(1.05)}
+.notification{border-color:#20354f}
+.notification:hover{background:#0f2035}
+.user{border-radius:10px}
+.avatar,.profile-avatar{background:linear-gradient(135deg,#213a5b,#172a43);color:#fff;border:1px solid #315171}
+</style>
+
+
+<style id="notification-theme">
+.bell-wrap{position:relative}
+.bell-button{position:relative;width:40px;height:40px;padding:0;display:grid;place-items:center;font-size:17px}
+.bell-icon{display:block;transform:rotate(180deg);font-weight:900}
+.notification-badge{
+ position:absolute;right:-3px;top:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;
+ display:grid;place-items:center;background:#ff4d67;color:#fff;font-size:10px;font-weight:900;
+ border:2px solid #0d1a2b;box-shadow:0 4px 12px rgba(255,77,103,.35)
+}
+.notification-panel{
+ position:absolute;right:0;top:48px;width:340px;max-width:calc(100vw - 28px);
+ background:#0d1a2b;border:1px solid #29415e;border-radius:14px;
+ box-shadow:0 24px 60px rgba(0,0,0,.42);z-index:5000;overflow:hidden
+}
+.notification-head{display:flex;justify-content:space-between;align-items:center;padding:14px 15px;border-bottom:1px solid #20354f;color:#fff}
+.notification-clear{border:0;background:none;color:#75a7ff;font-size:11px;font-weight:800;cursor:pointer}
+#notificationItems{max-height:330px;overflow:auto}
+.notification-item{padding:13px 15px;border-bottom:1px solid #1b2e45;cursor:pointer}
+.notification-item:hover{background:#10233a}
+.notification-item b{display:block;font-size:12px;color:#eef4ff;margin-bottom:4px}
+.notification-item small{color:#8297b0;font-size:10px}
+.notification-dot{display:inline-block;width:6px;height:6px;background:#4f8cff;border-radius:50%;margin-right:6px;vertical-align:middle}
+.notification-foot{padding:10px 15px;text-align:center}
+.notification-foot button{border:0;background:none;color:#75a7ff;font-weight:800;font-size:11px;cursor:pointer}
+@media(max-width:600px){.notification-panel{right:-48px;width:320px}}
+</style>
+
+
+<style id="removal-center-css">
+.rc-warning{display:flex;gap:14px;align-items:flex-start;border:1px solid rgba(246,189,96,.35);background:linear-gradient(145deg,rgba(246,189,96,.10),rgba(13,26,43,.96))}
+.rc-warning-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:900;background:rgba(246,189,96,.16);color:var(--rs-warning,#f6bd60);flex:0 0 auto}.rc-warning p{margin:6px 0 0}
+.rc-select{width:100%;padding:12px;border:1px solid var(--rs-border);border-radius:10px;background:#0a1728;color:var(--rs-text)}.rc-preview{margin-top:14px;padding:14px;border:1px solid var(--rs-border);border-radius:10px;background:rgba(255,255,255,.02)}.rc-preview p{line-height:1.6;margin:10px 0 0}
+.rc-check{display:flex;gap:9px;align-items:flex-start;margin:10px 0;color:var(--rs-text);font-size:13px;line-height:1.45}.rc-check input{margin-top:3px;accent-color:var(--rs-accent)}.rc-textarea{width:100%;min-height:130px;margin-top:10px;resize:vertical;padding:12px;border:1px solid var(--rs-border);border-radius:10px;background:#091626;color:var(--rs-text)}.rc-tip{font-size:11px;margin-top:8px}
+.rc-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.rc-flow{display:flex;align-items:center;gap:10px;margin:18px 0 22px}.rc-step{min-width:105px;padding:12px;border:1px solid var(--rs-border);border-radius:11px;background:rgba(255,255,255,.025);text-align:center}.rc-step span{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;margin:0 auto 7px;background:#172b45;color:#fff;font-weight:800}.rc-step.active{border-color:rgba(79,140,255,.42);background:rgba(79,140,255,.08)}.rc-step.active span{background:var(--rs-accent)}.rc-step b,.rc-step small{display:block}.rc-step small{margin-top:4px;color:var(--rs-muted);font-size:10px}.rc-line{height:1px;background:var(--rs-border);flex:1}.rc-guide{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rc-guide>div{padding:14px;border:1px solid var(--rs-border);border-radius:11px;background:rgba(255,255,255,.02)}.rc-guide p{margin:6px 0 0;font-size:12px;line-height:1.5}@media(max-width:700px){.rc-flow{overflow-x:auto;align-items:stretch}.rc-step{min-width:95px}.rc-line{min-width:18px}.rc-guide{grid-template-columns:1fr}.rc-head{flex-direction:column}}
+</style>
+
+
+<style id="removal-workflow-fix">
+.rc-workflow-nav button{cursor:pointer}
+.rc-workflow-nav button.active{border-color:#4f8cff;background:#13284a;box-shadow:0 0 0 1px rgba(79,140,255,.25)}
+.rc-workflow-nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.rc-workflow-nav button{border:1px solid #29415e;background:#0f2035;color:#cfe0f7;border-radius:9px;padding:10px 13px;font-weight:800;font-size:11px;cursor:pointer}
+.rc-workflow-nav button:hover{border-color:#4f8cff;background:#142b48}
+.rc-workflow-nav{align-items:stretch;background:#0b1727;border:1px solid #1e3550;border-radius:14px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.rc-workflow-nav button{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:145px;min-height:46px;transition:.18s ease}
+.rc-workflow-nav button.active{color:#fff;border-color:#4f8cff;background:linear-gradient(135deg,#16345d,#102746);transform:translateY(-1px)}
+.rc-nav-num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1a304b;color:#9fc1f5;font-size:10px;font-weight:900;flex:0 0 auto}
+.rc-workflow-nav button.active .rc-nav-num{background:#4f8cff;color:#fff}
+@media(max-width:760px){.rc-workflow-nav{display:grid;grid-template-columns:1fr 1fr}.rc-workflow-nav button{min-width:0}}
+@media(max-width:480px){.rc-workflow-nav{grid-template-columns:1fr}.rc-workflow-nav button{justify-content:flex-start;padding-left:14px}}
+.rc-workflow-panel{scroll-margin-top:20px}
+.rc-history-item{padding:12px 0;border-bottom:1px solid #20354f}
+.rc-history-item:last-child{border-bottom:0}
+
+.rc-case-link{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rc-case-link b{color:#172033}
+.rc-linked{color:#16804a;font-weight:700}
+</style>
+
+<style id="ai-workspace-upgrade">
+.ai-workspace{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:16px;align-items:start}
+.ai-input-card,.ai-result-card{padding:20px;min-height:560px}
+.ai-card-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:18px}
+.ai-card-head h2{margin:2px 0 5px;font-size:17px}
+.ai-card-head p{margin:0;font-size:12px}
+.ai-kicker{font-size:9px;letter-spacing:.14em;font-weight:900;color:#6ea2ff}
+.ai-review-editor{min-height:255px!important;line-height:1.65!important;font-size:14px!important}
+.ai-editor-footer{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#7187a2;font-size:10px}
+.ai-action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px}
+.ai-action-row .primary{min-height:42px;padding:11px 18px}
+.ai-action-row .ghost{min-height:42px}
+.ai-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:17px;padding:11px 12px;border:1px solid #203954;border-radius:10px;background:#091727;color:#8298b3;font-size:10px;line-height:1.5}
+.ai-status{padding:7px 10px;border-radius:999px;border:1px solid #29415e;background:#0d1d31;color:#91acd0;font-size:10px;font-weight:900;white-space:nowrap}
+.ai-status.analyzing{color:#f6c979;border-color:rgba(246,189,96,.3)}
+.ai-status.complete{color:#55e0aa;border-color:rgba(54,211,153,.3)}
+.saved-badge{padding:6px 9px;border-radius:999px;background:rgba(54,211,153,.12);color:#55e0aa;font-size:9px;font-weight:900}
+.ai-empty{min-height:390px;border:1px dashed #29415e;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:8px;background:rgba(255,255,255,.015)}
+.ai-empty-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(79,140,255,.12);color:#76a7ff;font-size:21px;margin-bottom:5px}
+.ai-empty b{font-size:14px;color:#edf4ff}.ai-empty span{max-width:310px;color:#7187a2;font-size:11px;line-height:1.55}
+.ai-result-top{display:grid;grid-template-columns:145px 1fr;gap:16px;align-items:center}
+.ai-score-ring{width:128px;height:128px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(#4f8cff var(--score-angle),#1a2c43 0);position:relative}
+.ai-score-ring:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#0d1a2b}
+.ai-score-inner{position:relative;z-index:1;text-align:center}.ai-score-inner b{display:block;font-size:27px;color:#fff}.ai-score-inner small{font-size:9px;color:#8297b0}
+.ai-summary-title{font-size:18px;font-weight:850;color:#fff;margin-bottom:7px}.ai-summary-copy{font-size:11px;color:#8fa2ba;line-height:1.55}
+.ai-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
+.ai-metric{padding:11px;border:1px solid #203852;border-radius:10px;background:#091727}.ai-metric small{display:block;color:#7187a2;font-size:9px;margin-bottom:5px}.ai-metric b{font-size:12px;color:#fff}
+.ai-result-section{margin-top:17px}.ai-result-section>h3{font-size:12px;margin:0 0 9px;color:#edf4ff}
+.ai-signal-card{display:flex;gap:11px;justify-content:space-between;align-items:flex-start;padding:11px;border:1px solid #203852;border-radius:10px;background:#0a1727;margin-top:7px}
+.ai-signal-icon{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;background:rgba(255,107,120,.12);color:#ff8791;flex:0 0 auto;font-size:11px}
+.ai-signal-main b{display:block;font-size:11px;color:#edf4ff}.ai-signal-main small{display:block;margin-top:3px;color:#8297b0;font-size:10px;line-height:1.45}
+.ai-match{font-size:9px;color:#f6c979;background:rgba(246,189,96,.09);border:1px solid rgba(246,189,96,.18);border-radius:6px;padding:5px 7px;white-space:nowrap}
+.ai-evidence{margin:0;padding-left:17px}.ai-evidence li{font-size:10px;color:#a4b6cc;line-height:1.55;margin:6px 0}
+.ai-next{padding:12px;border:1px solid rgba(79,140,255,.25);background:rgba(79,140,255,.07);border-radius:10px;color:#a9bee0;font-size:10px;line-height:1.55}
+.ai-result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ai-result-actions button{font-size:10px}
+.ai-howto{padding:18px}
+.ai-flow-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.ai-flow-head h2{margin:3px 0 0;font-size:15px}
+.ai-flow{display:flex;align-items:center;gap:10px;margin-top:17px}.ai-flow>div:not(.ai-flow-line){flex:1;padding:12px;border:1px solid #203852;border-radius:10px;background:#0a1727}.ai-flow span{display:block;width:22px;height:22px;border-radius:50%;background:#183354;color:#9fc2f7;text-align:center;line-height:22px;font-size:9px;font-weight:900;margin-bottom:7px}.ai-flow b{display:block;font-size:10px;color:#edf4ff}.ai-flow small{display:block;color:#7187a2;font-size:9px;margin-top:4px;line-height:1.35}.ai-flow-line{height:1px;background:#203852;flex:0 0 25px}
+@media(max-width:950px){.ai-workspace{grid-template-columns:1fr}.ai-input-card,.ai-result-card{min-height:auto}}
+@media(max-width:650px){.ai-result-top{grid-template-columns:1fr}.ai-metrics{grid-template-columns:1fr 1fr 1fr}.ai-flow{display:grid;grid-template-columns:1fr 1fr}.ai-flow-line{display:none}.ai-flow>div:not(.ai-flow-line){min-height:90px}.ai-card-head{flex-direction:column}.ai-input-card,.ai-result-card{padding:15px}.ai-review-editor{min-height:210px!important}}
+</style>
+<style id="toast-upgrade">
+#toastContainer{position:fixed;right:22px;bottom:22px;z-index:10000;display:grid;gap:9px;pointer-events:none}
+.rs-toast{min-width:250px;max-width:380px;padding:12px 14px;border:1px solid #29415e;border-radius:11px;background:#0d1a2b;color:#eaf3ff;box-shadow:0 18px 45px rgba(0,0,0,.42);font-size:11px;line-height:1.45;animation:rsToastIn .2s ease}
+.rs-toast.ok{border-color:rgba(54,211,153,.35)}.rs-toast.warn{border-color:rgba(246,189,96,.35)}
+@keyframes rsToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
+<style id="mobile-app-upgrade">
+/* ReviewShield AI — Mobile App Experience */
+.mobile-menu-btn{display:none}
+.mobile-brand{display:none}
+@media(max-width:760px){
+  body{padding-bottom:74px;overflow-x:hidden}
+  .side{
+    width:0;transform:translateX(-100%);padding:0;border:0;box-shadow:none;
+    transition:transform .22s ease,width .22s ease;z-index:9000;overflow:hidden;
+  }
+  .side.mobile-open{width:270px;transform:translateX(0);padding:18px 15px;border-right:1px solid var(--rs-border);box-shadow:20px 0 50px rgba(0,0,0,.5)}
+  .side.mobile-open .brand span:last-child,.side.mobile-open .nav button span,
+  .side.mobile-open .plan,.side.mobile-open .user div:last-child{display:block}
+  .side.mobile-open .nav button{text-align:left}
+  .main{margin-left:0;width:100%;min-width:0}
+  .top{height:62px;padding:0 12px;position:sticky;top:0;z-index:800;box-shadow:0 8px 25px rgba(0,0,0,.14)}
+  .business{display:none}
+  .topright{gap:6px}
+  .topright .ghost{min-width:40px;height:40px;padding:8px}
+  .topright .ghost:first-of-type{font-size:0}
+  .topright .ghost:first-of-type:after{content:"↪";font-size:17px}
+  .top-email{display:none}
+  .mobile-menu-btn{
+    display:grid;place-items:center;width:40px;height:40px;border:1px solid #29415e;
+    border-radius:9px;background:#101f33;color:#fff;font-size:20px
+  }
+  .mobile-brand{display:block;font-weight:850;font-size:14px;margin-left:8px;margin-right:auto}
+  .mobile-top-group{display:flex;align-items:center;min-width:0}
+  .page{padding:16px 13px 20px;max-width:none}
+  .head{margin-bottom:16px}
+  .head h1{font-size:22px;line-height:1.15}
+  .head .muted{font-size:11px;line-height:1.5}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .stat{padding:13px;border-radius:11px}
+  .stat strong{font-size:21px;margin:5px 0}
+  .stat small{font-size:10px}
+  .section{padding:14px;margin-top:12px;border-radius:11px}
+  .section h2{font-size:14px}
+  .grid2{grid-template-columns:1fr;gap:0}
+  .review{grid-template-columns:1fr;gap:9px;padding:12px}
+  .review .actions{width:100%;flex-wrap:wrap}
+  .review .actions button{flex:1;min-height:38px}
+  .toolbar{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none}
+  .toolbar::-webkit-scrollbar{display:none}
+  .filter-btn{white-space:nowrap;min-height:38px}
+  .case{grid-template-columns:1fr;gap:8px;padding:12px 0}
+  .chart-wrap{height:220px}
+  .form{max-width:none}
+  .form textarea{min-height:125px}
+  .analyzer-options{grid-template-columns:1fr 1fr;gap:8px}
+  .ai-workspace{grid-template-columns:1fr;gap:10px}
+  .ai-input-card,.ai-result-card{padding:13px;min-height:auto}
+  .ai-review-editor{min-height:190px!important;font-size:14px!important}
+  .ai-result-top{grid-template-columns:105px 1fr;gap:10px}
+  .ai-score-ring{width:96px;height:96px}
+  .ai-score-ring:after{inset:7px}
+  .ai-score-inner b{font-size:22px}
+  .ai-summary-title{font-size:15px}
+  .ai-metrics{grid-template-columns:repeat(3,1fr);gap:5px}
+  .ai-metric{padding:8px}
+  .ai-metric b{font-size:10px}
+  .ai-signal-card{padding:9px;gap:7px}
+  .ai-result-actions button{flex:1;min-height:40px}
+  .ai-flow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .ai-flow-line{display:none}
+  .ai-flow>div:not(.ai-flow-line){min-height:78px}
+  .rc-warning{padding:13px!important}
+  .rc-workflow-nav{grid-template-columns:1fr 1fr;margin:10px 0}
+  .rc-workflow-nav button{min-width:0;min-height:48px;padding:8px;font-size:10px}
+  .rc-status-grid{grid-template-columns:1fr;gap:7px}
+  .rc-status-card{padding:13px}
+  .rc-evidence-grid{grid-template-columns:1fr}
+  .rc-evidence-toolbar{display:grid;grid-template-columns:1fr 1fr}
+  .rc-evidence-toolbar .primary{grid-column:1/-1}
+  .rc-head{flex-direction:column;gap:8px}
+  .rc-select{min-height:44px}
+  .rc-textarea{min-height:125px}
+  .auth-box{width:calc(100vw - 28px);padding:22px 18px}
+  #toastContainer{left:12px;right:12px;bottom:84px}
+  .rs-toast{min-width:0;width:100%}
+  /* fixed mobile navigation */
+  #mobileBottomNav{
+    position:fixed;left:0;right:0;bottom:0;height:70px;z-index:8500;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
+    background:rgba(7,17,31,.97);backdrop-filter:blur(14px);
+    border-top:1px solid #1d3048;padding:6px 5px env(safe-area-inset-bottom,4px)
+  }
+  #mobileBottomNav button{
+    border:0;background:transparent;color:#8297b0;border-radius:9px;
+    font-size:9px;font-weight:800;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:3px
+  }
+  #mobileBottomNav button b{font-size:17px;line-height:18px}
+  #mobileBottomNav button.active{background:rgba(79,140,255,.13);color:#fff}
+  #mobileBottomNav button.active b{color:#76a7ff}
+  #mobileOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:8999}
+}
+@media(min-width:761px){
+  #mobileBottomNav,#mobileOverlay{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="toastContainer" aria-live="polite"></div>
+
+<div id="authWrap" class="auth-wrap">
+  <div class="auth-box">
+    <h1 id="authTitle">Welcome to ReviewShield AI</h1>
+    <p id="authSubtitle">Sign in to access your private review dashboard.</p>
+    <div id="signupNameWrap" class="hidden">
+      <input id="authName" type="text" placeholder="Your name" autocomplete="name">
+    </div>
+    <input id="authEmail" type="email" placeholder="Email address" autocomplete="email">
+    <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="authButton" class="primary" type="button" onclick="handleAuth()">Sign in</button>
+    <div id="authMsg" class="auth-msg"></div>
+    <div class="auth-switch">
+      <span id="authSwitchText">Don't have an account?</span>
+      <button type="button" onclick="toggleAuthMode()">Create account</button>
+    </div>
+  </div>
+</div>
+
+<div id="appShell" class="app hidden">
+<aside class="side">
+<div class="brand"><span class="logo">R</span><span>ReviewShield AI</span></div>
+<div class="nav">
+<button class="active" onclick="show('dashboard',this)">⌂ &nbsp; Dashboard</button>
+<button onclick="show('reviews',this)">★ &nbsp; Reviews</button>
+<button onclick="show('analyzer',this)">⚑ &nbsp; AI Analyzer</button>
+<button onclick="show('cases',this)">▣ &nbsp; Cases</button>
+<button onclick="show('responses',this)">◈ &nbsp; AI Responses</button>
+<button onclick="show('removal',this)">🛡 &nbsp; Removal Center</button>
+<button onclick="show('profile',this)">◎ &nbsp; Profile</button>
+<button onclick="show('activity',this)">◌ &nbsp; Activity</button>
+<button onclick="show('settings',this)">⚙ &nbsp; Settings</button>
+</div>
+<div class="bottom">
+<div class="plan"><small>Current plan</small><b>Starter</b><button type="button" onclick="showToast('Upgrade options will be available in the next billing stage.')">Upgrade</button></div>
+<div class="user"><div id="sideAvatar" class="avatar">U</div><div><b id="sideName">Business Owner</b><small id="sideEmail">Signed in</small></div></div>
+</div>
+</aside>
+
+<main class="main">
+<header class="top">
+<div class="business"><span class="muted">Business</span><strong id="businessTop">Acme Auto Care ▾</strong></div>
+<div class="topright">
+<span id="topEmail" class="top-email"></span>
+<button class="ghost" type="button" onclick="signOut()">Sign out</button>
+<button class="ghost" type="button" onclick="showToast('Help center is coming soon.')">?</button>
+<div class="bell-wrap">
+<button id="bellButton" class="ghost bell-button" type="button" onclick="toggleNotifications()" aria-label="Notifications">
+<span class="bell-icon">♢</span>
+<span id="notificationBadge" class="notification-badge hidden">0</span>
+</button>
+<div id="notificationPanel" class="notification-panel hidden">
+<div class="notification-head"><b>Notifications</b><button class="notification-clear" type="button" onclick="markNotificationsRead()">Mark read</button></div>
+<div id="notificationItems"></div>
+<div class="notification-foot"><button type="button" onclick="openActivityFromBell()">View all activity</button></div>
+</div>
+</div>
+<div id="topAvatar" class="avatar">U</div>
+</div>
+</header>
+
+<section id="dashboard" class="page">
+<div class="head">
+<div><div class="eyebrow">REVIEW HEALTH</div><h1 id="welcomeTitle">Good evening 👋</h1><div class="muted">Monitor, analyze and organize your business reviews.</div></div>
+<button class="primary" type="button" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">＋ Analyze review</button>
+</div>
+<div class="stats">
+<div class="card stat"><small>Average rating</small><strong id="avgRating">0.0 ★</strong><span class="green">Live data</span></div>
+<div class="card stat"><small>Total reviews</small><strong id="totalReviews">0</strong><span class="green">Your account</span></div>
+<div class="card stat"><small>Potential issues</small><strong id="flagCount">0</strong><span class="amber">Needs attention</span></div>
+<div class="card stat"><small>Open cases</small><strong id="caseCount">0</strong><span class="muted">Your account</span></div>
+</div>
+<div class="grid2">
+<div class="card section"><h2>Rating overview</h2><div class="chart-wrap"><canvas id="ratingChart"></canvas></div></div>
+<div class="card section"><h2>Review health</h2><div class="chart-wrap"><canvas id="healthChart"></canvas></div></div>
+</div>
+<div class="card section"><h2>What ReviewShield does</h2><p class="muted">Analyze reviews for potential policy issues, organize evidence, prepare reporting information, and generate professional responses. Google makes the final decision on policy violations.</p></div>
+<div class="card section"><h2>Recent reviews</h2><div id="dashReviews" class="review-list"></div></div>
+</section>
+
+<section id="reviews" class="page hidden">
+<div class="head"><div><div class="eyebrow">REVIEWS</div><h1>Review inbox</h1><div class="muted">Reviews saved to your account.</div></div><button class="primary" type="button" onclick="show('analyzer',document.querySelectorAll('.nav button')[2])">Analyze a review</button></div>
+<div class="card section">
+<div class="toolbar" id="reviewFilters">
+<button class="filter-btn active" onclick="setReviewFilter('all',this)">All</button>
+<button class="filter-btn" onclick="setReviewFilter('5',this)">5★</button>
+<button class="filter-btn" onclick="setReviewFilter('4',this)">4★</button>
+<button class="filter-btn" onclick="setReviewFilter('3',this)">3★</button>
+<button class="filter-btn" onclick="setReviewFilter('2',this)">2★</button>
+<button class="filter-btn" onclick="setReviewFilter('1',this)">1★</button>
+<button class="filter-btn" onclick="setReviewFilter('issues',this)">Potential Issues</button>
+</div>
+<div id="allReviews" class="review-list"></div>
+</div>
+</section>
+
+
+<section id="analyzer" class="page hidden">
+<div class="head">
+  <div>
+    <div class="eyebrow">AI REVIEW ANALYZER</div>
+    <h1>AI Analysis Workspace</h1>
+    <div class="muted">Review policy signals, understand why a review was flagged, and move verified cases into the Removal Center.</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="aiEngineBadge" class="saved-badge">SMART ENGINE</span><span id="analyzerStatus" class="ai-status">Ready</span></div>
+</div>
+
+<div class="ai-workspace">
+  <div class="card ai-input-card">
+    <div class="ai-card-head">
+      <div><div class="ai-kicker">STEP 01</div><h2>Review details</h2><p class="muted">Paste a review or open one from your Review Inbox.</p></div>
+      <button class="ghost" type="button" onclick="show('reviews',document.querySelectorAll('.nav button')[1])">Browse reviews</button>
+    </div>
+    <div class="field">
+      <label>Review text</label>
+      <textarea id="reviewText" class="ai-review-editor" placeholder="Paste a Google review here..."></textarea>
+      <div class="ai-editor-footer"><span id="reviewCharCount">0 characters</span><span>Human review required</span></div>
+    </div>
+    <div class="analyzer-options">
+      <div class="field"><label>Star rating</label>
+        <select id="reviewRating">
+          <option value="">Not provided</option><option value="1">1 ★</option><option value="2">2 ★</option>
+          <option value="3">3 ★</option><option value="4">4 ★</option><option value="5">5 ★</option>
+        </select>
+      </div>
+      <div class="field"><label>Reviewer name</label><input id="reviewerName" placeholder="e.g. John Smith"></div>
+    </div>
+    <div class="ai-action-row">
+      <button class="primary" type="button" onclick="analyze()">🤖 Analyze review</button>
+      <button class="ghost" type="button" onclick="clearAnalyzer()">Clear</button>
+    </div>
+    <div class="ai-disclaimer"><span>ⓘ</span><span>Smart Engine combines structured policy-signal analysis with a secure AI endpoint when configured. It does not make a Google policy determination.</span></div>
+  </div>
+
+  <div class="card ai-result-card">
+    <div class="ai-card-head">
+      <div><div class="ai-kicker">STEP 02</div><h2>Analysis result</h2><p class="muted">A structured triage summary of the selected review.</p></div>
+      <div id="analyzerSavedBadge" class="saved-badge hidden">Saved</div>
+    </div>
+    <div id="analysisResult">
+      <div class="ai-empty">
+        <div class="ai-empty-icon">✦</div>
+        <b>Ready to analyze</b>
+        <span>Enter review text to see risk, signals, evidence suggestions, and next actions.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card section ai-howto">
+  <div class="ai-flow-head"><div><div class="eyebrow">REVIEW WORKFLOW</div><h2>From analysis to action</h2></div><span class="muted">Keep decisions evidence-based</span></div>
+  <div class="ai-flow">
+    <div><span>01</span><b>Analyze</b><small>Identify potential signals</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>02</span><b>Verify</b><small>Collect factual evidence</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>03</span><b>Report</b><small>Use Google's official process</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>04</span><b>Track</b><small>Record the final decision</small></div>
+  </div>
+</div>
+</section>
+
+<section id="cases" class="page hidden">
+<div class="head"><div><div class="eyebrow">CASE MANAGEMENT</div><h1>Cases</h1><div class="muted">Track reviews that need evidence or reporting.</div></div></div>
+<div class="card section">
+<div class="toolbar"><button class="filter-btn active" type="button" onclick="filterCases('all',this)">All</button><button class="filter-btn" type="button" onclick="filterCases('open',this)">Open</button><button class="filter-btn" type="button" onclick="filterCases('closed',this)">Closed</button></div>
+<div id="caseList"></div>
+</div>
+</section>
+
+<section id="responses" class="page hidden">
+<div class="head"><div><div class="eyebrow">AI RESPONSES</div><h1>Response assistant</h1><div class="muted">Generate a professional draft for a legitimate negative review.</div></div></div>
+<div class="card section"><div class="form">
+<label><b>Customer review</b></label>
+<textarea id="responseText" placeholder="Paste the customer's review..."></textarea>
+<label><b>Tone</b></label>
+<select id="responseTone"><option value="professional">Professional</option><option value="warm">Warm &amp; Empathetic</option><option value="short">Short &amp; Concise</option><option value="factual">Professional &amp; Factual</option></select>
+<button class="primary" type="button" onclick="generateResponse()">Generate draft</button>
+<div id="responseResult"></div>
+</div></div>
+</section>
+
+<section id="profile" class="page hidden">
+<div class="head"><div><div class="eyebrow">PROFILE</div><h1>Account &amp; business profile</h1><div class="muted">Keep your account and business information ready for review workflows.</div></div></div>
+<div class="grid2">
+<div class="card section">
+<h2>Your profile</h2>
+<div id="profileAvatar" class="profile-avatar">U</div>
+<div class="form">
+<div class="field"><label>Full name</label><input id="profileName" placeholder="Your name"></div>
+<div class="field"><label>Email</label><input id="profileEmail" disabled></div>
+<button class="primary" type="button" onclick="saveProfile()">Save profile</button>
+</div>
+</div>
+<div class="card section">
+<h2>Business details</h2>
+<div class="form">
+<div class="field"><label>Business name</label><input id="businessName" placeholder="Business name"></div>
+<div class="field"><label>Category</label><input id="businessCategory" placeholder="e.g. Auto Repair"></div>
+<div class="field"><label>Website</label><input id="businessWebsite" placeholder="https://example.com"></div>
+<div class="field"><label>Location</label><input id="businessLocation" placeholder="City, State, Country"></div>
+<button class="primary" type="button" onclick="saveBusiness()">Save business</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="activity" class="page hidden">
+<div class="head"><div><div class="eyebrow">ACTIVITY</div><h1>Notifications &amp; activity</h1><div class="muted">Recent activity from this ReviewShield session.</div></div></div>
+<div class="card section"><div id="activityList"></div></div>
+</section>
+
+
+<section id="removal" class="page hidden">
+<div class="head"><div><div class="eyebrow">GOOGLE REVIEW REMOVAL</div><h1>Removal Center</h1><div class="muted">Prepare evidence, report eligible reviews, and track the Google decision.</div></div></div>
+<div class="card section rc-warning"><div class="rc-warning-icon">!</div><div><b>Important: ReviewShield does not guarantee removal.</b><p class="muted">Only Google decides whether a review violates its policies. Report a review only when there is a genuine policy-based reason.</p></div></div>
+<div class="rc-workflow-nav" aria-label="Removal workflow navigation">
+  <button type="button" class="active" onclick="removalGo('analyze')"><span class="rc-nav-num">1</span><span>🤖 AI Analysis</span></button>
+  <button type="button" onclick="removalGo('evidence')"><span class="rc-nav-num">2</span><span>📋 Evidence</span></button>
+  <button type="button" onclick="removalGo('report')"><span class="rc-nav-num">3</span><span>📤 Report</span></button>
+  <button type="button" onclick="removalGo('status')"><span class="rc-nav-num">4</span><span>📊 Status Tracking</span></button>
+  <button type="button" onclick="removalGo('appeal')"><span class="rc-nav-num">5</span><span>⚖️ Appeal</span></button>
+  <button type="button" onclick="removalGo('history')"><span class="rc-nav-num">6</span><span>🕘 Case History</span></button>
+</div>
+<div class="grid2">
+  <div id="removalAnalyzeSection" class="card section rc-workflow-panel"><h2>1. AI Analysis</h2>
+    <select id="removalReviewSelect" class="rc-select" onchange="prepareRemovalReview()"><option value="">Choose a review...</option></select>
+    <div id="removalReviewPreview" class="rc-preview"><div class="empty" style="padding:24px 8px">Select a review to begin.</div></div>
+    <div id="removalAnalyzerPanel" class="rc-analyzer-panel hidden"></div>
+  </div>
+  <div id="removalEvidenceSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>2. Evidence</h2><div class="muted">Document only facts that can be verified. Your evidence stays attached to the selected review.</div></div><span id="evidenceProgress" class="status">0 / 6</span></div>
+    <div class="rc-evidence-toolbar"><button type="button" class="ghost" onclick="applyAnalyzerEvidence()">✨ Apply analyzer suggestions</button><button type="button" class="ghost" onclick="clearRemovalEvidence()">Clear evidence</button><button type="button" class="primary" onclick="saveRemovalEvidence()">💾 Save evidence</button></div>
+    <div class="rc-evidence-grid">
+    <label class="rc-check"><input type="checkbox" id="evNonGenuine"> Non-genuine experience signal</label>
+    <label class="rc-check"><input type="checkbox" id="evSpam"> Spam, repetitive, or irrelevant content</label>
+    <label class="rc-check"><input type="checkbox" id="evAbuse"> Abusive, threatening, or harassing language</label>
+    <label class="rc-check"><input type="checkbox" id="evPromo"> Promotional or advertising content</label>
+    <label class="rc-check"><input type="checkbox" id="evConflict"> Conflict-of-interest or manipulation signal</label>
+    <label class="rc-check"><input type="checkbox" id="evOther"> Other policy-relevant evidence</label></div>
+    <textarea id="removalEvidence" class="rc-textarea" placeholder="Write factual evidence notes: what happened, what can be verified, and why the review may violate a policy..."></textarea>
+    <div class="rc-evidence-footer"><span id="evidenceSaveMessage" class="muted">Evidence is autosaved while you edit.</span><span class="muted">Do not include passwords, payment details, or unnecessary personal information.</span></div>
+  </div>
+</div>
+<div id="removalReportSection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>3. 📤 Report</h2><div class="muted">Open Google's official review-management flow and keep your internal status here.</div></div><span id="removalStatusBadge" class="status">Not started</span></div>
+  <div class="toolbar"><button class="primary" type="button" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button><button class="ghost" type="button" onclick="setRemovalStatus('Reported')">✓ Mark as Reported</button><button class="ghost" type="button" onclick="createRemovalCase()">▣ Create / Link Case</button></div>
+  <div id="removalCaseLink" class="result" style="margin-top:10px">No ReviewShield case linked yet.</div>
+  <div id="removalStatusMessage" class="result">Select a review, prepare evidence, then use Google's official tool to report it.</div>
+</div>
+<div id="removalStatusSection" class="card section rc-workflow-panel">
+<div class="rc-head"><div><h2>4. 📊 Status Tracking</h2><div class="muted">Track the current Google review-removal decision for the selected review.</div></div><span id="removalStatusBadge2" class="status">Not started</span></div>
+<div class="rc-status-grid">
+<button type="button" class="rc-status-card" onclick="setRemovalStatus('Reported')"><b>📤 Reported</b><small>Report submitted to Google</small></button>
+<button type="button" class="rc-status-card" onclick="setRemovalStatus('Decision pending')"><b>⏳ Decision pending</b><small>Google is reviewing the report</small></button>
+<button type="button" class="rc-status-card" onclick="setRemovalStatus('Removed')"><b>✅ Removed</b><small>Review was removed</small></button>
+<button type="button" class="rc-status-card" onclick="setRemovalStatus('No policy violation')"><b>❌ No policy violation</b><small>Google did not find a violation</small></button>
+<button type="button" class="rc-status-card" onclick="setRemovalStatus('Escalated')"><b>📩 Escalated</b><small>Check Google's email for updates</small></button>
+</div>
+<div id="removalStatusMessage2" class="result">Select a review to track its status.</div>
+</div>
+<div id="removalAppealSection" class="card section rc-workflow-panel">
+<div class="rc-head"><div><h2>5. ⚖️ Appeal</h2><div class="muted">Use this section when Google has denied the removal request and an appeal is available.</div></div></div>
+<div class="rc-appeal-box">
+<div class="rc-appeal-info"><b>When to appeal</b><p class="muted">Appeal only when you have a genuine policy-based reason and supporting evidence.</p></div>
+<textarea id="appealNotes" class="rc-textarea" placeholder="Add factual appeal notes or supporting context..."></textarea>
+<div class="toolbar"><button type="button" class="primary" onclick="submitRemovalAppeal()">⚖️ Submit Appeal</button><button type="button" class="ghost" onclick="openGoogleRemovalTool()">Open Google Review Management Tool</button></div>
+<div id="appealMessage" class="result">No appeal submitted yet.</div>
+</div>
+</div>
+<div id="removalHistorySection" class="card section rc-workflow-panel"><div class="rc-head"><div><h2>6. 🕘 Case History</h2><div class="muted">Saved workflow activity for the selected review.</div></div></div><div id="removalCaseHistory"><div class="empty">Select a review to view its history.</div></div></div>
+<div class="card section"><h2>Reporting guide</h2><div class="rc-guide"><div><b>Report only genuine policy concerns</b><p class="muted">A negative or unfair review is not automatically removable.</p></div><div><b>Keep evidence factual</b><p class="muted">Record verifiable context that supports the suspected policy issue.</p></div><div><b>Track Google's decision</b><p class="muted">Use Google's review-management flow for the official status.</p></div><div><b>Use appeal when appropriate</b><p class="muted">If a report is denied, follow Google's available appeal process.</p></div></div></div>
+</section>
+
+<section id="settings" class="page hidden">
+<div class="head"><div><div class="eyebrow">SETTINGS</div><h1>Settings</h1><div class="muted">Account, data and Google integration settings.</div></div></div>
+<div class="card section">
+<h2>Account</h2><p class="muted">Signed in as <b id="settingsEmail"></b></p>
+<div class="toolbar"><button class="ghost" type="button" onclick="signOut()">Sign out</button><button class="ghost" type="button" onclick="exportReport()">Export report</button></div>
+</div>
+<div class="card section">
+<h2>Google Business Profile</h2>
+<p class="muted">Status: <b id="googleStatus">Not connected</b></p>
+<button class="primary" type="button" onclick="connectGoogle()">Connect Google</button>
+<p class="muted" style="font-size:12px;margin-top:10px">This is a real connection placeholder. No fake Google account connection is claimed until OAuth/API access is configured.</p>
+</div>
+</section>
+
+</main></div>
+<div id="mobileOverlay" class="hidden" onclick="toggleMobileMenu()"></div>
+<nav id="mobileBottomNav" aria-label="Mobile navigation">
+  <button data-page="dashboard" class="active" onclick="mobileShow('dashboard',this)"><b>⌂</b>Home</button>
+  <button data-page="reviews" onclick="mobileShow('reviews',this)"><b>★</b>Reviews</button>
+  <button data-page="analyzer" onclick="mobileShow('analyzer',this)"><b>⚑</b>Analyze</button>
+  <button data-page="removal" onclick="mobileShow('removal',this)"><b>🛡</b>Removal</button>
+  <button data-page="cases" onclick="mobileShow('cases',this)"><b>▣</b>Cases</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const SUPABASE_URL="https://ppqavvwcmgojbddnqwpl.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Q6IJEnT3XvDI8KXMWpatkg_bNyxpKie";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+let reviews=[];
+let cases=[];
+let currentUser=null;
+let signupMode=false;
+let reviewFilter="all";
+let caseFilter="all";
+let ratingChart=null;
+let healthChart=null;
+let activity=[];
+let profileData={};
+
+function $(id){return document.getElementById(id)}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+function showToast(message,type='ok'){
+  const box=$('toastContainer');
+  if(!box){return}
+  const toast=document.createElement('div');
+  toast.className='rs-toast '+(type||'ok');
+  toast.textContent=message;
+  box.appendChild(toast);
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateY(6px)';toast.style.transition='.2s';setTimeout(()=>toast.remove(),220)},2800);
+}
+
+function toggleAuthMode(){
+  signupMode=!signupMode;
+  $('authTitle').textContent=signupMode?'Create your ReviewShield account':'Welcome to ReviewShield AI';
+  $('authSubtitle').textContent=signupMode?'Create an account to keep your dashboard and data private.':'Sign in to access your private review dashboard.';
+  $('authButton').textContent=signupMode?'Create account':'Sign in';
+  $('authSwitchText').textContent=signupMode?'Already have an account?':"Don't have an account?";
+  document.querySelector('.auth-switch button').textContent=signupMode?'Sign in':'Create account';
+  $('signupNameWrap').classList.toggle('hidden',!signupMode);
+  $('authMsg').textContent='';
+  $('authPassword').autocomplete=signupMode?'new-password':'current-password';
+}
+
+async function handleAuth(){
+  const button=$('authButton'),msg=$('authMsg');
+  const email=$('authEmail').value.trim().toLowerCase();
+  const password=$('authPassword').value;
+  const name=($('authName')?.value||'').trim()||'Business Owner';
+  msg.textContent='';
+  if(!email||!password){msg.innerHTML='<span class="amber">Enter your email and password.</span>';return}
+  if(password.length<6){msg.innerHTML='<span class="amber">Password must be at least 6 characters.</span>';return}
+  button.disabled=true;button.textContent=signupMode?'Creating account…':'Signing in…';
+  try{
+    let result;
+    if(signupMode){
+      result=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name}}});
+      if(result.error) throw result.error;
+      if(!result.data.session){
+        msg.innerHTML='<span class="green"><b>Account created ✓</b><br>Check your email for the confirmation link, then sign in.</span>';
+        return;
+      }
+    }else{
+      result=await supabaseClient.auth.signInWithPassword({email,password});
+      if(result.error) throw result.error;
+    }
+    if(!result.data?.user||!result.data?.session){
+      msg.innerHTML='<span class="amber">No active session was returned. If email confirmation is enabled, confirm your email first.</span>';
+      return;
+    }
+    await startApp(result.data.user);
+  }catch(err){
+    console.error('Authentication error:',err);
+    msg.innerHTML='<span class="danger">'+escapeHTML(err?.message||'Unable to sign in. Please try again.')+'</span>';
+  }finally{
+    button.disabled=false;
+    button.textContent=signupMode?'Create account':'Sign in';
+  }
+}
+
+async function startApp(user){
+  currentUser=user;
+  notificationReadAt=localStorage.getItem('reviewshield_notification_read_'+currentUser.id)||'';
+  activity=[];
+  $('authWrap').classList.add('hidden');
+  $('appShell').classList.remove('hidden');
+  const email=user.email||'';
+  const meta=user.user_metadata||{};
+  const name=meta.full_name||email.split('@')[0]||'Business Owner';
+  const initial=(name.charAt(0)||email.charAt(0)||'U').toUpperCase();
+  $('topAvatar').textContent=initial;$('sideAvatar').textContent=initial;$('profileAvatar').textContent=initial;
+  $('topEmail').textContent=email;$('sideName').textContent=name;$('sideEmail').textContent=email;$('settingsEmail').textContent=email;
+  $('profileName').value=name;$('profileEmail').value=email;
+  $('welcomeTitle').textContent='Good evening, '+name+' 👋';
+  loadLocalProfile();
+  try{await loadData()}catch(err){
+    console.error(err);
+    $('dashReviews').innerHTML='<div class="result">Could not load your private data.<br><br>'+escapeHTML(err.message||err)+'</div>';
+    render();
+  }
+}
+
+async function signOut(){
+  try{await supabaseClient.auth.signOut()}catch(err){console.error(err)}
+  currentUser=null;reviews=[];cases=[];
+  destroyCharts();
+  $('appShell').classList.add('hidden');
+  $('authWrap').classList.remove('hidden');
+  $('authMsg').innerHTML='<span class="green">Signed out successfully.</span>';
+}
+
+function normalizeReview(r){
+  const text=r.text??r.review_text??'';
+  const name=r.name??r.reviewer_name??'Reviewer';
+  const assessment=r.assessment||(r.issue_type?'Potential issue':'Likely legitimate');
+  const rating=Number(r.rating||0);
+  return {...r,text,name,assessment,rating,cls:/Potential|Needs|issue/i.test(assessment)?'flag':'safe'};
+}
+function normalizeCase(c){return {...c,name:c.name||c.review_name||'Review case',issue:c.issue||c.issue_type||c.evidence_notes||'Review requires attention',status:c.status||'Open',priority:c.priority||'medium',evidence_notes:c.evidence_notes||''}}
+
+async function loadData(showStatus=false){
+  if(!currentUser)return;
+  if(showStatus)$('dashReviews').innerHTML='<div class="result">Refreshing your live Supabase data…</div>';
+  const [reviewsRes,casesRes]=await Promise.all([
+    supabaseClient.from('reviews').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:true}),
+    supabaseClient.from('cases').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:true})
+  ]);
+  if(reviewsRes.error)throw reviewsRes.error;
+  if(casesRes.error)throw casesRes.error;
+  reviews=(reviewsRes.data||[]).map(normalizeReview);
+  cases=(casesRes.data||[]).map(normalizeCase);
+  updateStats();render();renderCharts();
+}
+
+function updateStats(){
+  const avg=reviews.length?(reviews.reduce((a,r)=>a+Number(r.rating||0),0)/reviews.length).toFixed(1):'0.0';
+  const flags=reviews.filter(r=>r.issue_type||/Potential|Needs|issue/i.test(r.assessment||'')).length;
+  const open=cases.filter(c=>!/resolved|closed/i.test(c.status||'')).length;
+  $('avgRating').textContent=avg+' ★';$('totalReviews').textContent=reviews.length;$('flagCount').textContent=flags;$('caseCount').textContent=open;
+}
+
+function reviewHTML(r){
+  const id=JSON.stringify(String(r.id));
+  const stars='★'.repeat(Math.max(0,Math.min(5,r.rating)))+'☆'.repeat(Math.max(0,5-r.rating));
+  return `<div class="review"><div><b>${escapeHTML(r.name)}</b> &nbsp; <span class="badge ${r.cls}">${escapeHTML(r.assessment||'Likely legitimate')}</span><small> · ${stars}</small><p>“${escapeHTML(r.text)}”</p><small>${escapeHTML(r.reviewer_name||'Reviewer')} · ${new Date(r.created_at||Date.now()).toLocaleString()}</small></div><div class="actions"><button class="ghost" type="button" onclick='loadReview(${id})'>Analyze</button></div></div>`;
+}
+
+function render(){
+  $('dashReviews').innerHTML=reviews.length?reviews.slice(-3).reverse().map(reviewHTML).join(''):'<div class="empty">No reviews yet. Analyze your first review.</div>';
+  let filtered=reviews.slice().reverse();
+  if(reviewFilter!=='all'){
+    if(reviewFilter==='issues')filtered=filtered.filter(r=>r.issue_type||/Potential|Needs|issue/i.test(r.assessment||''));
+    else filtered=filtered.filter(r=>Number(r.rating)===Number(reviewFilter));
+  }
+  $('allReviews').innerHTML=filtered.length?filtered.map(reviewHTML).join(''):'<div class="empty">No reviews match this filter.</div>';
+  renderCases();
+}
+
+function setReviewFilter(filter,btn){
+  reviewFilter=filter;
+  document.querySelectorAll('#reviewFilters .filter-btn').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');render();
+}
+
+function renderCases(){
+  let list=cases.slice().reverse();
+  if(caseFilter==='open')list=list.filter(c=>!/resolved|closed/i.test(c.status||''));
+  if(caseFilter==='closed')list=list.filter(c=>/resolved|closed/i.test(c.status||''));
+  $('caseList').innerHTML=list.length?list.map(c=>`
+    <div class="case">
+      <div><b>${escapeHTML(c.name)}</b><div class="muted">${escapeHTML(c.issue)}</div><small class="muted">Priority: ${escapeHTML(c.priority)}</small></div>
+      <span class="status">${escapeHTML(c.status)}</span>
+      <div class="actions"><button class="ghost" type="button" onclick='editCase(${JSON.stringify(String(c.id))})'>Manage</button></div>
+    </div>`).join(''):'<div class="empty">No cases yet.</div>';
+}
+function filterCases(filter,btn){
+  caseFilter=filter;
+  document.querySelectorAll('#cases .filter-btn').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');renderCases();
+}
+
+async function editCase(id){
+  const c=cases.find(x=>String(x.id)===String(id));if(!c)return;
+  const status=prompt('Case status (Open / Needs evidence / Closed):',c.status||'Open');if(status===null)return;
+  const priority=prompt('Priority (low / medium / high):',c.priority||'medium');if(priority===null)return;
+  const evidence=prompt('Evidence notes:',c.evidence_notes||'');if(evidence===null)return;
+  const {data,error}=await supabaseClient.from('cases').update({status,priority,evidence_notes:evidence}).eq('id',c.id).eq('user_id',currentUser.id).select().single();
+  if(error){showToast('Case update failed: '+error.message);return}
+  const idx=cases.findIndex(x=>String(x.id)===String(c.id));if(idx>=0)cases[idx]=normalizeCase(data);
+  updateStats();render();addActivity('Case updated');showToast('Case updated successfully.');
+}
+
+function setAnalyzerStatus(text,state=''){
+  const el=$('analyzerStatus');if(!el)return;
+  el.textContent=text;el.className='ai-status '+state;
+}
+function updateReviewCharCount(){
+  const el=$('reviewText'),out=$('reviewCharCount');
+  if(el&&out)out.textContent=(el.value||'').length.toLocaleString()+' characters';
+}
+function clearAnalyzer(){
+  $('reviewText').value='';$('reviewerName').value='';$('reviewRating').value='';
+  $('analysisResult').innerHTML='<div class="ai-empty"><div class="ai-empty-icon">✦</div><b>Ready to analyze</b><span>Enter review text to see risk, signals, evidence suggestions, and next actions.</span></div>';
+  $('analyzerSavedBadge')?.classList.add('hidden');setAnalyzerStatus('Ready');updateReviewCharCount();
+}
+function renderMainAnalysis(a,saveState=''){
+  const riskClass=a.risk==='High'?'danger-badge':a.risk==='Medium'?'flag':'safe';
+  const angle=Math.max(0,Math.min(100,a.score))*3.6;
+  const signals=a.findings.length?a.findings.map(x=>`<div class="ai-signal-card"><div style="display:flex;gap:10px"><span class="ai-signal-icon">!</span><div class="ai-signal-main"><b>${escapeHTML(x.cat)}</b><small>${escapeHTML(x.reason)}</small></div></div><span class="ai-match">${escapeHTML(x.match)}</span></div>`).join(''):'<div class="ai-next">No configured policy-signal rule matched this review. This does not prove the review complies with every Google policy.</div>';
+  const evidence=a.evidenceSuggestions.map(x=>`<li>${escapeHTML(x)}</li>`).join('');
+  const next=a.findings.length?(a.risk==='High'?'Verify the strongest signals, document factual evidence, then consider reporting through the official Google process.':'Verify the facts and supporting context before deciding whether a report is appropriate.'):'No action is required from the analyzer alone. If you still have concerns, review the full context manually.';
+  $('analysisResult').innerHTML=`
+    <div class="ai-result-top">
+      <div class="ai-score-ring" style="--score-angle:${angle}deg"><div class="ai-score-inner"><b>${a.score}</b><small>RISK / 100</small></div></div>
+      <div><div class="ai-summary-title">${escapeHTML(a.assessment)}</div><div class="ai-summary-copy">The analyzer found <b>${a.findings.length}</b> configured signal${a.findings.length===1?'':'s'} in this text. This is a triage result, not a Google policy verdict.</div><div style="margin-top:9px"><span class="badge ${riskClass}">${escapeHTML(a.risk)} risk</span></div></div>
+    </div>
+    <div class="ai-metrics">
+      <div class="ai-metric"><small>Confidence</small><b>${a.confidence}%</b></div>
+      <div class="ai-metric"><small>Signals</small><b>${a.findings.length}</b></div>
+      <div class="ai-metric"><small>Primary</small><b style="font-size:10px">${escapeHTML(a.issueType||'None')}</b></div>
+    </div>
+    <div class="ai-result-section"><h3>Why this was flagged</h3>${signals}</div>
+    <div class="ai-result-section"><h3>Evidence to verify</h3><ul class="ai-evidence">${evidence}</ul></div>
+    <div class="ai-result-section"><h3>Recommended next step</h3><div class="ai-next">${escapeHTML(next)}</div></div>
+    <div class="ai-result-actions">
+      ${saveState ? '' : '<button class="ghost" type="button" onclick="sendAnalyzerToRemoval()">🛡 Send to Removal Center</button>'}
+      ${saveState ? '' : '<button class="ghost" type="button" onclick="createCaseFromAnalyzer()">▣ Create Case</button>'}
+      <button class="ghost" type="button" onclick="copyAnalysisSummary()">Copy summary</button>
+    </div>
+    <div class="muted" style="font-size:9px;margin-top:12px">ReviewShield AI provides indicators only. Google makes the final decision on policy violations.</div>`;
+}
+function copyAnalysisSummary(){
+  const r=$('analysisResult');if(!r)return;
+  const text=r.innerText||'';
+  navigator.clipboard?.writeText(text).then(()=>showToast('Analysis summary copied.'));
+}
+function sendAnalyzerToRemoval(){
+  const text=$('reviewText').value.trim();
+  if(!text){showToast('Analyze a review first.','warn');return}
+  let r=selectedAnalyzerReviewId?reviews.find(x=>String(x.id)===String(selectedAnalyzerReviewId)):null;
+  if(!r){
+    show('removal',document.querySelectorAll('.nav button')[5]);
+    setTimeout(()=>{
+      const s=$('removalReviewSelect');
+      if(s){
+        const match=reviews.find(x=>String(x.text||'').trim()===text);
+        if(match){s.value=String(match.id);prepareRemovalReview()}
+      }
+      removalGo('analyze');
+    },50);
+    return;
+  }
+  show('removal',document.querySelectorAll('.nav button')[5]);
+  setTimeout(()=>{$('removalReviewSelect').value=String(r.id);prepareRemovalReview();removalGo('analyze')},50);
+}
+async function createCaseFromAnalyzer(){
+  if(!currentUser){showToast('Please sign in first.','warn');return}
+  const t=$('reviewText').value.trim();if(!t){showToast('Enter a review first.','warn');return}
+  let r=selectedAnalyzerReviewId?reviews.find(x=>String(x.id)===String(selectedAnalyzerReviewId)):null;
+  if(!r){showToast('Save the review first by analyzing it, then create a case.','warn');return}
+  const a=analyzeReviewText(r.text||'');
+  const c={user_id:currentUser.id,name:'Review Analysis — '+(r.reviewer_name||r.name||'Reviewer'),issue:a.issueType||'Potential policy issue',status:a.findings.length?'Needs evidence':'Open',priority:a.risk==='High'?'high':a.risk==='Medium'?'medium':'low',evidence_notes:'Analyzer summary: '+a.assessment+'\\nRisk: '+a.score+'/100\\nSignals: '+a.findings.map(x=>x.cat).join(', ')};
+  const {data,error}=await supabaseClient.from('cases').insert(c).select().single();
+  if(error){showToast('Case creation failed: '+error.message,'warn');return}
+  cases.push(normalizeCase(data));updateStats();renderCases();addActivity('Case created from AI Analyzer');showToast('Case created successfully.');
+}
+let selectedAnalyzerReviewId=null;
+function loadReview(id){
+  const r=reviews.find(x=>String(x.id)===String(id));if(!r)return;
+  selectedAnalyzerReviewId=r.id;
+  show('analyzer',document.querySelectorAll('.nav button')[2]);
+  $('reviewText').value=r.text||'';
+  $('reviewRating').value=r.rating?String(r.rating):'';
+  $('reviewerName').value=r.reviewer_name||r.name||'';
+  updateReviewCharCount();
+  analyze(false);
+}
+function renderAnalyzerSavedState(saved){
+  $('analyzerSavedBadge')?.classList.toggle('hidden',!saved);
+  setAnalyzerStatus(saved?'Analysis saved':'Analysis complete','complete');
+}
+async function analyze(saveToDatabase=true){
+  const t=$('reviewText').value.trim();
+  if(!t){$('analysisResult').innerHTML='<div class="ai-empty"><div class="ai-empty-icon">!</div><b>Review text required</b><span>Paste the review text before starting analysis.</span></div>';setAnalyzerStatus('Waiting','');return}
+  updateReviewCharCount();setAnalyzerStatus('Analyzing…','analyzing');$('analyzerSavedBadge')?.classList.add('hidden');
+  const rating=$('reviewRating')?.value||'';
+  const reviewerName=($('reviewerName')?.value||'').trim()||'Manual review';
+  let a=analyzeReviewText(t);
+  let engineLabel='SMART FALLBACK';
+  try{
+    const aiResult=await runSecureAIAnalysis(t,rating,reviewerName);
+    if(aiResult&&aiResult.score!=null){
+      a={...a,...aiResult,findings:Array.isArray(aiResult.findings)&&aiResult.findings.length?aiResult.findings:a.findings,
+        evidenceSuggestions:Array.isArray(aiResult.evidenceSuggestions)&&aiResult.evidenceSuggestions.length?aiResult.evidenceSuggestions:a.evidenceSuggestions};
+      engineLabel='SECURE AI';
+    }
+  }catch(e){ console.info('Secure AI unavailable; using smart fallback.',e); }
+  if($('aiEngineBadge'))$('aiEngineBadge').textContent=engineLabel;
+  renderMainAnalysis(a,saveToDatabase?'':'loaded');
+  if(!saveToDatabase){renderAnalyzerSavedState(true);return}
+  if(!currentUser){setAnalyzerStatus('Sign in required','');return}
+  const record={user_id:currentUser.id,name:reviewerName,rating:rating?Number(rating):(a.findings.length?1:5),text:t,assessment:a.assessment,issue_type:a.issueType||null};
+  const {data,error}=await supabaseClient.from('reviews').insert(record).select().single();
+  if(error){$('analysisResult').insertAdjacentHTML('beforeend',`<div class="ai-next" style="margin-top:10px">Database save failed: ${escapeHTML(error.message)}</div>`);setAnalyzerStatus('Save failed','');return}
+  selectedAnalyzerReviewId=data.id;
+  reviews.push(normalizeReview(data));
+  if(a.findings.length){
+    const c={user_id:currentUser.id,name:reviewerName,issue:a.issueType||'Potential policy issue',status:'Needs evidence',priority:a.risk==='High'?'high':a.risk==='Medium'?'medium':'low'};
+    const {data:caseData,error:caseError}=await supabaseClient.from('cases').insert(c).select().single();
+    if(!caseError&&caseData)cases.push(normalizeCase(caseData));
+  }
+  updateStats();render();renderCharts();addActivity('Review analyzed and saved');
+  renderAnalyzerSavedState(true);
+  $('analysisResult').insertAdjacentHTML('beforeend',`<div class="green" style="font-size:10px;margin-top:10px"><b>✓ Saved to your private account</b>${a.findings.length?' · Case created for evidence review':''}</div>`);
+}
+async function runSecureAIAnalysis(text,rating,reviewerName){
+  if(!supabaseClient) return null;
+  const {data,error}=await supabaseClient.functions.invoke('ai-review-analyze',{
+    body:{review_text:text,rating:rating||null,reviewer_name:reviewerName||null}
+  });
+  if(error) throw error;
+  if(!data||data.error) throw new Error(data?.error||'AI endpoint unavailable');
+  return data;
+}
+
+function generateResponse(){
+  const t=$('responseText').value.trim();if(!t){$('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
+  const tone=$('responseTone').value;
+  let draft='';
+  if(tone==='warm')draft='Thank you for sharing your feedback. We’re truly sorry to hear that your experience did not meet expectations. We appreciate you bringing this to our attention and would value the opportunity to understand what happened and make things right. Please contact our team directly so we can help.';
+  else if(tone==='short')draft='Thank you for your feedback. We’re sorry your experience did not meet expectations. Please contact our team directly so we can review this with you and make things right.';
+  else if(tone==='factual')draft='Thank you for your feedback. We take customer concerns seriously. We would like to review the details of your experience and verify what happened. Please contact our team directly so we can investigate and assist you appropriately.';
+  else draft='Thank you for sharing your feedback. We’re sorry to hear that your experience did not meet expectations. We take concerns like this seriously and would appreciate the opportunity to understand what happened and make things right. Please contact our team directly so we can look into this further.';
+  $('responseResult').innerHTML='<div class="result"><strong>Draft response</strong><div id="draftText"></div><br><button class="ghost" type="button" onclick="copyDraft(this)">Copy draft</button></div>';
+  $('draftText').textContent='“'+draft+'”';addActivity('Response draft generated');
+}
+function copyDraft(btn){
+  const draft=$('draftText').innerText;
+  if(navigator.clipboard)navigator.clipboard.writeText(draft);
+  btn.innerText='Copied';setTimeout(()=>btn.innerText='Copy draft',1200);
+}
+
+function loadLocalProfile(){
+  try{profileData=JSON.parse(localStorage.getItem('reviewshield_profile_'+currentUser.id)||'{}')}catch(e){profileData={}}
+  $('businessName').value=profileData.businessName||'';
+  $('businessCategory').value=profileData.businessCategory||'';
+  $('businessWebsite').value=profileData.businessWebsite||'';
+  $('businessLocation').value=profileData.businessLocation||'';
+  if(profileData.businessName)$('businessTop').textContent=profileData.businessName+' ▾';
+}
+function saveProfile(){
+  const name=$('profileName').value.trim()||'Business Owner';
+  const currentMeta=currentUser.user_metadata||{};
+  supabaseClient.auth.updateUser({data:{...currentMeta,full_name:name}}).then(({error})=>{
+    if(error){showToast('Profile save failed: '+error.message);return}
+    $('sideName').textContent=name;$('welcomeTitle').textContent='Good evening, '+name+' 👋';
+    const initial=name.charAt(0).toUpperCase();$('sideAvatar').textContent=initial;$('topAvatar').textContent=initial;$('profileAvatar').textContent=initial;
+    addActivity('Profile updated');showToast('Profile saved successfully.');
+  });
+}
+function saveBusiness(){
+  profileData={businessName:$('businessName').value.trim(),businessCategory:$('businessCategory').value.trim(),businessWebsite:$('businessWebsite').value.trim(),businessLocation:$('businessLocation').value.trim()};
+  localStorage.setItem('reviewshield_profile_'+currentUser.id,JSON.stringify(profileData));
+  $('businessTop').textContent=(profileData.businessName||'Acme Auto Care')+' ▾';
+  addActivity('Business profile updated');showToast('Business profile saved.');
+}
+
+function addActivity(text){activity.unshift({text,date:new Date().toISOString()});activity=activity.slice(0,30);localStorage.setItem('reviewshield_activity_'+(currentUser?.id||'guest'),JSON.stringify(activity));renderActivity()}
+function renderActivity(){
+  $('activityList').innerHTML=activity.length?activity.map(a=>`<div class="notification"><b>${escapeHTML(a.text)}</b><div class="muted">${new Date(a.date).toLocaleString()}</div></div>`).join(''):'<div class="empty">No activity yet.</div>';
+}
+function loadActivity(){
+  try{activity=JSON.parse(localStorage.getItem('reviewshield_activity_'+currentUser.id)||'[]')}catch(e){activity=[]}
+  renderActivity();
+}
+
+function exportReport(){
+  const rows=[['Type','Reviewer/Case','Rating','Assessment/Issue','Status','Priority','Created']];
+  reviews.forEach(r=>rows.push(['Review',r.name,r.rating,r.assessment,'','',r.created_at||'']));
+  cases.forEach(c=>rows.push(['Case',c.name,'',c.issue,c.status,c.priority,c.created_at||'']));
+  const csv=rows.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ReviewShield-report.csv';a.click();URL.revokeObjectURL(url);
+  addActivity('Report exported');showToast('Report exported successfully.');
+}
+
+function connectGoogle(){
+  alert('Google Business Profile OAuth is not connected yet. This button intentionally does not fake a connection.');
+}
+
+function renderCharts(){
+  if(typeof Chart==='undefined')return;
+  const counts=[1,2,3,4,5].map(n=>reviews.filter(r=>Number(r.rating)===n).length);
+  const issues=reviews.filter(r=>r.issue_type||/Potential|Needs|issue/i.test(r.assessment||'')).length;
+  const legitimate=Math.max(0,reviews.length-issues);
+  if(ratingChart)ratingChart.destroy();
+  if(healthChart)healthChart.destroy();
+  ratingChart=new Chart($('ratingChart'),{type:'bar',data:{labels:['1★','2★','3★','4★','5★'],datasets:[{label:'Reviews',data:counts}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+  healthChart=new Chart($('healthChart'),{type:'doughnut',data:{labels:['Potential issues','Other reviews'],datasets:[{data:[issues,legitimate]}]},options:{responsive:true,maintainAspectRatio:false}});
+}
+function destroyCharts(){if(ratingChart){ratingChart.destroy();ratingChart=null}if(healthChart){healthChart.destroy();healthChart=null}}
+
+
+const REMOVAL_KEY_PREFIX='reviewshield_removal_';
+function removalStorageKey(){return REMOVAL_KEY_PREFIX+(currentUser?.id||'guest')}
+function getRemovalState(){try{return JSON.parse(localStorage.getItem(removalStorageKey())||'{}')}catch(e){return {}}}
+function saveRemovalState(state){localStorage.setItem(removalStorageKey(),JSON.stringify(state))}
+function removalStateForReview(id){const all=getRemovalState();return all[String(id)]||{status:'Not started',evidence:'',checks:{}}}
+function selectedRemovalReview(){const id=$('removalReviewSelect')?.value;return id?reviews.find(r=>String(r.id)===String(id)):null}
+function populateRemovalReviews(){const select=$('removalReviewSelect');if(!select)return;const previous=select.value;select.innerHTML='<option value="">Choose a review...</option>'+reviews.slice().reverse().map(r=>`<option value="${escapeHTML(String(r.id))}">${escapeHTML((r.name||'Review')+' — '+(r.assessment||'Review'))}</option>`).join('');if(previous&&reviews.some(r=>String(r.id)===String(previous)))select.value=previous;prepareRemovalReview()}
+function analyzeReviewText(t){
+  const findings=[];
+  const rules=[
+    {cat:'Non-genuine experience',weight:32,re:/(never\s+(went|visited|been|used)|didn.?t\s+(visit|go|use|buy)|not\s+a\s+customer|never\s+(was|came)\s+(there|here)|i\s+have\s+never\s+(visited|been|used)|reviewing\s+from\s+another\s+location)/i,reason:'The text suggests the reviewer may not have had a genuine customer experience.'},
+    {cat:'Spam / repetitive content',weight:24,re:/(^(.)\1{6,}$|repeat(ed)?\s+(review|post)|same\s+review|copy.?paste|fake\s+account|bot\s+review|multiple\s+accounts|posted\s+the\s+same)/i,reason:'The review contains language associated with repetitive, spam-like, or automated activity.'},
+    {cat:'Promotional / advertising content',weight:22,re:/(https?:\/\/|www\.|discount\s+code|promo\s+code|buy\s+now|visit\s+my|follow\s+(me|us)|subscribe|special\s+offer|coupon|call\s+\+?\d|whatsapp\s*[:+])/i,reason:'Promotional language, advertising, or an external contact/link was detected.'},
+    {cat:'Abusive / harassing language',weight:22,re:/(idiot|stupid|moron|shut\s+up|scumbag|loser|dumbass|f\*+k|bitch|asshole|piece\s+of\s+shit|go\s+to\s+hell)/i,reason:'Potentially abusive or harassing language was detected.'},
+    {cat:'Threatening language',weight:35,re:/(i\s+will\s+(hurt|kill|destroy|attack)|you('ll|\s+will)\s+(regret|pay)|i.?m\s+going\s+to\s+(hurt|kill|attack)|threaten|threatening|watch\s+your\s+back|burn\s+(this|your)|come\s+after\s+you)/i,reason:'The review contains language that may indicate a threat or intimidation.'},
+    {cat:'Unverifiable / serious accusation',weight:20,re:/(scam|fraud|stole|stolen|criminal|illegal|corrupt|con\s+artist|thief|embezzl|money\s+launder|counterfeit|stole\s+my\s+money)/i,reason:'A serious accusation was detected; supporting facts should be verified before reporting.'},
+    {cat:'Irrelevant / off-topic',weight:18,re:/(politics|politician|election|weather|crypto\s+investment|bitcoin\s+investment|unrelated\s+political|campaign\s+ad)/i,reason:'The text may contain content unrelated to the business experience.'},
+    {cat:'Conflict of interest signal',weight:28,re:/(competitor|rival\s+business|i\s+work\s+for|i\s+own\s+(a|the)|my\s+company|our\s+competitor|works\s+for\s+another\s+company)/i,reason:'The reviewer may have a relationship or competing interest that should be investigated.'},
+    {cat:'Incentive / review manipulation signal',weight:28,re:/(paid\s+me\s+to\s+review|paid\s+review|gift\s+card\s+for\s+review|free\s+meal\s+for\s+review|asked\s+me\s+to\s+(change|remove)|remove\s+this\s+review\s+and|offered\s+money\s+for\s+(a|this)\s+review)/i,reason:'The text suggests a possible incentive or manipulation of reviews.'}
+  ];
+  rules.forEach(rule=>{const m=t.match(rule.re);if(m)findings.push({...rule,match:m[0]})});
+  const score=Math.min(100,findings.reduce((sum,x)=>sum+x.weight,0));
+  const risk=score>=60?'High':score>=30?'Medium':findings.length?'Low':'No obvious signal';
+  const confidence=findings.length?Math.min(98,62+findings.length*8):78;
+  const evidenceSuggestions=[];
+  const cats=new Set(findings.map(x=>x.cat));
+  if(cats.has('Non-genuine experience'))evidenceSuggestions.push('Verify whether the reviewer had a customer visit, purchase, booking, or other genuine interaction.');
+  if(cats.has('Spam / repetitive content'))evidenceSuggestions.push('Compare wording, timing, accounts, or duplicate content across other reviews.');
+  if(cats.has('Promotional / advertising content'))evidenceSuggestions.push('Capture the promotional text, link, phone number, or offer shown in the review.');
+  if(cats.has('Abusive / harassing language')||cats.has('Threatening language'))evidenceSuggestions.push('Preserve the exact wording and record any relevant context or safety concerns.');
+  if(cats.has('Unverifiable / serious accusation'))evidenceSuggestions.push('Document verifiable business records that confirm or contradict the serious allegation.');
+  if(cats.has('Irrelevant / off-topic'))evidenceSuggestions.push('Explain briefly why the content is unrelated to the business or customer experience.');
+  if(cats.has('Conflict of interest signal'))evidenceSuggestions.push('Document any verifiable competitor or employment relationship relevant to the review.');
+  if(cats.has('Incentive / review manipulation signal'))evidenceSuggestions.push('Preserve messages, offers, receipts, or other records showing possible review manipulation.');
+  if(!evidenceSuggestions.length)evidenceSuggestions.push('No specific evidence suggestion was triggered. Keep factual context and verify the review before reporting.');
+  return {findings,score,risk,confidence,assessment:findings.length?'Potential policy issue':'No obvious policy signal detected',issueType:findings[0]?.cat||null,evidenceSuggestions,recommendation:findings.length?(risk==='High'?'Collect supporting evidence and review the relevant Google policy before reporting.':'Verify the facts and collect evidence before deciding whether to report.'):'No obvious signal was detected. A clean result is not proof that the review complies with every Google policy.'};
+}
+
+function renderRemovalAnalyzer(r){
+  const panel=$('removalAnalyzerPanel');if(!panel)return;
+  if(!r){panel.classList.add('hidden');panel.innerHTML='';return}
+  const a=analyzeReviewText(r.text||'');
+  const riskClass=a.risk==='High'?'danger-badge':a.risk==='Medium'?'flag':'safe';
+  const signals=a.findings.length?a.findings.map(x=>`<div class="rc-signal"><div><b>${escapeHTML(x.cat)}</b><small>${escapeHTML(x.reason)}</small></div><span class="badge">+${x.weight}</span></div>`).join(''):'<div class="empty">No configured policy-signal rule matched this review.</div>';
+  const evidence=a.evidenceSuggestions.map(x=>`<li>${escapeHTML(x)}</li>`).join('');
+  panel.classList.remove('hidden');
+  panel.innerHTML=`<div class="rc-head"><div><h3 style="margin:0">Analyzer assessment</h3><div class="muted">Signals are triage indicators, not a Google policy verdict.</div></div><span class="badge ${riskClass}">${escapeHTML(a.risk)}</span></div>
+  <div class="analysis-grid"><div class="analysis-item"><small>Risk score</small><b>${a.score}/100</b></div><div class="analysis-item"><small>Confidence</small><b>${a.confidence}%</b></div><div class="analysis-item"><small>Signals</small><b>${a.findings.length}</b></div><div class="analysis-item"><small>Primary</small><b>${escapeHTML(a.issueType||'None')}</b></div></div>
+  <div style="margin-top:14px"><b>Policy signals</b><div class="rc-signals">${signals}</div></div>
+  <div style="margin-top:14px"><b>Evidence suggestions</b><ul class="signal-list">${evidence}</ul></div>
+  <div class="muted" style="margin-top:10px">${escapeHTML(a.recommendation)} Google makes the final decision.</div>`;
+  return a;
+}
+
+function prepareRemovalReview(){
+  const r=selectedRemovalReview(),preview=$('removalReviewPreview');
+  if(!r){if(preview)preview.innerHTML='<div class="empty" style="padding:24px 8px">Select a review to begin.</div>';renderRemovalAnalyzer(null);if($('removalStatusBadge'))$('removalStatusBadge').textContent='Not started';if($('removalEvidence'))$('removalEvidence').value='';return}
+  const state=removalStateForReview(r.id),checks=state.checks||{};
+  if(preview)preview.innerHTML=`<div><b>${escapeHTML(r.name||'Review')}</b> <span class="badge ${escapeHTML(r.cls||'')}">${escapeHTML(r.assessment||'Review')}</span></div><small class="muted">${'★'.repeat(Math.max(0,Math.min(5,Number(r.rating)||0)))} · ${escapeHTML(r.reviewer_name||'Reviewer')}</small><p>“${escapeHTML(r.text||'')}”</p>`;
+  renderRemovalAnalyzer(r);
+  if($('removalEvidence'))$('removalEvidence').value=state.evidence||'';if($('appealNotes'))$('appealNotes').value=state.appealNotes||'';updateEvidenceProgress();if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent=state.evidenceSavedAt?'Evidence saved ✓':'Evidence is autosaved while you edit.';
+  ['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>{const el=$('ev'+k);if(el)el.checked=!!checks[k]});
+  if($('removalStatusBadge'))$('removalStatusBadge').textContent=state.status||'Not started';updateRemovalMessage(state.status||'Not started');renderRemovalCaseLink();renderRemovalCaseHistory();
+}
+function updateEvidenceProgress(){
+  const ids=['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther'];
+  const count=ids.filter(id=>$(id)?.checked).length;
+  const el=$('evidenceProgress'); if(el)el.textContent=count+' / 6';
+}
+function saveRemovalEvidence(){
+  const r=selectedRemovalReview();
+  if(!r){showToast('Select a review first.');return}
+  const state=captureRemovalState()||{};
+  state.evidenceSavedAt=new Date().toISOString();
+  const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);
+  syncRemovalCase(r,state);
+  renderRemovalCaseLink();
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Evidence saved just now ✓';
+  if(typeof addActivity==='function')addActivity('Evidence saved for review '+(r.reviewer_name||'selected review'));
+  showToast('Evidence saved successfully.');
+  renderRemovalCaseHistory();
+}
+function clearRemovalEvidence(){
+  const r=selectedRemovalReview(); if(!r){showToast('Select a review first.');return}
+  ['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther'].forEach(id=>{if($(id))$(id).checked=false});
+  if($('removalEvidence'))$('removalEvidence').value='';
+  captureRemovalState();updateEvidenceProgress();
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Evidence cleared and saved.';
+}
+function applyAnalyzerEvidence(){
+  const r=selectedRemovalReview(); if(!r){showToast('Select a review first.');return}
+  const a=analyzeReviewText(r.text||''); const cats=new Set(a.findings.map(x=>x.cat));
+  const map={evNonGenuine:cats.has('Non-genuine experience'),evSpam:cats.has('Spam / repetitive content')||cats.has('Irrelevant / off-topic'),evAbuse:cats.has('Abusive / harassing language')||cats.has('Threatening language'),evPromo:cats.has('Promotional / advertising content'),evConflict:cats.has('Conflict of interest signal')||cats.has('Incentive / review manipulation signal')};
+  Object.entries(map).forEach(([id,on])=>{if($(id)&&on)$(id).checked=true});
+  if($('evOther')&&!a.findings.length)$('evOther').checked=true;
+  const suggestions=a.evidenceSuggestions||[];
+  if($('removalEvidence')){const existing=$('removalEvidence').value.trim();const block=suggestions.map(x=>'• '+x).join('\n');if(!existing)$('removalEvidence').value=block;else if(block&&!existing.includes(block))$('removalEvidence').value=existing+'\n\nAI analyzer suggestions:\n'+block;}
+  captureRemovalState();updateEvidenceProgress();
+  if($('evidenceSaveMessage'))$('evidenceSaveMessage').textContent='Analyzer suggestions applied and saved ✓';
+  showToast('Analyzer evidence suggestions applied.');
+}
+
+function captureRemovalState(){const r=selectedRemovalReview();if(!r)return null;const all=getRemovalState(),current=all[String(r.id)]||{},checks={};['NonGenuine','Spam','Abuse','Promo','Conflict','Other'].forEach(k=>checks[k]=!!$('ev'+k)?.checked);all[String(r.id)]={...current,evidence:$('removalEvidence')?.value||'',checks,updatedAt:new Date().toISOString()};saveRemovalState(all);return all[String(r.id)]}
+function removalCasePriority(r){const a=analyzeReviewText(r?.text||'');return a.risk==='High'?'high':a.risk==='Medium'?'medium':'low'}
+function removalCaseStatus(status){return status==='Removed'||status==='No policy violation'?'Closed':status==='Not started'?'Needs evidence':status}
+function removalCaseMarker(r){return '[ReviewShield Removal] '+String(r.id)+' | '+String(r.reviewer_name||r.name||'Reviewer')}
+function renderRemovalCaseLink(){
+ const box=$('removalCaseLink');if(!box)return;
+ const r=selectedRemovalReview();if(!r){box.textContent='Select a review to create or link a case.';return}
+ const st=removalStateForReview(r.id),cid=st.caseId;
+ const c=cid?cases.find(x=>String(x.id)===String(cid)):null;
+ if(c)box.innerHTML='<div class="rc-case-link"><span><span class="rc-linked">✓ Case linked</span> · '+escapeHTML(c.name||'Review case')+' · '+escapeHTML(c.status||'Needs evidence')+'</span><button type="button" class="ghost" onclick="openRemovalCase()">Open Case</button></div>';
+ else box.innerHTML='<div class="rc-case-link"><span>No ReviewShield case linked yet.</span><button type="button" class="ghost" onclick="createRemovalCase()">Create case</button></div>';
+}
+async function createRemovalCase(){
+ const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
+ const st=removalStateForReview(r.id);if(st.caseId){renderRemovalCaseLink();showToast('This review is already linked to a case.');return}
+ if(!currentUser){showToast('Please sign in first.');return}
+ const a=analyzeReviewText(r.text||'');
+ const existingEvidence=String(st.evidence||'').trim();
+ const marker=removalCaseMarker(r);
+ const notes=[marker,'Review text: '+String(r.text||'').slice(0,500),existingEvidence?'Evidence notes: '+existingEvidence:''].filter(Boolean).join('\\n\\n');
+ const c={user_id:currentUser.id,name:'Review Removal — '+(r.reviewer_name||r.name||'Reviewer'),issue:a.issueType||'Potential policy issue',status:removalCaseStatus(st.status||'Needs evidence'),priority:removalCasePriority(r),evidence_notes:notes};
+ const {data,error}=await supabaseClient.from('cases').insert(c).select().single();
+ if(error){showToast('Case creation failed: '+error.message);return}
+ cases.push(normalizeCase(data));
+ const all=getRemovalState();all[String(r.id)]={...st,caseId:data.id,caseCreatedAt:new Date().toISOString(),updatedAt:new Date().toISOString()};saveRemovalState(all);
+ updateStats();renderCases();renderRemovalCaseLink();
+ if(typeof addActivity==='function')addActivity('Removal Center: case created for '+(r.reviewer_name||'selected review'));
+ showToast('ReviewShield case created and linked.');renderRemovalCaseHistory();
+}
+function openRemovalCase(){
+ const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
+ const st=removalStateForReview(r.id),cid=st.caseId;if(!cid){createRemovalCase();return}
+ const btn=[...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick')?.includes("show('cases'"));show('cases',btn);setTimeout(()=>{const c=cases.find(x=>String(x.id)===String(cid));if(c)showToast('Linked case: '+(c.name||'Review case'));},50);
+}
+async function syncRemovalCase(r,state){
+ if(!r||!state?.caseId||!currentUser)return;
+ const payload={status:removalCaseStatus(state.status||'Needs evidence'),priority:removalCasePriority(r),evidence_notes:[removalCaseMarker(r),'Review text: '+String(r.text||'').slice(0,500),state.evidence?'Evidence notes: '+state.evidence:'',state.appealNotes?'Appeal notes: '+state.appealNotes:''].filter(Boolean).join('\\n\\n')};
+ const {data,error}=await supabaseClient.from('cases').update(payload).eq('id',state.caseId).eq('user_id',currentUser.id).select().single();
+ if(!error&&data){const i=cases.findIndex(x=>String(x.id)===String(data.id));if(i>=0)cases[i]=normalizeCase(data);else cases.push(normalizeCase(data));renderCases();renderRemovalCaseLink();}
+}
+
+function setRemovalStatus(status){const r=selectedRemovalReview();if(!r){showToast('Select a review in Removal Center first.');return}const state=captureRemovalState()||{};state.status=status;state.updatedAt=new Date().toISOString();const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);if($('removalStatusBadge'))$('removalStatusBadge').textContent=status;if($('removalStatusBadge2'))$('removalStatusBadge2').textContent=status;if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Current status: '+status;updateRemovalMessage(status);if(typeof addActivity==='function')addActivity('Removal Center: '+status);showToast('Removal workflow updated: '+status);renderRemovalCaseHistory();renderRemovalCaseLink();syncRemovalCase(r,state)}
+function updateRemovalMessage(status){const box=$('removalStatusMessage');if(!box)return;const messages={'Not started':"Select a review, prepare evidence, then use Google's official tool to report it.",'Reported':'Marked as reported. Keep the Google confirmation/details available for your records.','Decision pending':'Google is reviewing the report. Check the official review-management tool for the current decision.','Removed':'Marked as removed. Verify the review is no longer visible in Google.','No policy violation':'Marked as no policy violation. If Google offers an appeal, use the official appeal flow when appropriate.','Appeal submitted':"Marked as appeal submitted. Follow Google's instructions and monitor the review-management status.",'Escalated':'Marked as escalated. Check the email/account instructions provided by Google.'};box.innerHTML='<b>'+escapeHTML(messages[status]||messages['Not started'])+'</b>'}
+function openGoogleRemovalTool(){const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}captureRemovalState();window.open('https://support.google.com/business/workflow/9945796','_blank','noopener,noreferrer');if(typeof addActivity==='function')addActivity('Opened Google Review Management Tool');showToast('Google Review Management Tool opened.')}
+function renderRemovalCaseHistory(){
+  const box=$('removalCaseHistory'); if(!box)return;
+  const r=selectedRemovalReview(); if(!r){box.innerHTML='<div class="empty">Select a review to view its history.</div>';return}
+  const state=removalStateForReview(r.id);
+  const items=[];
+  if(state.updatedAt)items.push({text:'Workflow updated — '+(state.status||'Not started'),date:state.updatedAt});
+  const reviewActs=(activity||[]).filter(a=>/Removal Center/i.test(a.text||''));
+  reviewActs.slice(0,12).forEach(a=>items.push(a));
+  items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  box.innerHTML=items.length?items.slice(0,12).map(a=>`<div class="rc-history-item"><b>${escapeHTML(a.text||'Workflow activity')}</b><div class="muted" style="margin-top:4px;font-size:11px">${new Date(a.date).toLocaleString()}</div></div>`).join(''):'<div class="empty">No workflow history yet. Use the workflow buttons to begin.</div>';
+}
+function submitRemovalAppeal(){
+ const r=selectedRemovalReview();if(!r){showToast('Select a review first.');return}
+ const state=captureRemovalState()||{};state.appealNotes=$('appealNotes')?.value||'';state.status='Appeal submitted';state.updatedAt=new Date().toISOString();
+ const all=getRemovalState();all[String(r.id)]=state;saveRemovalState(all);
+ syncRemovalCase(r,state);renderRemovalCaseLink();
+ if($('removalStatusBadge'))$('removalStatusBadge').textContent='Appeal submitted';
+ if($('removalStatusBadge2'))$('removalStatusBadge2').textContent='Appeal submitted';
+ if($('removalStatusMessage2'))$('removalStatusMessage2').textContent='Appeal submitted. Continue tracking the Google decision.';
+ if($('appealMessage'))$('appealMessage').textContent='Appeal marked as submitted. Use the Google Review Management Tool for the official appeal process.';
+ addActivity('Appeal submitted for review '+(r.reviewer_name||'selected review'));renderRemovalCaseHistory();
+}
+function removalGo(step){
+  const map={analyze:'removalAnalyzeSection',evidence:'removalEvidenceSection',report:'removalReportSection',status:'removalStatusSection',appeal:'removalAppealSection',history:'removalHistorySection'};
+  const el=$(map[step]);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  if(step==='history')renderRemovalCaseHistory();
+  document.querySelectorAll('.rc-workflow-nav button').forEach(b=>b.classList.remove('active'));
+  const active=[...document.querySelectorAll('.rc-workflow-nav button')].find(b=>b.getAttribute('onclick')===`removalGo('${step}')`);
+  if(active)active.classList.add('active');
+}
+function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseLink();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',()=>{captureRemovalState();updateEvidenceProgress()});el.addEventListener('input',()=>{captureRemovalState();updateEvidenceProgress()})});updateEvidenceProgress()}
+
+
+function toggleMobileMenu(){
+  const side=document.querySelector('.side');
+  const overlay=$('mobileOverlay');
+  if(!side) return;
+  const open=side.classList.toggle('mobile-open');
+  if(overlay){
+    overlay.classList.toggle('hidden',!open);
+    if(open) overlay.style.display='block'; else overlay.style.display='none';
+  }
+}
+function mobileShow(id,btn){
+  const navButtons=document.querySelectorAll('.nav button');
+  const map={dashboard:0,reviews:1,analyzer:2,cases:3,removal:5};
+  const n=map[id];
+  show(id,n!==undefined?navButtons[n]:null);
+  document.querySelectorAll('#mobileBottomNav button').forEach(x=>x.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const side=document.querySelector('.side');
+  if(side?.classList.contains('mobile-open')) toggleMobileMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function show(id,btn){
+  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+  const page=$(id);if(page)page.classList.remove('hidden');
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(id==='activity')loadActivity();
+  if(id==='profile'&&currentUser){$('profileEmail').value=currentUser.email||'';loadLocalProfile()}
+  if(id==='dashboard')renderCharts();
+  if(id==='removal'&&currentUser)initRemovalCenter();
+}
+
+window.addEventListener('error',e=>{
+  console.error('ReviewShield JS error:',e.error||e.message);
+  if($('authMsg')&&!currentUser)$('authMsg').innerHTML='<span class="danger">App error: '+escapeHTML(e.message)+'</span>';
+});
+window.addEventListener('unhandledrejection',e=>{
+  console.error('ReviewShield promise error:',e.reason);
+  if($('authMsg')&&!currentUser)$('authMsg').innerHTML='<span class="danger">'+escapeHTML(e.reason?.message||String(e.reason))+'</span>';
+});
+
+supabaseClient.auth.getSession().then(async({data,error})=>{
+  if(error){console.error(error);return}
+  if(data?.session)await startApp(data.session.user);
+});
+supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+  if(session&&!currentUser)await startApp(session.user);
+  if(event==='SIGNED_OUT'){
+    currentUser=null;reviews=[];cases=[];destroyCharts();
+    $('appShell').classList.add('hidden');$('authWrap').classList.remove('hidden');
+  }
+});
+
+setInterval(()=>{if(currentUser)loadData(false).catch(err=>console.error('Refresh error:',err))},15000);
+
+// Professional notification center
+let notificationReadAt='';
+
+function notificationData(){
+  return (activity||[]).slice(0,12);
+}
+function updateNotificationCenter(){
+  const items=notificationData();
+  const unread=notificationReadAt ? items.filter(a=>new Date(a.date)>new Date(notificationReadAt)).length : Math.min(items.length,5);
+  const badge=$('notificationBadge');
+  if(badge){
+    badge.textContent=unread>9?'9+':String(unread);
+    badge.classList.toggle('hidden',unread===0);
+  }
+  const box=$('notificationItems');
+  if(!box)return;
+  box.innerHTML=items.length
+    ?items.map(a=>`<div class="notification-item" onclick="openActivityFromBell()"><b><span class="notification-dot"></span>${escapeHTML(a.text)}</b><small>${new Date(a.date).toLocaleString()}</small></div>`).join('')
+    :'<div class="empty" style="padding:28px">No notifications yet.</div>';
+}
+function toggleNotifications(){
+  const p=$('notificationPanel');
+  if(!p)return;
+  p.classList.toggle('hidden');
+  if(!p.classList.contains('hidden'))updateNotificationCenter();
+}
+function markNotificationsRead(){
+  notificationReadAt=new Date().toISOString();
+  if(currentUser)localStorage.setItem('reviewshield_notification_read_'+currentUser.id,notificationReadAt);
+  updateNotificationCenter();
+  $('notificationPanel')?.classList.add('hidden');
+}
+function openActivityFromBell(){
+  markNotificationsRead();
+  const nav=[...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick')?.includes("show('activity'"));
+  show('activity',nav);
+}
+document.addEventListener('click',e=>{
+  const wrap=document.querySelector('.bell-wrap');
+  const panel=$('notificationPanel');
+  if(wrap && panel && !wrap.contains(e.target))panel.classList.add('hidden');
+});
+const _oldAddActivity=addActivity;
+addActivity=function(text){
+  _oldAddActivity(text);
+  updateNotificationCenter();
+};
+const _oldLoadActivity=loadActivity;
+loadActivity=function(){
+  _oldLoadActivity();
+  updateNotificationCenter();
+};
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const editor=$('reviewText');
+  if(editor){
+    editor.addEventListener('input',updateReviewCharCount);
+    updateReviewCharCount();
+  }
+  updateNotificationCenter();
+});
+
+</script>
+</body>
+</html>
