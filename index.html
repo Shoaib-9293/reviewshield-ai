@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ReviewShield AI">
 <title>ReviewShield AI — Phase 3</title>
 <style>
 *{box-sizing:border-box}
@@ -302,6 +307,108 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .rs-toast.ok{border-color:rgba(54,211,153,.35)}.rs-toast.warn{border-color:rgba(246,189,96,.35)}
 @keyframes rsToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
+
+<style id="mobile-app-upgrade">
+/* ReviewShield AI — Mobile App Experience */
+.mobile-menu-btn{display:none}
+.mobile-brand{display:none}
+@media(max-width:760px){
+  body{padding-bottom:74px;overflow-x:hidden}
+  .side{
+    width:0;transform:translateX(-100%);padding:0;border:0;box-shadow:none;
+    transition:transform .22s ease,width .22s ease;z-index:9000;overflow:hidden;
+  }
+  .side.mobile-open{width:270px;transform:translateX(0);padding:18px 15px;border-right:1px solid var(--rs-border);box-shadow:20px 0 50px rgba(0,0,0,.5)}
+  .side.mobile-open .brand span:last-child,.side.mobile-open .nav button span,
+  .side.mobile-open .plan,.side.mobile-open .user div:last-child{display:block}
+  .side.mobile-open .nav button{text-align:left}
+  .main{margin-left:0;width:100%;min-width:0}
+  .top{height:62px;padding:0 12px;position:sticky;top:0;z-index:800;box-shadow:0 8px 25px rgba(0,0,0,.14)}
+  .business{display:none}
+  .topright{gap:6px}
+  .topright .ghost{min-width:40px;height:40px;padding:8px}
+  .topright .ghost:first-of-type{font-size:0}
+  .topright .ghost:first-of-type:after{content:"↪";font-size:17px}
+  .top-email{display:none}
+  .mobile-menu-btn{
+    display:grid;place-items:center;width:40px;height:40px;border:1px solid #29415e;
+    border-radius:9px;background:#101f33;color:#fff;font-size:20px
+  }
+  .mobile-brand{display:block;font-weight:850;font-size:14px;margin-left:8px;margin-right:auto}
+  .mobile-top-group{display:flex;align-items:center;min-width:0}
+  .page{padding:16px 13px 20px;max-width:none}
+  .head{margin-bottom:16px}
+  .head h1{font-size:22px;line-height:1.15}
+  .head .muted{font-size:11px;line-height:1.5}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .stat{padding:13px;border-radius:11px}
+  .stat strong{font-size:21px;margin:5px 0}
+  .stat small{font-size:10px}
+  .section{padding:14px;margin-top:12px;border-radius:11px}
+  .section h2{font-size:14px}
+  .grid2{grid-template-columns:1fr;gap:0}
+  .review{grid-template-columns:1fr;gap:9px;padding:12px}
+  .review .actions{width:100%;flex-wrap:wrap}
+  .review .actions button{flex:1;min-height:38px}
+  .toolbar{gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none}
+  .toolbar::-webkit-scrollbar{display:none}
+  .filter-btn{white-space:nowrap;min-height:38px}
+  .case{grid-template-columns:1fr;gap:8px;padding:12px 0}
+  .chart-wrap{height:220px}
+  .form{max-width:none}
+  .form textarea{min-height:125px}
+  .analyzer-options{grid-template-columns:1fr 1fr;gap:8px}
+  .ai-workspace{grid-template-columns:1fr;gap:10px}
+  .ai-input-card,.ai-result-card{padding:13px;min-height:auto}
+  .ai-review-editor{min-height:190px!important;font-size:14px!important}
+  .ai-result-top{grid-template-columns:105px 1fr;gap:10px}
+  .ai-score-ring{width:96px;height:96px}
+  .ai-score-ring:after{inset:7px}
+  .ai-score-inner b{font-size:22px}
+  .ai-summary-title{font-size:15px}
+  .ai-metrics{grid-template-columns:repeat(3,1fr);gap:5px}
+  .ai-metric{padding:8px}
+  .ai-metric b{font-size:10px}
+  .ai-signal-card{padding:9px;gap:7px}
+  .ai-result-actions button{flex:1;min-height:40px}
+  .ai-flow{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .ai-flow-line{display:none}
+  .ai-flow>div:not(.ai-flow-line){min-height:78px}
+  .rc-warning{padding:13px!important}
+  .rc-workflow-nav{grid-template-columns:1fr 1fr;margin:10px 0}
+  .rc-workflow-nav button{min-width:0;min-height:48px;padding:8px;font-size:10px}
+  .rc-status-grid{grid-template-columns:1fr;gap:7px}
+  .rc-status-card{padding:13px}
+  .rc-evidence-grid{grid-template-columns:1fr}
+  .rc-evidence-toolbar{display:grid;grid-template-columns:1fr 1fr}
+  .rc-evidence-toolbar .primary{grid-column:1/-1}
+  .rc-head{flex-direction:column;gap:8px}
+  .rc-select{min-height:44px}
+  .rc-textarea{min-height:125px}
+  .auth-box{width:calc(100vw - 28px);padding:22px 18px}
+  #toastContainer{left:12px;right:12px;bottom:84px}
+  .rs-toast{min-width:0;width:100%}
+  /* fixed mobile navigation */
+  #mobileBottomNav{
+    position:fixed;left:0;right:0;bottom:0;height:70px;z-index:8500;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
+    background:rgba(7,17,31,.97);backdrop-filter:blur(14px);
+    border-top:1px solid #1d3048;padding:6px 5px env(safe-area-inset-bottom,4px)
+  }
+  #mobileBottomNav button{
+    border:0;background:transparent;color:#8297b0;border-radius:9px;
+    font-size:9px;font-weight:800;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:3px
+  }
+  #mobileBottomNav button b{font-size:17px;line-height:18px}
+  #mobileBottomNav button.active{background:rgba(79,140,255,.13);color:#fff}
+  #mobileBottomNav button.active b{color:#76a7ff}
+  #mobileOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:8999}
+}
+@media(min-width:761px){
+  #mobileBottomNav,#mobileOverlay{display:none!important}
+}
+</style>
 </head>
 <body>
 <div id="toastContainer" aria-live="polite"></div>
@@ -593,6 +700,14 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 </section>
 
 </main></div>
+<div id="mobileOverlay" class="hidden" onclick="toggleMobileMenu()"></div>
+<nav id="mobileBottomNav" aria-label="Mobile navigation">
+  <button data-page="dashboard" class="active" onclick="mobileShow('dashboard',this)"><b>⌂</b>Home</button>
+  <button data-page="reviews" onclick="mobileShow('reviews',this)"><b>★</b>Reviews</button>
+  <button data-page="analyzer" onclick="mobileShow('analyzer',this)"><b>⚑</b>Analyze</button>
+  <button data-page="removal" onclick="mobileShow('removal',this)"><b>🛡</b>Removal</button>
+  <button data-page="cases" onclick="mobileShow('cases',this)"><b>▣</b>Cases</button>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1175,6 +1290,28 @@ function removalGo(step){
 }
 function initRemovalCenter(){populateRemovalReviews();renderRemovalCaseLink();renderRemovalCaseHistory();['evNonGenuine','evSpam','evAbuse','evPromo','evConflict','evOther','removalEvidence'].forEach(id=>{const el=$(id);if(!el||el.dataset.rcBound)return;el.dataset.rcBound='1';el.addEventListener('change',()=>{captureRemovalState();updateEvidenceProgress()});el.addEventListener('input',()=>{captureRemovalState();updateEvidenceProgress()})});updateEvidenceProgress()}
 
+
+function toggleMobileMenu(){
+  const side=document.querySelector('.side');
+  const overlay=$('mobileOverlay');
+  if(!side) return;
+  const open=side.classList.toggle('mobile-open');
+  if(overlay){
+    overlay.classList.toggle('hidden',!open);
+    if(open) overlay.style.display='block'; else overlay.style.display='none';
+  }
+}
+function mobileShow(id,btn){
+  const navButtons=document.querySelectorAll('.nav button');
+  const map={dashboard:0,reviews:1,analyzer:2,cases:3,removal:5};
+  const n=map[id];
+  show(id,n!==undefined?navButtons[n]:null);
+  document.querySelectorAll('#mobileBottomNav button').forEach(x=>x.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const side=document.querySelector('.side');
+  if(side?.classList.contains('mobile-open')) toggleMobileMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function show(id,btn){
   document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
   const page=$(id);if(page)page.classList.remove('hidden');
@@ -1273,5 +1410,16 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (err) {
+      console.warn('ReviewShield service worker registration failed:', err);
+    });
+  });
+}
+</script>
+
 </body>
 </html>
