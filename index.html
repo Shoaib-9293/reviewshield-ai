@@ -253,8 +253,58 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 .rc-case-link b{color:#172033}
 .rc-linked{color:#16804a;font-weight:700}
 </style>
+
+<style id="ai-workspace-upgrade">
+.ai-workspace{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:16px;align-items:start}
+.ai-input-card,.ai-result-card{padding:20px;min-height:560px}
+.ai-card-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:18px}
+.ai-card-head h2{margin:2px 0 5px;font-size:17px}
+.ai-card-head p{margin:0;font-size:12px}
+.ai-kicker{font-size:9px;letter-spacing:.14em;font-weight:900;color:#6ea2ff}
+.ai-review-editor{min-height:255px!important;line-height:1.65!important;font-size:14px!important}
+.ai-editor-footer{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:#7187a2;font-size:10px}
+.ai-action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px}
+.ai-action-row .primary{min-height:42px;padding:11px 18px}
+.ai-action-row .ghost{min-height:42px}
+.ai-disclaimer{display:flex;gap:8px;align-items:flex-start;margin-top:17px;padding:11px 12px;border:1px solid #203954;border-radius:10px;background:#091727;color:#8298b3;font-size:10px;line-height:1.5}
+.ai-status{padding:7px 10px;border-radius:999px;border:1px solid #29415e;background:#0d1d31;color:#91acd0;font-size:10px;font-weight:900;white-space:nowrap}
+.ai-status.analyzing{color:#f6c979;border-color:rgba(246,189,96,.3)}
+.ai-status.complete{color:#55e0aa;border-color:rgba(54,211,153,.3)}
+.saved-badge{padding:6px 9px;border-radius:999px;background:rgba(54,211,153,.12);color:#55e0aa;font-size:9px;font-weight:900}
+.ai-empty{min-height:390px;border:1px dashed #29415e;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:8px;background:rgba(255,255,255,.015)}
+.ai-empty-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(79,140,255,.12);color:#76a7ff;font-size:21px;margin-bottom:5px}
+.ai-empty b{font-size:14px;color:#edf4ff}.ai-empty span{max-width:310px;color:#7187a2;font-size:11px;line-height:1.55}
+.ai-result-top{display:grid;grid-template-columns:145px 1fr;gap:16px;align-items:center}
+.ai-score-ring{width:128px;height:128px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(#4f8cff var(--score-angle),#1a2c43 0);position:relative}
+.ai-score-ring:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#0d1a2b}
+.ai-score-inner{position:relative;z-index:1;text-align:center}.ai-score-inner b{display:block;font-size:27px;color:#fff}.ai-score-inner small{font-size:9px;color:#8297b0}
+.ai-summary-title{font-size:18px;font-weight:850;color:#fff;margin-bottom:7px}.ai-summary-copy{font-size:11px;color:#8fa2ba;line-height:1.55}
+.ai-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
+.ai-metric{padding:11px;border:1px solid #203852;border-radius:10px;background:#091727}.ai-metric small{display:block;color:#7187a2;font-size:9px;margin-bottom:5px}.ai-metric b{font-size:12px;color:#fff}
+.ai-result-section{margin-top:17px}.ai-result-section>h3{font-size:12px;margin:0 0 9px;color:#edf4ff}
+.ai-signal-card{display:flex;gap:11px;justify-content:space-between;align-items:flex-start;padding:11px;border:1px solid #203852;border-radius:10px;background:#0a1727;margin-top:7px}
+.ai-signal-icon{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;background:rgba(255,107,120,.12);color:#ff8791;flex:0 0 auto;font-size:11px}
+.ai-signal-main b{display:block;font-size:11px;color:#edf4ff}.ai-signal-main small{display:block;margin-top:3px;color:#8297b0;font-size:10px;line-height:1.45}
+.ai-match{font-size:9px;color:#f6c979;background:rgba(246,189,96,.09);border:1px solid rgba(246,189,96,.18);border-radius:6px;padding:5px 7px;white-space:nowrap}
+.ai-evidence{margin:0;padding-left:17px}.ai-evidence li{font-size:10px;color:#a4b6cc;line-height:1.55;margin:6px 0}
+.ai-next{padding:12px;border:1px solid rgba(79,140,255,.25);background:rgba(79,140,255,.07);border-radius:10px;color:#a9bee0;font-size:10px;line-height:1.55}
+.ai-result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ai-result-actions button{font-size:10px}
+.ai-howto{padding:18px}
+.ai-flow-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.ai-flow-head h2{margin:3px 0 0;font-size:15px}
+.ai-flow{display:flex;align-items:center;gap:10px;margin-top:17px}.ai-flow>div:not(.ai-flow-line){flex:1;padding:12px;border:1px solid #203852;border-radius:10px;background:#0a1727}.ai-flow span{display:block;width:22px;height:22px;border-radius:50%;background:#183354;color:#9fc2f7;text-align:center;line-height:22px;font-size:9px;font-weight:900;margin-bottom:7px}.ai-flow b{display:block;font-size:10px;color:#edf4ff}.ai-flow small{display:block;color:#7187a2;font-size:9px;margin-top:4px;line-height:1.35}.ai-flow-line{height:1px;background:#203852;flex:0 0 25px}
+@media(max-width:950px){.ai-workspace{grid-template-columns:1fr}.ai-input-card,.ai-result-card{min-height:auto}}
+@media(max-width:650px){.ai-result-top{grid-template-columns:1fr}.ai-metrics{grid-template-columns:1fr 1fr 1fr}.ai-flow{display:grid;grid-template-columns:1fr 1fr}.ai-flow-line{display:none}.ai-flow>div:not(.ai-flow-line){min-height:90px}.ai-card-head{flex-direction:column}.ai-input-card,.ai-result-card{padding:15px}.ai-review-editor{min-height:210px!important}}
+</style>
+<style id="toast-upgrade">
+#toastContainer{position:fixed;right:22px;bottom:22px;z-index:10000;display:grid;gap:9px;pointer-events:none}
+.rs-toast{min-width:250px;max-width:380px;padding:12px 14px;border:1px solid #29415e;border-radius:11px;background:#0d1a2b;color:#eaf3ff;box-shadow:0 18px 45px rgba(0,0,0,.42);font-size:11px;line-height:1.45;animation:rsToastIn .2s ease}
+.rs-toast.ok{border-color:rgba(54,211,153,.35)}.rs-toast.warn{border-color:rgba(246,189,96,.35)}
+@keyframes rsToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
+<div id="toastContainer" aria-live="polite"></div>
 
 <div id="authWrap" class="auth-wrap">
   <div class="auth-box">
@@ -351,25 +401,71 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
 </div>
 </section>
 
+
 <section id="analyzer" class="page hidden">
-<div class="head"><div><div class="eyebrow">AI REVIEW ANALYZER</div><h1>Analyze a review</h1><div class="muted">Transparent rule-based analysis with results saved privately to your account.</div></div></div>
-<div class="card section"><div class="form">
-<label><b>Review text</b></label>
-<textarea id="reviewText" placeholder="Paste a Google review here..."></textarea>
-<div class="analyzer-options">
-  <div class="field"><label>Star rating (optional)</label>
-    <select id="reviewRating">
-      <option value="">Not provided</option><option value="1">1 ★</option><option value="2">2 ★</option>
-      <option value="3">3 ★</option><option value="4">4 ★</option><option value="5">5 ★</option>
-    </select>
+<div class="head">
+  <div>
+    <div class="eyebrow">AI REVIEW ANALYZER</div>
+    <h1>AI Analysis Workspace</h1>
+    <div class="muted">Review policy signals, understand why a review was flagged, and move verified cases into the Removal Center.</div>
   </div>
-  <div class="field"><label>Reviewer name (optional)</label>
-    <input id="reviewerName" placeholder="e.g. John Smith">
+  <span id="analyzerStatus" class="ai-status">Ready</span>
+</div>
+
+<div class="ai-workspace">
+  <div class="card ai-input-card">
+    <div class="ai-card-head">
+      <div><div class="ai-kicker">STEP 01</div><h2>Review details</h2><p class="muted">Paste a review or open one from your Review Inbox.</p></div>
+      <button class="ghost" type="button" onclick="show('reviews',document.querySelectorAll('.nav button')[1])">Browse reviews</button>
+    </div>
+    <div class="field">
+      <label>Review text</label>
+      <textarea id="reviewText" class="ai-review-editor" placeholder="Paste a Google review here..."></textarea>
+      <div class="ai-editor-footer"><span id="reviewCharCount">0 characters</span><span>Human review required</span></div>
+    </div>
+    <div class="analyzer-options">
+      <div class="field"><label>Star rating</label>
+        <select id="reviewRating">
+          <option value="">Not provided</option><option value="1">1 ★</option><option value="2">2 ★</option>
+          <option value="3">3 ★</option><option value="4">4 ★</option><option value="5">5 ★</option>
+        </select>
+      </div>
+      <div class="field"><label>Reviewer name</label><input id="reviewerName" placeholder="e.g. John Smith"></div>
+    </div>
+    <div class="ai-action-row">
+      <button class="primary" type="button" onclick="analyze()">🤖 Analyze review</button>
+      <button class="ghost" type="button" onclick="clearAnalyzer()">Clear</button>
+    </div>
+    <div class="ai-disclaimer"><span>ⓘ</span><span>This analyzer uses transparent configured rules. It does not make a Google policy determination.</span></div>
+  </div>
+
+  <div class="card ai-result-card">
+    <div class="ai-card-head">
+      <div><div class="ai-kicker">STEP 02</div><h2>Analysis result</h2><p class="muted">A structured triage summary of the selected review.</p></div>
+      <div id="analyzerSavedBadge" class="saved-badge hidden">Saved</div>
+    </div>
+    <div id="analysisResult">
+      <div class="ai-empty">
+        <div class="ai-empty-icon">✦</div>
+        <b>Ready to analyze</b>
+        <span>Enter review text to see risk, signals, evidence suggestions, and next actions.</span>
+      </div>
+    </div>
   </div>
 </div>
-<button class="primary" type="button" onclick="analyze()">Analyze review</button>
-<div id="analysisResult"></div>
-</div></div>
+
+<div class="card section ai-howto">
+  <div class="ai-flow-head"><div><div class="eyebrow">REVIEW WORKFLOW</div><h2>From analysis to action</h2></div><span class="muted">Keep decisions evidence-based</span></div>
+  <div class="ai-flow">
+    <div><span>01</span><b>Analyze</b><small>Identify potential signals</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>02</span><b>Verify</b><small>Collect factual evidence</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>03</span><b>Report</b><small>Use Google's official process</small></div>
+    <div class="ai-flow-line"></div>
+    <div><span>04</span><b>Track</b><small>Record the final decision</small></div>
+  </div>
+</div>
 </section>
 
 <section id="cases" class="page hidden">
@@ -519,12 +615,14 @@ let profileData={};
 function $(id){return document.getElementById(id)}
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
-function showToast(message){
-  const msg=$('authMsg');
-  if(msg && $('authWrap').classList.contains('hidden')) {
-    activity.unshift({text:message,date:new Date().toISOString()});
-    renderActivity();
-  } else if(msg) msg.innerHTML='<span class="green">'+escapeHTML(message)+'</span>';
+function showToast(message,type='ok'){
+  const box=$('toastContainer');
+  if(!box){return}
+  const toast=document.createElement('div');
+  toast.className='rs-toast '+(type||'ok');
+  toast.textContent=message;
+  box.appendChild(toast);
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateY(6px)';toast.style.transition='.2s';setTimeout(()=>toast.remove(),220)},2800);
 }
 
 function toggleAuthMode(){
@@ -577,6 +675,8 @@ async function handleAuth(){
 
 async function startApp(user){
   currentUser=user;
+  notificationReadAt=localStorage.getItem('reviewshield_notification_read_'+currentUser.id)||'';
+  activity=[];
   $('authWrap').classList.add('hidden');
   $('appShell').classList.remove('hidden');
   const email=user.email||'';
@@ -685,133 +785,119 @@ async function editCase(id){
   updateStats();render();addActivity('Case updated');showToast('Case updated successfully.');
 }
 
+function setAnalyzerStatus(text,state=''){
+  const el=$('analyzerStatus');if(!el)return;
+  el.textContent=text;el.className='ai-status '+state;
+}
+function updateReviewCharCount(){
+  const el=$('reviewText'),out=$('reviewCharCount');
+  if(el&&out)out.textContent=(el.value||'').length.toLocaleString()+' characters';
+}
+function clearAnalyzer(){
+  $('reviewText').value='';$('reviewerName').value='';$('reviewRating').value='';
+  $('analysisResult').innerHTML='<div class="ai-empty"><div class="ai-empty-icon">✦</div><b>Ready to analyze</b><span>Enter review text to see risk, signals, evidence suggestions, and next actions.</span></div>';
+  $('analyzerSavedBadge')?.classList.add('hidden');setAnalyzerStatus('Ready');updateReviewCharCount();
+}
+function renderMainAnalysis(a,saveState=''){
+  const riskClass=a.risk==='High'?'danger-badge':a.risk==='Medium'?'flag':'safe';
+  const angle=Math.max(0,Math.min(100,a.score))*3.6;
+  const signals=a.findings.length?a.findings.map(x=>`<div class="ai-signal-card"><div style="display:flex;gap:10px"><span class="ai-signal-icon">!</span><div class="ai-signal-main"><b>${escapeHTML(x.cat)}</b><small>${escapeHTML(x.reason)}</small></div></div><span class="ai-match">${escapeHTML(x.match)}</span></div>`).join(''):'<div class="ai-next">No configured policy-signal rule matched this review. This does not prove the review complies with every Google policy.</div>';
+  const evidence=a.evidenceSuggestions.map(x=>`<li>${escapeHTML(x)}</li>`).join('');
+  const next=a.findings.length?(a.risk==='High'?'Verify the strongest signals, document factual evidence, then consider reporting through the official Google process.':'Verify the facts and supporting context before deciding whether a report is appropriate.'):'No action is required from the analyzer alone. If you still have concerns, review the full context manually.';
+  $('analysisResult').innerHTML=`
+    <div class="ai-result-top">
+      <div class="ai-score-ring" style="--score-angle:${angle}deg"><div class="ai-score-inner"><b>${a.score}</b><small>RISK / 100</small></div></div>
+      <div><div class="ai-summary-title">${escapeHTML(a.assessment)}</div><div class="ai-summary-copy">The analyzer found <b>${a.findings.length}</b> configured signal${a.findings.length===1?'':'s'} in this text. This is a triage result, not a Google policy verdict.</div><div style="margin-top:9px"><span class="badge ${riskClass}">${escapeHTML(a.risk)} risk</span></div></div>
+    </div>
+    <div class="ai-metrics">
+      <div class="ai-metric"><small>Confidence</small><b>${a.confidence}%</b></div>
+      <div class="ai-metric"><small>Signals</small><b>${a.findings.length}</b></div>
+      <div class="ai-metric"><small>Primary</small><b style="font-size:10px">${escapeHTML(a.issueType||'None')}</b></div>
+    </div>
+    <div class="ai-result-section"><h3>Why this was flagged</h3>${signals}</div>
+    <div class="ai-result-section"><h3>Evidence to verify</h3><ul class="ai-evidence">${evidence}</ul></div>
+    <div class="ai-result-section"><h3>Recommended next step</h3><div class="ai-next">${escapeHTML(next)}</div></div>
+    <div class="ai-result-actions">
+      ${saveState ? '' : '<button class="ghost" type="button" onclick="sendAnalyzerToRemoval()">🛡 Send to Removal Center</button>'}
+      ${saveState ? '' : '<button class="ghost" type="button" onclick="createCaseFromAnalyzer()">▣ Create Case</button>'}
+      <button class="ghost" type="button" onclick="copyAnalysisSummary()">Copy summary</button>
+    </div>
+    <div class="muted" style="font-size:9px;margin-top:12px">ReviewShield AI provides indicators only. Google makes the final decision on policy violations.</div>`;
+}
+function copyAnalysisSummary(){
+  const r=$('analysisResult');if(!r)return;
+  const text=r.innerText||'';
+  navigator.clipboard?.writeText(text).then(()=>showToast('Analysis summary copied.'));
+}
+function sendAnalyzerToRemoval(){
+  const text=$('reviewText').value.trim();
+  if(!text){showToast('Analyze a review first.','warn');return}
+  let r=selectedAnalyzerReviewId?reviews.find(x=>String(x.id)===String(selectedAnalyzerReviewId)):null;
+  if(!r){
+    show('removal',document.querySelectorAll('.nav button')[5]);
+    setTimeout(()=>{
+      const s=$('removalReviewSelect');
+      if(s){
+        const match=reviews.find(x=>String(x.text||'').trim()===text);
+        if(match){s.value=String(match.id);prepareRemovalReview()}
+      }
+      removalGo('analyze');
+    },50);
+    return;
+  }
+  show('removal',document.querySelectorAll('.nav button')[5]);
+  setTimeout(()=>{$('removalReviewSelect').value=String(r.id);prepareRemovalReview();removalGo('analyze')},50);
+}
+async function createCaseFromAnalyzer(){
+  if(!currentUser){showToast('Please sign in first.','warn');return}
+  const t=$('reviewText').value.trim();if(!t){showToast('Enter a review first.','warn');return}
+  let r=selectedAnalyzerReviewId?reviews.find(x=>String(x.id)===String(selectedAnalyzerReviewId)):null;
+  if(!r){showToast('Save the review first by analyzing it, then create a case.','warn');return}
+  const a=analyzeReviewText(r.text||'');
+  const c={user_id:currentUser.id,name:'Review Analysis — '+(r.reviewer_name||r.name||'Reviewer'),issue:a.issueType||'Potential policy issue',status:a.findings.length?'Needs evidence':'Open',priority:a.risk==='High'?'high':a.risk==='Medium'?'medium':'low',evidence_notes:'Analyzer summary: '+a.assessment+'\\nRisk: '+a.score+'/100\\nSignals: '+a.findings.map(x=>x.cat).join(', ')};
+  const {data,error}=await supabaseClient.from('cases').insert(c).select().single();
+  if(error){showToast('Case creation failed: '+error.message,'warn');return}
+  cases.push(normalizeCase(data));updateStats();renderCases();addActivity('Case created from AI Analyzer');showToast('Case created successfully.');
+}
+let selectedAnalyzerReviewId=null;
 function loadReview(id){
   const r=reviews.find(x=>String(x.id)===String(id));if(!r)return;
+  selectedAnalyzerReviewId=r.id;
   show('analyzer',document.querySelectorAll('.nav button')[2]);
-  $('reviewText').value=r.text;analyze(false);
+  $('reviewText').value=r.text||'';
+  $('reviewRating').value=r.rating?String(r.rating):'';
+  $('reviewerName').value=r.reviewer_name||r.name||'';
+  updateReviewCharCount();
+  analyze(false);
 }
-
+function renderAnalyzerSavedState(saved){
+  $('analyzerSavedBadge')?.classList.toggle('hidden',!saved);
+  setAnalyzerStatus(saved?'Analysis saved':'Analysis complete','complete');
+}
 async function analyze(saveToDatabase=true){
   const t=$('reviewText').value.trim();
-  if(!t){$('analysisResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
-
+  if(!t){$('analysisResult').innerHTML='<div class="ai-empty"><div class="ai-empty-icon">!</div><b>Review text required</b><span>Paste the review text before starting analysis.</span></div>';setAnalyzerStatus('Waiting','');return}
+  updateReviewCharCount();setAnalyzerStatus('Analyzing…','analyzing');$('analyzerSavedBadge')?.classList.add('hidden');
   const rating=$('reviewRating')?.value||'';
   const reviewerName=($('reviewerName')?.value||'').trim()||'Manual review';
-  const lower=t.toLowerCase();
-  const findings=[];
-
-  const rules=[
-    {cat:'Non-genuine experience',weight:32,
-      re:/(never (went|visited|been|used)|didn.?t (visit|go|use|buy)|not a customer|never (was|came) (there|here)|i have never (visited|been|used))/i,
-      reason:'The text suggests the reviewer did not have a genuine customer experience.'},
-    {cat:'Spam / repetitive content',weight:24,
-      re:/(^(.)\1{6,}$|repeat(ed)? (review|post)|same review|copy.?paste|fake account|bot review)/i,
-      reason:'The review contains language associated with repetitive, spam-like, or automated activity.'},
-    {cat:'Promotional / advertising content',weight:22,
-      re:/(https?:\/\/|www\.|discount code|promo code|buy now|visit my|follow (me|us)|subscribe|special offer|coupon)/i,
-      reason:'Promotional language, advertising, or an external link was detected.'},
-    {cat:'Abusive / harassing language',weight:22,
-      re:/(idiot|stupid|moron|shut up|scumbag|loser|dumbass|f\*+k|bitch|asshole)/i,
-      reason:'Potentially abusive or harassing language was detected.'},
-    {cat:'Threatening language',weight:35,
-      re:/(i will (hurt|kill|destroy)|you('ll| will) regret|threaten|threat|watch your back|burn (this|your))/i,
-      reason:'The review contains language that may indicate a threat or intimidation.'},
-    {cat:'Unverifiable / serious accusation',weight:20,
-      re:/(scam|fraud|stole|stolen|criminal|illegal|corrupt|con artist|thief)/i,
-      reason:'A serious accusation was detected; supporting facts should be verified before reporting.'},
-    {cat:'Irrelevant / off-topic',weight:18,
-      re:/(politics|politician|election|religion|weather|crypto investment|bitcoin investment)/i,
-      reason:'The text may contain content unrelated to the business experience.'},
-    {cat:'Conflict of interest signal',weight:28,
-      re:/(competitor|rival business|i work for|i own (a|the)|my company|our competitor)/i,
-      reason:'The reviewer may have a relationship or competing interest that should be investigated.'},
-    {cat:'Incentive / review manipulation signal',weight:28,
-      re:/(paid me to review|paid review|gift card for review|free meal for review|asked me to change|remove this review and)/i,
-      reason:'The text suggests a possible incentive or manipulation of reviews.'}
-  ];
-
-  rules.forEach(rule=>{
-    const match=t.match(rule.re);
-    if(match) findings.push({...rule,match:match[0]});
-  });
-
-  const score=Math.min(100,findings.reduce((sum,x)=>sum+x.weight,0));
-  const risk=score>=60?'High':score>=30?'Medium':findings.length?'Low':'No obvious signal';
-  const confidence=findings.length?Math.min(98,62+findings.length*8):78;
-  const assessment=findings.length?'Potential policy issue':'No obvious policy signal detected';
-  const issueType=findings.length?findings[0].cat:null;
-
-  const riskClass=risk==='High'?'danger-badge':risk==='Medium'?'flag':'safe';
-  const categoryText=findings.length
-    ?findings.map(x=>`<li><b>${escapeHTML(x.cat)}</b> — ${escapeHTML(x.reason)} <small>(matched: "${escapeHTML(x.match)}")</small></li>`).join('')
-    :'<li>No configured policy-signal rule matched this text.</li>';
-
-  const recommendation=findings.length
-    ? (risk==='High'
-      ? 'Collect supporting evidence and review the relevant Google policy before reporting.'
-      : 'Verify the facts and collect evidence before deciding whether to report.')
-    : 'No obvious signal was detected. A clean result is not proof that the review complies with every Google policy.';
-
-  $('analysisResult').innerHTML=`
-    <div class="result">
-      <strong>${escapeHTML(assessment)}</strong>
-      <div class="analysis-grid">
-        <div class="analysis-item"><small>Risk level</small><b class="badge ${riskClass}">${escapeHTML(risk)}</b></div>
-        <div class="analysis-item"><small>Risk score</small><b>${score}/100</b></div>
-        <div class="analysis-item"><small>Confidence</small><b class="confidence">${confidence}%</b></div>
-        <div class="analysis-item"><small>Primary category</small><b>${escapeHTML(issueType||'None detected')}</b></div>
-      </div>
-      <div style="margin-top:14px"><b>Detected signals</b>
-        <ul class="signal-list">${categoryText}</ul>
-      </div>
-      <div style="margin-top:12px"><b>Recommended action</b>
-        <p class="muted">${escapeHTML(recommendation)}</p>
-      </div>
-      <small class="muted">${saveToDatabase?'Saving to Supabase…':'Loaded from Supabase'} · Human review required · Google makes the final decision.</small>
-    </div>`;
-
-  if(!saveToDatabase)return;
-  if(!currentUser){
-    $('analysisResult').innerHTML+='<div class="muted" style="margin-top:8px">Please sign in first.</div>';
-    return;
-  }
-
-  /* Supabase-safe save: keep the database payload compatible with the
-     existing reviews table. Advanced analyzer results stay in the UI,
-     while the core review record uses the fields already used by Phase 2/3. */
-  const record={
-    user_id:currentUser.id,
-    name:reviewerName || 'Manual review',
-    rating:rating?Number(rating):(findings.length?1:5),
-    text:t,
-    assessment,
-    issue_type:issueType || null
-  };
-
+  const a=analyzeReviewText(t);
+  renderMainAnalysis(a,saveToDatabase?'':'loaded');
+  if(!saveToDatabase){renderAnalyzerSavedState(true);return}
+  if(!currentUser){setAnalyzerStatus('Sign in required','');return}
+  const record={user_id:currentUser.id,name:reviewerName,rating:rating?Number(rating):(a.findings.length?1:5),text:t,assessment:a.assessment,issue_type:a.issueType||null};
   const {data,error}=await supabaseClient.from('reviews').insert(record).select().single();
-  if(error){
-    $('analysisResult').innerHTML+=`<div class="muted" style="margin-top:8px">Database save failed: ${escapeHTML(error.message)}</div>`;
-    return;
-  }
-
+  if(error){$('analysisResult').insertAdjacentHTML('beforeend',`<div class="ai-next" style="margin-top:10px">Database save failed: ${escapeHTML(error.message)}</div>`);setAnalyzerStatus('Save failed','');return}
+  selectedAnalyzerReviewId=data.id;
   reviews.push(normalizeReview(data));
-
-  if(findings.length){
-    const c={
-      user_id:currentUser.id,
-      name:reviewerName || 'Manual review',
-      issue:issueType||'Potential policy issue',
-      status:'Needs evidence',
-      priority:risk==='High'?'high':risk==='Medium'?'medium':'low'
-    };
+  if(a.findings.length){
+    const c={user_id:currentUser.id,name:reviewerName,issue:a.issueType||'Potential policy issue',status:'Needs evidence',priority:a.risk==='High'?'high':a.risk==='Medium'?'medium':'low'};
     const {data:caseData,error:caseError}=await supabaseClient.from('cases').insert(c).select().single();
     if(!caseError&&caseData)cases.push(normalizeCase(caseData));
   }
-
   updateStats();render();renderCharts();addActivity('Review analyzed and saved');
-  $('analysisResult').innerHTML+=`<div class="green" style="margin-top:8px"><b>Saved to your private account ✓</b>${findings.length?' Case created for evidence review ✓':''}</div>`;
+  renderAnalyzerSavedState(true);
+  $('analysisResult').insertAdjacentHTML('beforeend',`<div class="green" style="font-size:10px;margin-top:10px"><b>✓ Saved to your private account</b>${a.findings.length?' · Case created for evidence review':''}</div>`);
 }
-
 function generateResponse(){
   const t=$('responseText').value.trim();if(!t){$('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
   const tone=$('responseTone').value;
@@ -1104,7 +1190,7 @@ supabaseClient.auth.onAuthStateChange(async(event,session)=>{
 setInterval(()=>{if(currentUser)loadData(false).catch(err=>console.error('Refresh error:',err))},15000);
 
 // Professional notification center
-let notificationReadAt = localStorage.getItem('reviewshield_notification_read_'+(currentUser?.id||'guest')) || '';
+let notificationReadAt='';
 
 function notificationData(){
   return (activity||[]).slice(0,12);
@@ -1155,6 +1241,16 @@ loadActivity=function(){
   _oldLoadActivity();
   updateNotificationCenter();
 };
+
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const editor=$('reviewText');
+  if(editor){
+    editor.addEventListener('input',updateReviewCharCount);
+    updateReviewCharCount();
+  }
+  updateNotificationCenter();
+});
 
 </script>
 </body>
