@@ -409,7 +409,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
     <h1>AI Analysis Workspace</h1>
     <div class="muted">Review policy signals, understand why a review was flagged, and move verified cases into the Removal Center.</div>
   </div>
-  <span id="analyzerStatus" class="ai-status">Ready</span>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="aiEngineBadge" class="saved-badge">SMART ENGINE</span><span id="analyzerStatus" class="ai-status">Ready</span></div>
 </div>
 
 <div class="ai-workspace">
@@ -436,7 +436,7 @@ body{background:linear-gradient(135deg,#06101d 0%,#091728 48%,#07111f 100%);colo
       <button class="primary" type="button" onclick="analyze()">🤖 Analyze review</button>
       <button class="ghost" type="button" onclick="clearAnalyzer()">Clear</button>
     </div>
-    <div class="ai-disclaimer"><span>ⓘ</span><span>This analyzer uses transparent configured rules. It does not make a Google policy determination.</span></div>
+    <div class="ai-disclaimer"><span>ⓘ</span><span>Smart Engine combines structured policy-signal analysis with a secure AI endpoint when configured. It does not make a Google policy determination.</span></div>
   </div>
 
   <div class="card ai-result-card">
@@ -880,7 +880,17 @@ async function analyze(saveToDatabase=true){
   updateReviewCharCount();setAnalyzerStatus('Analyzing…','analyzing');$('analyzerSavedBadge')?.classList.add('hidden');
   const rating=$('reviewRating')?.value||'';
   const reviewerName=($('reviewerName')?.value||'').trim()||'Manual review';
-  const a=analyzeReviewText(t);
+  let a=analyzeReviewText(t);
+  let engineLabel='SMART FALLBACK';
+  try{
+    const aiResult=await runSecureAIAnalysis(t,rating,reviewerName);
+    if(aiResult&&aiResult.score!=null){
+      a={...a,...aiResult,findings:Array.isArray(aiResult.findings)&&aiResult.findings.length?aiResult.findings:a.findings,
+        evidenceSuggestions:Array.isArray(aiResult.evidenceSuggestions)&&aiResult.evidenceSuggestions.length?aiResult.evidenceSuggestions:a.evidenceSuggestions};
+      engineLabel='SECURE AI';
+    }
+  }catch(e){ console.info('Secure AI unavailable; using smart fallback.',e); }
+  if($('aiEngineBadge'))$('aiEngineBadge').textContent=engineLabel;
   renderMainAnalysis(a,saveToDatabase?'':'loaded');
   if(!saveToDatabase){renderAnalyzerSavedState(true);return}
   if(!currentUser){setAnalyzerStatus('Sign in required','');return}
@@ -898,6 +908,16 @@ async function analyze(saveToDatabase=true){
   renderAnalyzerSavedState(true);
   $('analysisResult').insertAdjacentHTML('beforeend',`<div class="green" style="font-size:10px;margin-top:10px"><b>✓ Saved to your private account</b>${a.findings.length?' · Case created for evidence review':''}</div>`);
 }
+async function runSecureAIAnalysis(text,rating,reviewerName){
+  if(!supabaseClient) return null;
+  const {data,error}=await supabaseClient.functions.invoke('ai-review-analyze',{
+    body:{review_text:text,rating:rating||null,reviewer_name:reviewerName||null}
+  });
+  if(error) throw error;
+  if(!data||data.error) throw new Error(data?.error||'AI endpoint unavailable');
+  return data;
+}
+
 function generateResponse(){
   const t=$('responseText').value.trim();if(!t){$('responseResult').innerHTML='<div class="result">Please paste a review first.</div>';return}
   const tone=$('responseTone').value;
